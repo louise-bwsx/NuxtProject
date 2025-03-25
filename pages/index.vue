@@ -8,7 +8,7 @@
       onclick="console.log(111)"
       class="btn btn-primary"
     >
-      收支圖表
+      收支圖表 已更新https
     </NuxtLink>
   </div>
 </template>

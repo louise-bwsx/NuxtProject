@@ -28,17 +28,32 @@
           </thead>
           <tbody v-if="content">
             <tr v-for="(data, index) in content.data">
-              <th>{{ index }}</th>
-              <td>{{ content.data[0 + 8][index] }}</td>
-              <td>{{ content.data[1 + 8][index] }}</td>
-              <input type="text" />
-              <td>{{ content.data[2 + 8][index] }}</td>
-              <input type="text" />
-              <td>{{ content.data[3 + 8][index] }}</td>
-              <input type="text" />
-              <td>{{ content.data[4 + 8][index] }}</td>
-              <input type="text" />
-              <td>{{ content.data[6 + 8][index] }}</td>
+              <th v-if="index <= lastDayOfMonth">{{ index }}</th>
+              <td v-if="index <= lastDayOfMonth">
+                {{ content.data[0 + rowSpacing][index] }}
+              </td>
+              <td v-if="index <= lastDayOfMonth">
+                {{ content.data[1 + rowSpacing][index] }}
+              </td>
+              <input v-if="index <= lastDayOfMonth" type="text" />
+              <td v-if="index <= lastDayOfMonth">
+                {{ content.data[2 + rowSpacing][index] }}
+              </td>
+              <input v-if="index <= lastDayOfMonth" type="text" value="aaa" />
+              <td v-if="index <= lastDayOfMonth">
+                {{ content.data[3 + rowSpacing][index] }}
+              </td>
+              <input v-if="index <= lastDayOfMonth" type="text" />
+              <td v-if="index <= lastDayOfMonth">
+                {{ content.data[4 + rowSpacing][index] }}
+              </td>
+              <input v-if="index <= lastDayOfMonth" type="text" />
+              <td v-if="index <= lastDayOfMonth">
+                {{ content.data[6 + rowSpacing][index] }}
+              </td>
+              <button v-if="index == lastDayOfMonth + 1" @click="handleSave">
+                儲存這一個月
+              </button>
             </tr>
           </tbody>
         </table>
@@ -53,18 +68,46 @@ const content = ref(undefined);
 const dayIndex = ref(0);
 const monthIndex = ref(0);
 const rowSpacing = ref(8);
+const lastDayOfMonth = ref(0);
 
 const handleFiles = (element) => {
   Papa.parse(element.target.files[0], {
     complete: function (results) {
       console.log(results);
       content.value = results;
+
+      var month = content.value.data[0 + rowSpacing.value][0];
+      var date = new Date(month);
+
+      // console.log(date); // Wed Feb 19 2025 00:00:00 GMT+0800 (台北標準時間)
+      // console.log(`date.getDate(): ${date.getDate()}`); // date.getDate(): 19
+
+      lastDayOfMonth.value = getLastDayOfMonth(
+        date.getFullYear(),
+        date.getMonth()
+      );
+      console.log(lastDayOfMonth.value);
     },
     // header: true, // keyed by field name
   });
 };
 
+const handleSave = () => {
+  console.log("handleSave");
+  // 跳一個月
+  rowSpacing.value += 8;
+  var month = content.data[0 + rowSpacing][1];
+  var date = new Date(month);
+  console.log(date);
+  // var getLastDayOfMonth = new Date(month);
+};
+
+const getLastDayOfMonth = (year, month) => {
+  let date = new Date(year, month + 1, 0);
+  return date.getDate();
+};
+
 onMounted(async () => {
-  await nextTick();
+  // await nextTick();
 });
 </script>
