@@ -23,34 +23,58 @@
               <th>晚餐類型</th>
               <th>額外花費</th>
               <th>花費類型</th>
-              <th>當天總花費</th>
             </tr>
           </thead>
           <tbody v-if="content">
             <tr v-for="(data, index) in content.data">
               <th v-if="index <= lastDayOfMonth">{{ index }}</th>
+
+              <!-- 這邊從:value改成v-model後才能在handleSave中取得修改後的數值 -->
+              <!-- 日期 -->
               <td v-if="index <= lastDayOfMonth">
-                {{ content.data[0 + rowSpacing][index] }}
+                <input type="text" v-model="costDate[index]" />
               </td>
+
+              <!-- 早餐金額 -->
               <td v-if="index <= lastDayOfMonth">
-                {{ content.data[1 + rowSpacing][index] }}
+                <input type="text" v-model="breakfastCost[index]" />
               </td>
-              <input v-if="index <= lastDayOfMonth" type="text" />
+
+              <!-- 早餐類型 -->
               <td v-if="index <= lastDayOfMonth">
-                {{ content.data[2 + rowSpacing][index] }}
+                <input type="text" v-model="breakfastType[index]" />
               </td>
-              <input v-if="index <= lastDayOfMonth" type="text" value="aaa" />
+
+              <!-- 午餐金額 -->
               <td v-if="index <= lastDayOfMonth">
-                {{ content.data[3 + rowSpacing][index] }}
+                <input type="text" v-model="lunchCost[index]" />
               </td>
-              <input v-if="index <= lastDayOfMonth" type="text" />
+
+              <!-- 午餐類型 -->
               <td v-if="index <= lastDayOfMonth">
-                {{ content.data[4 + rowSpacing][index] }}
+                <input type="text" v-model="lunchType[index]" />
               </td>
-              <input v-if="index <= lastDayOfMonth" type="text" />
+
+              <!-- 晚餐金額 -->
               <td v-if="index <= lastDayOfMonth">
-                {{ content.data[6 + rowSpacing][index] }}
+                <input type="text" v-model="dinnerCost[index]" />
               </td>
+
+              <!-- 晚餐類型 -->
+              <td v-if="index <= lastDayOfMonth">
+                <input type="text" v-model="dinnerType[index]" />
+              </td>
+
+              <!-- 額外花費 -->
+              <td v-if="index <= lastDayOfMonth">
+                <input type="text" v-model="extraCost[index]" />
+              </td>
+
+              <!-- 花費類型 -->
+              <td v-if="index <= lastDayOfMonth">
+                <input type="text" v-model="extraType[index]" />
+              </td>
+
               <button v-if="index == lastDayOfMonth + 1" @click="handleSave">
                 儲存這一個月
               </button>
@@ -67,13 +91,23 @@ import Papa from "papaparse";
 const content = ref(undefined);
 const dayIndex = ref(0);
 const monthIndex = ref(0);
-const rowSpacing = ref(8);
+const rowSpacing = ref(8); // 每過一個月要增加的行數
 const lastDayOfMonth = ref(0);
+
+const costDate = ref([]);
+const breakfastCost = ref([]);
+const breakfastType = ref([]);
+const lunchCost = ref([]);
+const lunchType = ref([]);
+const dinnerCost = ref([]);
+const dinnerType = ref([]);
+const extraCost = ref([]);
+const extraType = ref([]);
 
 const handleFiles = (element) => {
   Papa.parse(element.target.files[0], {
     complete: function (results) {
-      console.log(results);
+      console.log(`results: ${results}`);
       content.value = results;
 
       var month = content.value.data[0 + rowSpacing.value][0];
@@ -86,20 +120,29 @@ const handleFiles = (element) => {
         date.getFullYear(),
         date.getMonth()
       );
-      console.log(lastDayOfMonth.value);
+
+      costDate.value = content.value.data[0 + rowSpacing.value];
+      breakfastCost.value = content.value.data[1 + rowSpacing.value];
+      breakfastType.value = Array(lastDayOfMonth.value).fill("1");
+      lunchCost.value = content.value.data[2 + rowSpacing.value];
+      lunchType.value = [];
+      dinnerCost.value = content.value.data[3 + rowSpacing.value];
+      dinnerType.value = [];
+      extraCost.value = content.value.data[4 + rowSpacing.value];
+      extraType.value = [];
+      console.log(`這個月最後一天: ${lastDayOfMonth.value}`);
     },
-    // header: true, // keyed by field name
   });
 };
 
 const handleSave = () => {
+  for (let i = 0; i < lastDayOfMonth.value; i++) {
+    // console.log(costDate.value[i]);
+    console.log(breakfastType.value[i]);
+  }
   console.log("handleSave");
   // 跳一個月
   rowSpacing.value += 8;
-  var month = content.data[0 + rowSpacing][1];
-  var date = new Date(month);
-  console.log(date);
-  // var getLastDayOfMonth = new Date(month);
 };
 
 const getLastDayOfMonth = (year, month) => {
