@@ -107,7 +107,7 @@ const extraType = ref([]);
 const handleFiles = (element) => {
   Papa.parse(element.target.files[0], {
     complete: function (results) {
-      console.log(`results: ${results}`);
+      // console.log(`results: ${JSON.stringify(results)}`);
       content.value = results;
 
       var month = content.value.data[0 + rowSpacing.value][0];
