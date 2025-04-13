@@ -6,7 +6,7 @@
     <NuxtLink to="/incomeReport" class="btn btn-primary">
       收支圖表 已更新https
     </NuxtLink>
-    <div>Go測試API</div>
+    <!-- <div>Go測試API</div>
     <div>Go後端部署</div>
     <div>Go寫入資料庫</div>
     <div>寫入支出</div>
@@ -43,7 +43,7 @@
       https://www.google.com/search?q=swiftUI+flex+wrap&oq=swiftUI+flex+wrap&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIKCAEQABiABBiiBDIHCAIQABjvBTIHCAMQABjvBTIHCAQQABjvBdIBCDU3MjRqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8
     </div>
     <div>dev uat sit prd 環境設定</div>
-    <div>rust</div>
+    <div>rust</div> -->
   </div>
 </template>
 

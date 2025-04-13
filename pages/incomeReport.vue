@@ -6,6 +6,7 @@
     <div class="bbb flex flex-row grow w-full">
       <!-- <div class="bbb">a</div> -->
       <!-- <div class="bbb">b</div> -->
+      <button @click="handleSaveDay(1)">測試</button>
     </div>
     <div class="bbb grow w-full">
       <input type="file" @change="handleFiles" />
@@ -75,6 +76,11 @@
                 <input type="text" v-model="extraType[index]" />
               </td>
 
+              <!-- 儲存這一天 -->
+              <td v-if="index <= lastDayOfMonth">
+                <button @click="handleSaveDay(index)">儲存這一天</button>
+              </td>
+
               <button v-if="index == lastDayOfMonth + 1" @click="handleSave">
                 儲存這一個月
               </button>
@@ -123,7 +129,7 @@ const handleFiles = (element) => {
 
       costDate.value = content.value.data[0 + rowSpacing.value];
       breakfastCost.value = content.value.data[1 + rowSpacing.value];
-      breakfastType.value = Array(lastDayOfMonth.value).fill("1");
+      breakfastType.value = [];
       lunchCost.value = content.value.data[2 + rowSpacing.value];
       lunchType.value = [];
       dinnerCost.value = content.value.data[3 + rowSpacing.value];
@@ -143,6 +149,20 @@ const handleSave = () => {
   console.log("handleSave");
   // 跳一個月
   rowSpacing.value += 8;
+};
+
+const handleSaveDay = async (index) => {
+  // console.log(costDate.value[index]);
+  // console.log(breakfastCost.value[index]);
+  // console.log(breakfastType.value[index]);
+  // console.log(lunchCost.value[index]);
+  // console.log(lunchType.value[index]);
+  // console.log(dinnerCost.value[index]);
+  // console.log(dinnerType.value[index]);
+  // console.log(extraCost.value[index]);
+  // console.log(extraType.value[index]);
+
+  const response = await useApi().get("http://localhost:5002/api/v1/db-test");
 };
 
 const getLastDayOfMonth = (year, month) => {
