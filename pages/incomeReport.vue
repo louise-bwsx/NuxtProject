@@ -152,17 +152,18 @@ const handleSave = () => {
 };
 
 const handleSaveDay = async (index) => {
-  // console.log(costDate.value[index]);
-  // console.log(breakfastCost.value[index]);
-  // console.log(breakfastType.value[index]);
-  // console.log(lunchCost.value[index]);
-  // console.log(lunchType.value[index]);
-  // console.log(dinnerCost.value[index]);
-  // console.log(dinnerType.value[index]);
-  // console.log(extraCost.value[index]);
-  // console.log(extraType.value[index]);
-
-  const response = await useApi().get("http://localhost:5002/api/v1/db-test");
+  const response = await useApi().post("/api/v1/report", {
+    costDate: costDate.value[index],
+    breakfastCost: breakfastCost.value[index],
+    breakfastType: breakfastType.value[index],
+    lunchCost: lunchCost.value[index],
+    lunchType: lunchType.value[index],
+    dinnerCost: dinnerCost.value[index],
+    dinnerType: dinnerType.value[index],
+    extraCost: extraCost.value[index],
+    extraType: extraType.value[index],
+  });
+  console.log(`response: ${JSON.stringify(response)}`);
 };
 
 const getLastDayOfMonth = (year, month) => {
