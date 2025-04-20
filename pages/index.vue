@@ -6,6 +6,18 @@
     <NuxtLink to="/incomeReport" class="btn btn-primary">
       收支圖表 已更新https
     </NuxtLink>
+    
+    <!-- Sony手機411 832 -->
+    <div>Width: {{ width }}</div>
+    <div>Height: {{ height }}</div>
+    
+    <!-- <div>Width: {{ useWindowSize().width }}</div> -->
+    <!-- <div>Height: {{ useWindowSize().height }}</div> -->
+
+
+    <!-- <div>Width: {{ widthFunction }}</div> -->
+
+
     <!-- <div>Go測試API</div>
     <div>Go後端部署</div>
     <div>Go寫入資料庫</div>
@@ -47,6 +59,8 @@
   </div>
 </template>
 
-<script>
-import { NuxtLink } from "#components";
+<script setup>
+import { useWindowSize } from '@vueuse/core'
+
+const { width, height } = useWindowSize()
 </script>

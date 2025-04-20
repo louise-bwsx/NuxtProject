@@ -7,11 +7,12 @@ export function useApi() {
   // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
 
   const apiFetch = async (endpoint, options = {}) => {
+    console.log(import.meta.env.VITE_BASE_URL)
     // 合併默認選項和用戶提供的選項
     const mergedOptions = {
       // TODO: baseURL 用env區分
       // baseURL: config.public.apiBase,
-      baseURL: `http://localhost:5002`,
+      baseURL: import.meta.env.VITE_BASE_URL,
       // 合併用戶提供的選項
       ...options,
       // 合併 headers

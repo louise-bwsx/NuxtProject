@@ -6,9 +6,14 @@
     <div class="bbb flex flex-row grow w-full">
       <!-- <div class="bbb">a</div> -->
       <!-- <div class="bbb">b</div> -->
-      <button @click="handleSaveDay(1)">測試</button>
+      <button @click="handleSaveDay(1)">handleSaveDay測試</button>
+      <button @click="test()">測試</button>
+
+      <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
+      <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
     </div>
     <div class="bbb grow w-full">
+      <!-- 不可以加() 會導致function的element 是undefined -->
       <input type="file" @change="handleFiles" />
       <div class="overflow-x-auto">
         <table class="table table-xs">
@@ -81,7 +86,7 @@
                 <button @click="handleSaveDay(index)">儲存這一天</button>
               </td>
 
-              <button v-if="index == lastDayOfMonth + 1" @click="handleSave">
+              <button v-if="index == lastDayOfMonth + 1" @click="handleSaveMonth">
                 儲存這一個月
               </button>
             </tr>
@@ -95,8 +100,6 @@
 <script setup>
 import Papa from "papaparse";
 const content = ref(undefined);
-const dayIndex = ref(0);
-const monthIndex = ref(0);
 const rowSpacing = ref(8); // 每過一個月要增加的行數
 const lastDayOfMonth = ref(0);
 
@@ -110,48 +113,30 @@ const dinnerType = ref([]);
 const extraCost = ref([]);
 const extraType = ref([]);
 
-const handleFiles = (element) => {
-  Papa.parse(element.target.files[0], {
-    complete: function (results) {
-      // console.log(`results: ${JSON.stringify(results)}`);
-      content.value = results;
+const test = () => {
+  // console.log(import.meta.env.BASE_URL); // /_nuxt/
+  console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
+}
 
-      var month = content.value.data[0 + rowSpacing.value][0];
-      var date = new Date(month);
-
-      // console.log(date); // Wed Feb 19 2025 00:00:00 GMT+0800 (台北標準時間)
-      // console.log(`date.getDate(): ${date.getDate()}`); // date.getDate(): 19
-
-      lastDayOfMonth.value = getLastDayOfMonth(
-        date.getFullYear(),
-        date.getMonth()
-      );
-
-      costDate.value = content.value.data[0 + rowSpacing.value];
-      breakfastCost.value = content.value.data[1 + rowSpacing.value];
-      breakfastType.value = [];
-      lunchCost.value = content.value.data[2 + rowSpacing.value];
-      lunchType.value = [];
-      dinnerCost.value = content.value.data[3 + rowSpacing.value];
-      dinnerType.value = [];
-      extraCost.value = content.value.data[4 + rowSpacing.value];
-      extraType.value = [];
-      console.log(`這個月最後一天: ${lastDayOfMonth.value}`);
-    },
-  });
+const handleFiles = async (element) => {
+  console.log(element)
+  const file = element.target.files[0];
+  const csvText = await file.text(); // 讀成文字
+  parseIncomeCsvData(csvText)
 };
 
-const handleSave = () => {
+const handleSaveMonth = () => {
   for (let i = 0; i < lastDayOfMonth.value; i++) {
     // console.log(costDate.value[i]);
     console.log(breakfastType.value[i]);
   }
-  console.log("handleSave");
+  console.log("handleSaveMonth");
   // 跳一個月
   rowSpacing.value += 8;
 };
 
 const handleSaveDay = async (index) => {
+  console.log(`儲存這一天: ${costDate.value[index]}`);
   const response = await useApi().post("/api/v1/report", {
     costDate: costDate.value[index],
     breakfastCost: breakfastCost.value[index],
@@ -171,7 +156,37 @@ const getLastDayOfMonth = (year, month) => {
   return date.getDate();
 };
 
+const parseIncomeCsvData = (csvText) => {
+  Papa.parse(csvText, {
+    complete: (results) => {
+      content.value = results;
+
+      const month = content.value.data[0 + rowSpacing.value][0];
+      const date = new Date(month);
+
+      lastDayOfMonth.value = getLastDayOfMonth(
+        date.getFullYear(),
+        date.getMonth()
+      );
+
+      costDate.value = content.value.data[0 + rowSpacing.value];
+      breakfastCost.value = content.value.data[1 + rowSpacing.value];
+      breakfastType.value = [];
+      lunchCost.value = content.value.data[2 + rowSpacing.value];
+      lunchType.value = [];
+      dinnerCost.value = content.value.data[3 + rowSpacing.value];
+      dinnerType.value = [];
+      extraCost.value = content.value.data[4 + rowSpacing.value];
+      extraType.value = [];
+
+      console.log(`自動載入完成，這個月最後一天: ${lastDayOfMonth.value}`);
+    },
+  });
+}
+
 onMounted(async () => {
-  // await nextTick();
+const res = await fetch('/開銷紀錄.csv');
+  const csvText = await res.text();
+  parseIncomeCsvData(csvText)
 });
 </script>
