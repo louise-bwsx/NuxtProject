@@ -3,48 +3,20 @@
 node .output/server/index.mjs
 ```
 
-# Nuxt Minimal Starter
-
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install dependencies:
-
+安裝套件
 ```bash
 yarn install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+測試執行
 ```bash
 yarn dev
 ```
 
-## Production
-
-Build the application for production:
-
+打包
 ```bash
 yarn build
 ```
 
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+yarn 新增套件
+參考: https://titangene.github.io/article/npm-and-yarn-cheatsheet.html
