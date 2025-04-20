@@ -33,7 +33,7 @@
           </thead>
           <tbody v-if="content">
             <tr v-for="(data, index) in content.data">
-              <th v-if="index <= lastDayOfMonth">{{ index }}</th>
+              <td v-if="index <= lastDayOfMonth">{{ index }}</td>
 
               <!-- 這邊從:value改成v-model後才能在handleSave中取得修改後的數值 -->
               <!-- 日期 -->
