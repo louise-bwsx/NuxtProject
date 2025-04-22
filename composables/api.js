@@ -26,7 +26,8 @@ export function useApi() {
 
     // 使用useApi是因為對SEO最友好
     // 唯一的缺點就是這邊沒辦法拿response 雖然是data 但data.value才是response
-    const { data } = await useFetch(endpoint, mergedOptions);
+    // 20250422 louise 從useFetch改成$fetch 因為有warning
+    const { data } = await $fetch(endpoint, mergedOptions);
 
     return data.value;
   };
