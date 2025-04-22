@@ -11,17 +11,7 @@
     <div>Width: {{ width }}</div>
     <div>Height: {{ height }}</div>
     
-    <!-- <div>Width: {{ useWindowSize().width }}</div> -->
-    <!-- <div>Height: {{ useWindowSize().height }}</div> -->
-
-
-    <!-- <div>Width: {{ widthFunction }}</div> -->
-
-
-    <!-- <div>Go測試API</div>
-    <div>Go後端部署</div>
-    <div>Go寫入資料庫</div>
-    <div>寫入支出</div>
+    <!--
     <div>JWTToken</div>
     <div>JWTToken解析</div>
     <div>Google登入</div>
