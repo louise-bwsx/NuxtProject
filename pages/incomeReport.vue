@@ -15,11 +15,11 @@
     <div class="bbb grow w-full">
       <!-- 不可以加() 會導致function的element 是undefined -->
       <input type="file" @change="handleFiles" />
-      <div class="overflow-x-auto">
+      <div class="w-full">
         <table class="table table-xs">
           <thead>
             <tr>
-              <th></th>
+              <th>序號</th>
               <th>日期</th>
               <th>早餐金額</th>
               <th>早餐類型</th>
@@ -82,16 +82,15 @@
               </td>
 
               <!-- 儲存這一天 -->
-              <td v-if="index < lastDayOfMonth">
+              <td v-if="index < lastDayOfMonth" class="w-auto text-nowrap">
                 <button @click="handleSaveDay(index)">儲存這一天</button>
               </td>
-
-              <button v-if="index == lastDayOfMonth + 1" @click="handleSaveMonth">
-                儲存這一個月
-              </button>
             </tr>
           </tbody>
         </table>
+        <button @click="handleSaveMonth" class="bbb w-auto text-nowrap">
+          儲存這一個月
+        </button>
       </div>
     </div>
   </div>
@@ -147,21 +146,19 @@ const delaySecends = (secends) => {
   });
 }
 
-
 const handleSaveDay = async (index) => {
   console.log(`儲存這一天: ${costDate.value[index]}`);
   const response = await useApi().post("/api/v1/report", {
-    costDate: costDate.value[index].trim(),
-    breakfastCost: breakfastCost.value[index].trim(),
-    breakfastType: breakfastType.value[index].trim(),
-    lunchCost: lunchCost.value[index].trim(),
-    lunchType: lunchType.value[index].trim(),
-    dinnerCost: dinnerCost.value[index].trim(),
-    dinnerType: dinnerType.value[index].trim(),
-    extraCost: extraCost.value[index].trim(),
-    extraType: extraType.value[index].trim(),
+    costDate: costDate.value[index],
+    breakfastCost: breakfastCost.value[index],
+    breakfastType: breakfastType.value[index],
+    lunchCost: lunchCost.value[index],
+    lunchType: lunchType.value[index],
+    dinnerCost: dinnerCost.value[index],
+    dinnerType: dinnerType.value[index],
+    extraCost: extraCost.value[index],
+    extraType: extraType.value[index],
   });
-  console.log(`response: ${JSON.stringify(response)}`);
 };
 
 const getLastDayOfMonth = (year, month) => {
