@@ -27,9 +27,10 @@ export function useApi() {
     // 使用useApi是因為對SEO最友好
     // 唯一的缺點就是這邊沒辦法拿response 雖然是data 但data.value才是response
     // 20250422 louise 從useFetch改成$fetch 因為有warning
-    const { data } = await $fetch(endpoint, mergedOptions);
-
-    return data.value;
+    // 20250422 louise 從{ data }改成response 可能是因為改用$fetch的關係 本來的response變成undefined了
+    const response = await $fetch(endpoint, mergedOptions);
+    console.log(`data: ${JSON.stringify(response)}`);
+    return response;
   };
 
   return {
