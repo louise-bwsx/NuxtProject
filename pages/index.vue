@@ -12,6 +12,7 @@
     <div>Height: {{ height }}</div>
     
     <!--
+    <div>一般登入</div>
     <div>JWTToken</div>
     <div>JWTToken解析</div>
     <div>Google登入</div>

@@ -128,7 +128,7 @@ const handleFiles = async (element) => {
 const handleSaveMonth = async () => {
   console.log("handleSaveMonth");
   for (let i = 0; i < lastDayOfMonth.value; i++) {
-    await handleSaveDay(i)
+    // await handleSaveDay(i)
     // await delaySecends(0.25)
   }
   // 跳一個月
@@ -192,21 +192,24 @@ const setExtraType = () => {
       breakfastCost.value[i] = breakfast[1]
       breakfastType.value[i] = breakfast[2]
     }
-
+    
     if (lunchCost.value[i]){
       var lunch = lunchCost.value[i].match(/^(\d+)(.*)$/)
       lunchCost.value[i] = lunch[1]
       lunchType.value[i] = lunch[2]
     }
+
     if (dinnerCost.value[i]){
       var dinner = dinnerCost.value[i].match(/^(\d+)(.*)$/)
       dinnerCost.value[i] = dinner[1]
       dinnerType.value[i] = dinner[2]
     }
+    
     if (extraCost.value[i]){
-      var extra = extraCost.value[i].match(/^(\d+)(.*)$/)
-      extraCost.value[i] = extra[1]
-      extraType.value[i] = extra[2]
+      var extra = extraCost.value[i].match(/^(\d+)(.*)$/) // 數字和中文分離
+      console.log(extra[0]) // 分離前
+      extraCost.value[i] = extra[1] // 分離後第一個
+      extraType.value[i] = extra[2] // 分離前第二個
     }
   }
 }
