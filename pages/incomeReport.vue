@@ -129,7 +129,7 @@ const handleSaveMonth = async () => {
   console.log("handleSaveMonth");
   for (let i = 0; i < lastDayOfMonth.value; i++) {
     await handleSaveDay(i)
-    await delaySecends(0.25)
+    // await delaySecends(0.25)
   }
   // 跳一個月
   pastMonth.value += rowSpacing.value;
@@ -138,6 +138,7 @@ const handleSaveMonth = async () => {
   const date = new Date(month);
   setLastDayOfMonth(date);
   loadCostDataForDay(pastMonth.value);
+  setExtraType()
 };
 
 const delaySecends = (secends) => {
@@ -177,10 +178,37 @@ const parseIncomeCsvData = (csvText) => {
       setLastDayOfMonth(date);
 
       loadCostDataForDay(pastMonth.value);
+      setExtraType()
 
       console.log(`自動載入完成，這個月最後一天: ${lastDayOfMonth.value}`);
     },
   });
+}
+
+const setExtraType = () => {
+  for (let i = 0; i < lastDayOfMonth.value; i++) {
+    if (breakfastCost.value[i]){
+      var breakfast = breakfastCost.value[i].match(/^(\d+)(.*)$/)
+      breakfastCost.value[i] = breakfast[1]
+      breakfastType.value[i] = breakfast[2]
+    }
+
+    if (lunchCost.value[i]){
+      var lunch = lunchCost.value[i].match(/^(\d+)(.*)$/)
+      lunchCost.value[i] = lunch[1]
+      lunchType.value[i] = lunch[2]
+    }
+    if (dinnerCost.value[i]){
+      var dinner = dinnerCost.value[i].match(/^(\d+)(.*)$/)
+      dinnerCost.value[i] = dinner[1]
+      dinnerType.value[i] = dinner[2]
+    }
+    if (extraCost.value[i]){
+      var extra = extraCost.value[i].match(/^(\d+)(.*)$/)
+      extraCost.value[i] = extra[1]
+      extraType.value[i] = extra[2]
+    }
+  }
 }
 
 const setLastDayOfMonth = (date) => {
