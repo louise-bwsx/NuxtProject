@@ -149,17 +149,17 @@ const delaySecends = (secends) => {
 
 const handleSaveDay = async (index) => {
   console.log(`儲存這一天: ${costDate.value[index]}`);
-  const response = await useApi().post("/api/v1/report", {
-    costDate: costDate.value[index],
-    breakfastCost: breakfastCost.value[index],
-    breakfastType: breakfastType.value[index],
-    lunchCost: lunchCost.value[index],
-    lunchType: lunchType.value[index],
-    dinnerCost: dinnerCost.value[index],
-    dinnerType: dinnerType.value[index],
-    extraCost: extraCost.value[index],
-    extraType: extraType.value[index],
-  });
+  // const response = await useApi().post("/api/v1/report", {
+  //   costDate: costDate.value[index],
+  //   breakfastCost: breakfastCost.value[index],
+  //   breakfastType: breakfastType.value[index],
+  //   lunchCost: lunchCost.value[index],
+  //   lunchType: lunchType.value[index],
+  //   dinnerCost: dinnerCost.value[index],
+  //   dinnerType: dinnerType.value[index],
+  //   extraCost: extraCost.value[index],
+  //   extraType: extraType.value[index],
+  // });
 };
 
 const getLastDayOfMonth = (year, month) => {
