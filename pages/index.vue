@@ -2,6 +2,28 @@
   <div
     class="bbb min-h-screen overflow-hidden flex justify-center items-center"
   >
+    <div class="w-[1000px] h-[525px] bbb flex">
+      <div id="left" class="w-2/5 bg-[#bfbfbf]">
+        <div class="flex flex-col justify-center items-center h-full p-10">
+          <img src="/assets/CompanyLogo.png"></img>
+          <div class="w-full h-full"></div>
+          <div class="text-[black] w-full font-[700] text-[25px]">夢市集軟體技術有限公司</div>
+          <div class="text-[black] w-full">320676 桃園市中壢區中山路88號11樓之10</div>
+          <div class="text-[black] w-full">(03) 426-0010</div>
+          <div class="text-[black] w-full">統一編號: 90339952</div>
+        </div>
+      </div>
+      <div id="right" class="w-3/5 bg-[#ffffff]">
+        <div class="flex flex-col justify-center items-center h-full">
+          <div class="text-[black] w-[200px] justify-start flex font-[700] text-[30px]">汪世傑</div>
+          <div class="text-[black] w-[200px] justify-start flex text-[23px]">軟體開發部</div>
+          <div class="text-[black] w-[200px] justify-start flex text-[23px]">軟體工程師</div>
+          <div class="text-[black] w-[200px] justify-start flex text-[23px]">louise@mosji.co</div>
+          <div class="text-[black] w-[200px] justify-start flex text-[23px]">0954-074-430</div>
+        </div>
+      </div>
+    </div>
+
     <!-- TODO: 網址需要可以大小寫不分 -->
     <NuxtLink to="/incomeReport" class="btn btn-primary">
       收支圖表 已更新https
