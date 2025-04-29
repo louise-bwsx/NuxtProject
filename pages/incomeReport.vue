@@ -83,12 +83,12 @@
 
               <!-- 儲存這一天 -->
               <td v-if="index < lastDayOfMonth" class="w-auto text-nowrap">
-                <button @click="handleSaveDay(index)">儲存這一天</button>
+                <button @click="handleSaveDay(index)" class="btn">儲存這一天</button>
               </td>
             </tr>
           </tbody>
         </table>
-        <button @click="handleSaveMonth" class="bbb w-auto text-nowrap">
+        <button @click="handleSaveMonth" class="bbb w-auto text-nowrap btn">
           儲存這一個月
         </button>
       </div>
@@ -98,6 +98,7 @@
 
 <script setup>
 import Papa from "papaparse";
+
 const content = ref(undefined);
 const rowSpacing = ref(8); // 每過一個月要增加的行數
 const pastMonth = ref(0); // 經過的月份 從一開始 每次按下儲存這一個月後 += rowSpacing
@@ -128,8 +129,8 @@ const handleFiles = async (element) => {
 const handleSaveMonth = async () => {
   console.log("handleSaveMonth");
   for (let i = 0; i < lastDayOfMonth.value; i++) {
-    // await handleSaveDay(i)
-    // await delaySecends(0.25)
+    await handleSaveDay(i)
+    await delaySecends(0.25)
   }
   // 跳一個月
   pastMonth.value += rowSpacing.value;
