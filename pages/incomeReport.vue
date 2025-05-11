@@ -1,13 +1,15 @@
 <template>
   <!-- IncomeReport -->
-  <div
-    class="bbb min-h-screen overflow-hidden overflow-y-hidden flex flex-col justify-center items-center"
-  >
-    <div class="bbb flex flex-row grow w-full">
+  <div class="bbb min-h-screen overflow-hidden overflow-y-hidden flex flex-col justify-center items-center">
+    <div class="bbb flex flex-col grow w-full">
       <!-- <div class="bbb">a</div> -->
       <!-- <div class="bbb">b</div> -->
       <button @click="handleSaveDay(1)">handleSaveDay測試</button>
       <button @click="test()">測試</button>
+      <div>lastDayOfMonth: {{ lastDayOfMonth }}</div>
+      <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
+      <div v-if="content">content.data.length: {{ content.data.length }}</div>
+      <div v-if="content">content.data[0].length: {{ content.data[0].length }}</div>
 
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
       <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
@@ -32,6 +34,7 @@
             </tr>
           </thead>
           <tbody v-if="content">
+            <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
             <tr v-for="(data, index) in content.data">
               <td v-if="index < lastDayOfMonth">{{ index }}</td>
 
