@@ -1,6 +1,6 @@
 <template>
   <!-- IncomeReport -->
-  <div class="bbb min-h-screen overflow-hidden overflow-y-hidden flex flex-col justify-center items-center">
+  <div class="bbb min-h-screen max-h-screen overflow-hidden overflow-y-hidden flex flex-col justify-center items-center">
     <div class="bbb flex flex-col grow w-full">
       <!-- <div class="bbb">a</div> -->
       <!-- <div class="bbb">b</div> -->
@@ -14,7 +14,8 @@
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
       <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
     </div>
-    <div class="bbb grow w-full">
+
+    <div class="bbb grow w-full overflow-y-auto">
       <!-- 不可以加() 會導致function的element 是undefined -->
       <input type="file" @change="handleFiles" />
       <div class="w-full">
@@ -117,9 +118,10 @@ const dinnerType = ref([]);
 const extraCost = ref([]);
 const extraType = ref([]);
 
-const test = () => {
+const test = async () => {
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
-  console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
+  // console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
+  // const response = await useApi().get("/api/v1/test");
 }
 
 const handleFiles = async (element) => {
