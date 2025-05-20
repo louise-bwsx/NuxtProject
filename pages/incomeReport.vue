@@ -1,6 +1,6 @@
 <template>
   <!-- IncomeReport -->
-  <div class="bbb min-h-screen max-h-screen overflow-hidden overflow-y-hidden flex flex-col justify-center items-center">
+  <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-center items-center">
     <div class="bbb flex flex-col grow w-full">
       <!-- <div class="bbb">a</div> -->
       <!-- <div class="bbb">b</div> -->
@@ -97,11 +97,14 @@
         </button>
       </div>
     </div>
+    <Toast />
   </div>
 </template>
 
 <script setup>
 import Papa from "papaparse";
+import Toast from "/components/common/Toast"
+import { useToastStore } from '~/stores/toast';
 
 const content = ref(undefined);
 const rowSpacing = ref(8); // 每過一個月要增加的行數
@@ -118,10 +121,14 @@ const dinnerType = ref([]);
 const extraCost = ref([]);
 const extraType = ref([]);
 
+const aaa = ref(false);
+
 const test = async () => {
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
   // console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
   // const response = await useApi().get("/api/v1/test");
+  
+  useToastStore().showToast("aaa", "success")
 }
 
 const handleFiles = async (element) => {
