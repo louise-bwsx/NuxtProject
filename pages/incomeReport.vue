@@ -1,16 +1,13 @@
 <template>
-  <!-- IncomeReport -->
   <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-center items-center">
     <div class="bbb flex flex-col grow w-full">
-      <!-- <div class="bbb">a</div> -->
-      <!-- <div class="bbb">b</div> -->
       <button @click="handleSaveDay(1)">handleSaveDay測試</button>
       <button @click="test()">測試</button>
       <div>lastDayOfMonth: {{ lastDayOfMonth }}</div>
       <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
       <div v-if="content">content.data.length: {{ content.data.length }}</div>
       <div v-if="content">content.data[0].length: {{ content.data[0].length }}</div>
-      <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
+      <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
 
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
       <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
@@ -19,6 +16,7 @@
     <div class="bbb grow w-full overflow-y-auto">
       <!-- 不可以加() 會導致function的element 是undefined -->
       <input type="file" @change="handleFiles" />
+      
       <div class="w-full">
         <table class="table table-xs">
           <thead>
