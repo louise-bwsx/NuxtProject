@@ -16,7 +16,7 @@
     <div class="bbb grow w-full overflow-y-auto">
       <!-- 不可以加() 會導致function的element 是undefined -->
       <input type="file" @change="handleFiles" />
-      
+
       <div class="w-full">
         <table class="table table-xs">
           <thead>
@@ -130,13 +130,13 @@ const test = async () => {
   useToastStore().showToast("aaa", "success")
 }
 
-// handle success event
+// Google登入成功時呼叫
 const handleLoginSuccess = (response) => {
   const { credential } = response;
   console.log("Access Token", credential);
 };
 
-// handle an error event
+// Google登入出現錯誤時呼叫
 const handleLoginError = () => {
   console.error("Login failed");
 };
