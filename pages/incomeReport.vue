@@ -7,6 +7,8 @@
       <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
       <div v-if="content">content.data.length: {{ content.data.length }}</div>
       <div v-if="content">content.data[0].length: {{ content.data[0].length }}</div>
+
+      <!-- TODO: 目前前端會出現兩個Error 是因為GoogleSignInButton的關係 不確定為什麼 -->
       <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
 
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
