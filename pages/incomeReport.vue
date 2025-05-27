@@ -10,6 +10,7 @@
       <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
       <div v-if="content">content.data.length: {{ content.data.length }}</div>
       <div v-if="content">content.data[0].length: {{ content.data[0].length }}</div>
+      <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError"></GoogleSignInButton>
 
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
       <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
@@ -130,6 +131,17 @@ const test = async () => {
   
   useToastStore().showToast("aaa", "success")
 }
+
+// handle success event
+const handleLoginSuccess = (response) => {
+  const { credential } = response;
+  console.log("Access Token", credential);
+};
+
+// handle an error event
+const handleLoginError = () => {
+  console.error("Login failed");
+};
 
 const handleFiles = async (element) => {
   console.log(element)

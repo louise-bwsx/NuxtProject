@@ -10,5 +10,9 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
+    'nuxt-vue3-google-signin'
   ],
+  googleSignIn: {
+    clientId: '254859062418-c7pr9ecdhai0hmttks0mskgdiiol4hav.apps.googleusercontent.com',
+  }
 });
