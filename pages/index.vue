@@ -1,16 +1,14 @@
 <template>
-  <div
-    class="bbb min-h-screen overflow-hidden flex justify-center items-center"
-  >
+  <div class="bbb min-h-screen overflow-hidden flex justify-center items-center">
     <!-- TODO: 網址需要可以大小寫不分 -->
-    <NuxtLink to="/incomeReport" class="btn btn-primary">
+    <NuxtLink to="/expenditureReport" class="btn btn-primary">
       收支圖表 已更新https
     </NuxtLink>
-    
+
     <!-- Sony手機411 832 -->
     <div>Width: {{ width }}</div>
     <div>Height: {{ height }}</div>
-    
+
     <!--
     
 Hangfire

@@ -147,7 +147,7 @@ const handleFiles = async (element) => {
   console.log(element)
   const file = element.target.files[0];
   const csvText = await file.text(); // 讀成文字
-  parseIncomeCsvData(csvText)
+  parseExpenditureCsvData(csvText)
 };
 
 const handleSaveMonth = async () => {
@@ -192,7 +192,7 @@ const getLastDayOfMonth = (year, month) => {
   return date.getDate();
 };
 
-const parseIncomeCsvData = (csvText) => {
+const parseExpenditureCsvData = (csvText) => {
   Papa.parse(csvText, {
     complete: (results) => {
       content.value = results;
@@ -262,6 +262,6 @@ const loadCostDataForDay = (offset) => {
 onMounted(async () => {
 const res = await fetch('/開銷紀錄.csv');
   const csvText = await res.text();
-  parseIncomeCsvData(csvText)
+  parseExpenditureCsvData(csvText)
 });
 </script>
