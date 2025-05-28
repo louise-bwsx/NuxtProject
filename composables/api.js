@@ -7,7 +7,7 @@ export function useApi() {
   // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
 
   const apiFetch = async (endpoint, options = {}) => {
-    console.log(import.meta.env.VITE_BASE_URL)
+    // console.log(import.meta.env.VITE_BASE_URL)
     // 合併默認選項和用戶提供的選項
     const mergedOptions = {
       // TODO: baseURL 用env區分
@@ -29,7 +29,7 @@ export function useApi() {
     // 20250422 louise 從useFetch改成$fetch 因為有warning
     // 20250422 louise 從{ data }改成response 可能是因為改用$fetch的關係 本來的response變成undefined了
     const response = await $fetch(endpoint, mergedOptions);
-    console.log(`data: ${JSON.stringify(response)}`);
+    // console.log(`data: ${JSON.stringify(response)}`);
     return response;
   };
 
