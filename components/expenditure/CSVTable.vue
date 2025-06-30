@@ -3,7 +3,7 @@
     <table class="table table-xs">
       <thead>
         <tr>
-          <th>序111號</th>
+          <th>序號</th>
           <th>日期</th>
           <th>早餐金額</th>
           <th>早餐類型</th>
@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
-        <tr v-for="(data, index) in csvContent.data">
+        <tr v-for="(date, index) in costDate" :key="index">
           <td v-if="index < lastDayOfMonth">{{ index }}</td>
 
           <!-- 這邊從:value改成v-model後才能在handleSave中取得修改後的數值 -->
@@ -80,7 +80,6 @@
 </template>
 
 <script setup>
-import { number } from "echarts";
 import Papa from "papaparse";
 
 const rowSpacing = ref(8); // 每過一個月要增加的行數
@@ -96,28 +95,23 @@ const dinnerCost = ref([]);
 const dinnerType = ref([]);
 const extraCost = ref([]);
 const extraType = ref([]);
+const csvContent = ref([])
 
-const props = defineProps(() => {
-  csvContent: number
-})
-
-const handleFiles = async (element) => {
-  console.log(element)
-  const file = element.target.files[0];
-  const csvText = await file.text(); // 讀成文字
-  parseExpenditureCsvData(csvText)
-};
+const props = defineProps({
+  csvText: String
+});
 
 const handleSaveMonth = async () => {
-  console.log("handleSaveMonth");
+  // console.log("handleSaveMonth");
   for (let i = 0; i < lastDayOfMonth.value; i++) {
     await handleSaveDay(i)
     await delaySecends(0.25)
   }
+  // TODOWarning: 目前跳下一個月是壞的
   // 跳一個月
   pastMonth.value += rowSpacing.value;
 
-  const month = props.csvContent.value.data[0 + pastMonth.value][0];
+  const month = csvContent.value.data[0 + pastMonth.value][0];
   const date = new Date(month);
   setLastDayOfMonth(date);
   loadCostDataForDay(pastMonth.value);
@@ -131,18 +125,18 @@ const delaySecends = (secends) => {
 }
 
 const handleSaveDay = async (index) => {
-  console.log(`儲存這一天: ${costDate.value[index]}`);
-  // const response = await useApi().post("/api/v1/report", {
-  //   costDate: costDate.value[index],
-  //   breakfastCost: breakfastCost.value[index],
-  //   breakfastType: breakfastType.value[index],
-  //   lunchCost: lunchCost.value[index],
-  //   lunchType: lunchType.value[index],
-  //   dinnerCost: dinnerCost.value[index],
-  //   dinnerType: dinnerType.value[index],
-  //   extraCost: extraCost.value[index],
-  //   extraType: extraType.value[index],
-  // });
+  // console.log(`儲存這一天: ${costDate.value[index]}`);
+  const response = await useApi().post("/api/v1/report", {
+    costDate: costDate.value[index],
+    breakfastCost: breakfastCost.value[index],
+    breakfastType: breakfastType.value[index],
+    lunchCost: lunchCost.value[index],
+    lunchType: lunchType.value[index],
+    dinnerCost: dinnerCost.value[index],
+    dinnerType: dinnerType.value[index],
+    extraCost: extraCost.value[index],
+    extraType: extraType.value[index],
+  });
 
   if(response.code == 0) {
     useToastStore().showToast("儲存成功", "success")
@@ -167,7 +161,7 @@ const parseExpenditureCsvData = (csvText) => {
       loadCostDataForDay(pastMonth.value);
       setExtraType()
 
-      console.log(`自動載入完成，這個月最後一天: ${lastDayOfMonth.value}`);
+      // console.log(`自動載入完成，這個月最後一天: ${lastDayOfMonth.value}`);
     },
   });
 }
@@ -194,7 +188,7 @@ const setExtraType = () => {
 
     if (extraCost.value[i]) {
       var extra = extraCost.value[i].match(/^(\d+)(.*)$/) // 數字和中文分離
-      console.log(extra[0]) // 分離前
+      // console.log(extra[0]) // 分離前
       extraCost.value[i] = extra[1] // 分離後第一個
       extraType.value[i] = extra[2] // 分離前第二個
     }
@@ -219,4 +213,8 @@ const loadCostDataForDay = (offset) => {
   extraCost.value = csvContent.value.data[4 + offset];
   extraType.value = [];
 };
+
+onMounted(() => {
+  parseExpenditureCsvData(props.csvText)
+})
 </script>

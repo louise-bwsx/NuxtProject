@@ -19,7 +19,7 @@
       <!-- 不可以加() 會導致function的element 是undefined -->
       <input type="file" @change="handleFiles" />
 
-      <CSVTable v-if="csvContent" />
+      <CSVTable v-if="csvText" :csvText="csvText"/>
       <ResponseDataTable v-else />
 
     </div>
@@ -28,12 +28,13 @@
 </template>
 
 <script setup>
-import Toast from "/components/common/Toast"
 import { useToastStore } from '~/stores/toast';
+import Toast from "/components/common/Toast"
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import CSVTable from "~/components/expenditure/CSVTable.vue";
 
 const csvContent = ref(undefined);
+const csvText = ref(undefined);
 const lastDayOfMonth = ref(0);
 
 const expenditureList = ref(undefined)
@@ -41,7 +42,8 @@ const expenditureList = ref(undefined)
 const test = async () => {
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
   // console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
-  // const response = await useApi().get("/api/v1/test");
+  const response = await useApi().get("/api/v1/test");
+  console.log(`response: ${JSON.stringify(response)}`)
 }
 
 // Google登入成功時呼叫
@@ -57,16 +59,13 @@ const handleLoginError = () => {
 };
 
 const handleFiles = async (element) => {
-  console.log(element)
   const file = element.target.files[0];
-  const csvText = await file.text(); // 讀成文字
-  parseExpenditureCsvData(csvText)
+  csvText.value = await file.text(); // 讀成文字
 };
 
 onMounted(async () => {
   // 讀取csv的做法
   // const res = await fetch('/開銷紀錄.csv');
   // const csvText = await res.text();
-  // parseExpenditureCsvData(csvText)
 });
 </script>

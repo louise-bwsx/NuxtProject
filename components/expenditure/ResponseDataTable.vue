@@ -3,7 +3,7 @@
     <table class="table table-xs">
       <thead>
         <tr>
-          <th>序222號</th>
+          <th>序號</th>
           <th>日期</th>
           <th>早餐金額</th>
           <th>早餐類型</th>
