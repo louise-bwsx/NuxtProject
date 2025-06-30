@@ -23,7 +23,7 @@
           <!-- 這邊從:value改成v-model後才能在handleSave中取得修改後的數值 -->
           <!-- 日期 -->
           <td>
-            <input type="text" v-model="data.costDate" />
+            <input type="date" v-model="data.costDate.split('T')[0]" />
           </td>
 
           <!-- 早餐金額 -->
@@ -84,17 +84,19 @@ const costDate = ref([]);
 const expenditureList = ref(undefined)
 
 const handleSaveDay = async (index) => {
-  console.log(`儲存這一天: ${costDate.value[index]}`);
+  console.log(`儲存這一天: ${index}`);
+  // console.log(`早餐: ${expenditureList.value[index].breakfastCost}`);
+  console.log(`消費日期: ${expenditureList.value[index].costDate}`);
   // const response = await useApi().post("/api/v1/report", {
-  //   costDate: costDate.value[index],
-  //   breakfastCost: breakfastCost.value[index],
-  //   breakfastType: breakfastType.value[index],
-  //   lunchCost: lunchCost.value[index],
-  //   lunchType: lunchType.value[index],
-  //   dinnerCost: dinnerCost.value[index],
-  //   dinnerType: dinnerType.value[index],
-  //   extraCost: extraCost.value[index],
-  //   extraType: extraType.value[index],
+  //   costDate: expenditureList.value[index].costDate,
+  //   breakfastCost: expenditureList.value[index].breakfastCost,
+  //   breakfastType: expenditureList.value[index].breakfastType,
+  //   lunchCost: expenditureList.value[index].lunchCost,
+  //   lunchType: expenditureList.value[index].lunchType,
+  //   dinnerCost: expenditureList.value[index].dinnerCost,
+  //   dinnerType: expenditureList.value[index].dinnerType,
+  //   extraCost: expenditureList.value[index].extraCost,
+  //   extraType: expenditureList.value[index].extraType,
   // });
 };
 

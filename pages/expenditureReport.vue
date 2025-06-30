@@ -37,8 +37,6 @@ const csvContent = ref(undefined);
 const csvText = ref(undefined);
 const lastDayOfMonth = ref(0);
 
-const expenditureList = ref(undefined)
-
 const test = async () => {
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
   // console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
