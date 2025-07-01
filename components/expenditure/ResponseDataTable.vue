@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
-        <tr v-for="(data, index) in expenditureList">
+        <tr v-for="(data, index) in expenditureList" :key="index">
           <td>{{ index }}</td>
 
           <!-- 這邊從:value改成v-model後才能在handleSave中取得修改後的數值 -->
@@ -80,7 +80,6 @@
 </template>
 
 <script setup>
-const costDate = ref([]);
 const expenditureList = ref(undefined)
 
 const handleSaveDay = async (index) => {
