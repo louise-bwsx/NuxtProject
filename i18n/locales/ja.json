@@ -1,0 +1,18 @@
+{
+  "welcome": "私のウェブサイトへようこそ",
+  "about": "私たちについて",
+  "contact": "お問い合わせ",
+  "home": "ホーム",
+  "menu": {
+    "products": "製品",
+    "services": "サービス"
+  },
+  "button": {
+    "submit": "送信",
+    "cancel": "キャンセル"
+  },
+  "greeting": "ja哈囉 {name}，今天是 {date}",
+  "apple": "ja沒有蘋果 | ja1 顆蘋果 | ja{count} 顆蘋果",
+  "message": "ja沒有訊息 | ja1 則訊息 | ja{count} 則訊息",
+  "item": "ja沒有商品 | ja1 個商品 | ja{count} 個商品"
+}

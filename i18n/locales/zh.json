@@ -1,0 +1,19 @@
+{
+  "welcome": "歡迎來到我的網站",
+  "about": "關於我們",
+  "contact": "聯絡我們",
+  "home": "首頁",
+  "menu": {
+    "products": "產品",
+    "services": "服務"
+  },
+  "button": {
+    "submit": "送出",
+    "cancel": "取消"
+  },
+  "greeting": "zh哈囉 {name}，今天是 {date}",
+  // 有點像陣列
+  "apple": "沒有蘋果 | 1 顆蘋果AAA | {count} 顆蘋果",
+  "message": "沒有訊息 | 1 則訊息 | {count} 則訊息",
+  "item": "沒有商品 | 1 個商品 | {count} 個商品"
+}

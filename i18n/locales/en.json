@@ -1,0 +1,18 @@
+{
+  "welcome": "Welcome to my website",
+  "about": "About Us",
+  "contact": "Contact Us",
+  "home": "Home",
+  "menu": {
+    "products": "Products",
+    "services": "Services"
+  },
+  "button": {
+    "submit": "Submit",
+    "cancel": "Cancel"
+  },
+  "greeting": "en哈囉 {name}，今天是 {date}",
+  "apple": "en沒有蘋果 | en1 顆蘋果 | en{count} 顆蘋果",
+  "message": "en沒有訊息 | en1 則訊息 | en{count} 則訊息",
+  "item": "en沒有商品 | en1 個商品 | en{count} 個商品"
+}

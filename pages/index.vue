@@ -5,6 +5,10 @@
       收支圖表 已更新https
     </NuxtLink>
 
+    <NuxtLink to="/localized" class="btn btn-primary">
+      切換語言測試
+    </NuxtLink>
+
     <!-- Sony手機411 832 -->
     <div>Width: {{ width }}</div>
     <div>Height: {{ height }}</div>
