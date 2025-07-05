@@ -49,16 +49,32 @@ const test = async () => {
 // Google登入成功時呼叫
 const handleLoginSuccess = (response) => {
   const { credential } = response;
-  console.log("Access Token", credential);
-  // Access Token 
-  // eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg4MjUwM2E1ZmQ1NmU5ZjczNGRmYmE1YzUwZDdiZjQ4ZGIyODRhZTkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyNTQ4NTkwNjI0MTgtYzdwcjllY2RoYWkwaG10dGtzMG1za2dkaWlvbDRoYXYuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyNTQ4NTkwNjI0MTgtYzdwcjllY2RoYWkwaG10dGtzMG1za2dkaWlvbDRoYXYuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDkzNDg5NjE5NjA3MzYxMDkxODQiLCJlbWFpbCI6ImxvdWlzZTg3Mjc2QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE3NTEzNzc2OTcsIm5hbWUiOiLkuJblgpEiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jTDJvVTdqRzRwVEhJTTd1MFNCQUNNTGNPWHJlVWQ0TmowSkJ0X3dnVXVnX2Fkd3pBPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IuS4luWCkSIsImlhdCI6MTc1MTM3Nzk5NywiZXhwIjoxNzUxMzgxNTk3LCJqdGkiOiI5YjUxOGVjZDNhMzlhNjhjNzcwM2NhMDJmNDQ4NjI3NTQ5NTk2NDE0In0.SzwKefll1k5huMY-5YRvI9L3-HVSc23msP8uyYKH87f5V-Da7W01c5fh5tuwAyjIK3deKt_tnBAEm5yZ_TA0nDCQpCwaDpSrhoXoYtii4dn7WEd_HCmuj1A5tcOCqK0Rz57R7Qk9axSa7GIuM8g5rsv0IJlAWmJ6eSRDx87u2HMEqbHdv7DUzbdbrbxY55JEn1qFAI-l37E3Ps3CP5rfGS1s8DWsUTGIlwbhvpyf70gmAopotpbJTOmAGzLS5I_CO2m3k_bxR1v6CQmhiPflvTOFiJ0fZqGg2H2i1oaVTZNCN5GNoMwL4_PwPdsfG0RwNn2SJMPi5kg65cf6p5f6Ig
-  useToastStore().showToast("登入成功", "success")
+  verifyTokenWithBackend(credential)
 };
 
 // Google登入出現錯誤時呼叫
 const handleLoginError = () => {
   useToastStore().showToast("登入失敗", "error")
 };
+
+const verifyTokenWithBackend = async (token) => {
+  const body = {
+    token: token
+  }
+
+  try {
+    const response = await useApi().post("/api/v1/auth/verify", body)
+    if (response.code === 0) {
+      localStorage.setItem("accessToken", response.data.token)
+      localStorage.setItem("userInfo", response.data.userInfo)
+      useToastStore().showToast("登入成功", "success")
+    } else {
+      useToastStore().showToast(`登入失敗: ${response.message}`, "error")
+    }
+  } catch {
+    useToastStore().showToast(`登入失敗`, "error")
+  }
+}
 
 const handleFiles = async (element) => {
   const file = element.target.files[0];

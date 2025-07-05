@@ -28,7 +28,7 @@
 
           <!-- 早餐金額 -->
           <td>
-            <input type="text" v-model="data.breakfastCost" />
+            <input type="number" v-model="data.breakfastCost" />
           </td>
 
           <!-- 早餐類型 -->
@@ -38,7 +38,7 @@
 
           <!-- 午餐金額 -->
           <td>
-            <input type="text" v-model="data.lunchCost" />
+            <input type="number" v-model="data.lunchCost" />
           </td>
 
           <!-- 午餐類型 -->
@@ -48,7 +48,7 @@
 
           <!-- 晚餐金額 -->
           <td>
-            <input type="text" v-model="data.dinnerCost" />
+            <input type="number" v-model="data.dinnerCost" />
           </td>
 
           <!-- 晚餐類型 -->
@@ -58,7 +58,7 @@
 
           <!-- 額外花費 -->
           <td>
-            <input type="text" v-model="data.extraCost" />
+            <input type="number" v-model="data.extraCost" />
           </td>
 
           <!-- 花費類型 -->
