@@ -1,5 +1,5 @@
 <template>
-  <div class="h-1/2 bbb">
+  <div class="grow bbb">
     <div>i18n</div>
 
     <!-- t() - 基本翻譯函數 -->

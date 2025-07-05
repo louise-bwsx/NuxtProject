@@ -10,6 +10,11 @@ export default defineNuxtConfig({
   },
   modules: ["@nuxtjs/i18n", "@pinia/nuxt", "nuxt-vue3-google-signin"],
   i18n: {
+    bundle: {
+      // 為了關掉yarn dev顯示的warning true或false都可以
+      // 因為這個設定有問題 再v10以後會deprecated
+      optimizeTranslationDirective: false,
+    },
     // 支援的語言列表
     locales: [
       { code: "zh", name: "中文", file: "zh.json" },

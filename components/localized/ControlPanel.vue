@@ -15,6 +15,9 @@
       <div>3. 未來如何擴充新的語言: </div>
       <div>4. 語言的文字如果要調整如何改最方便: </div>
       <div>5. 是否需要後端實作: </div>
+      <div>優點:</div>
+      <div>缺點:</div>
+      <div>需要cache 不然要下載有點慢</div>
       <div>使用TranslateAPI神經機器翻譯 (NMT) 每月前 50 萬個字元 免費</div>
     </div>
 
@@ -25,6 +28,8 @@
       <div>3. 未來如何擴充新的語言: 要在i18n/locales/zh.json新增對應的keyValue</div>
       <div>4. 語言的文字如果要調整如何改最方便: 直接在對應的json檔 修改文字</div>
       <div>5. 是否需要後端實作: 目前看可以只靠前端</div>
+      <div>優點:</div>
+      <div>缺點:</div>
     </div>
   </div>
 </template>
