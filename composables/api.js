@@ -2,7 +2,7 @@
 
 export function useApi() {
   // const config = useRuntimeConfig();
-  // const userInfo = localStorage.getItem("userInfo") || "{}";
+  const accessToken = localStorage.getItem("accessToken") || "";
   // const userInfoObj = JSON.parse(userInfo);
   // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
 
@@ -19,7 +19,9 @@ export function useApi() {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        // Authorization: token ? `Bearer ${token}` : "",
+        // 加上Authorization後 會變成 "非簡單請求" 所以會預先發送OPTIONS 在後端沒有處理OPTIONS時 會CORS
+        // 需要給後端安裝中間件
+        Authorization: `Bearer ${accessToken}`,
         ...(options.headers || {}),
       },
     };

@@ -49,6 +49,7 @@ const test = async () => {
 // Google登入成功時呼叫
 const handleLoginSuccess = (response) => {
   const { credential } = response;
+  // console.log(`credential: ${credential}`)
   verifyTokenWithBackend(credential)
 };
 
@@ -65,7 +66,7 @@ const verifyTokenWithBackend = async (token) => {
   try {
     const response = await useApi().post("/api/v1/auth/verify", body)
     if (response.code === 0) {
-      localStorage.setItem("accessToken", response.data.token)
+      localStorage.setItem("accessToken", response.data.accessToken)
       localStorage.setItem("userInfo", response.data.userInfo)
       useToastStore().showToast("登入成功", "success")
     } else {

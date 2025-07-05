@@ -3258,13 +3258,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/http-errors@npm:^1.8.2":
-  version: 1.8.2
-  resolution: "@types/http-errors@npm:1.8.2"
-  checksum: 10c0/7257ecf87729898ee2c0bfcaab86ed9733d52c8a8d0719343be8b116009c6a15bc575ccdf02a8eb5972f19df3d0b9fc7fefae69625a0b5aa9f149aea580609fc
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*":
   version: 24.0.10
   resolution: "@types/node@npm:24.0.10"
@@ -3472,17 +3465,6 @@ __metadata:
   bin:
     nft: out/cli.js
   checksum: 10c0/84ba32c685f9d7c2c849b1e8c963d3b7eb09d122e666143ed97c3776f5b04a4745605e1d29fd81383f72b1d1c0d7d58e39f06dc92f021b5de079dfa4e8523574
-  languageName: node
-  linkType: hard
-
-"@vitalets/google-translate-api@npm:^9.2.1":
-  version: 9.2.1
-  resolution: "@vitalets/google-translate-api@npm:9.2.1"
-  dependencies:
-    "@types/http-errors": "npm:^1.8.2"
-    http-errors: "npm:^2.0.0"
-    node-fetch: "npm:^2.6.7"
-  checksum: 10c0/3790c42a7684f2fe3ce247e83bf6551134dcb05b32c1e66c3c411fb784333e9d046d4bb4c351cc7ee89f2fb366f48e3ee9bcfc8f47e12246c0e85dd2e3885a71
   languageName: node
   linkType: hard
 
@@ -7712,7 +7694,6 @@ __metadata:
     "@nuxtjs/i18n": "npm:9.5.6"
     "@pinia/nuxt": "npm:^0.11.0"
     "@tailwindcss/vite": "npm:^4.0.9"
-    "@vitalets/google-translate-api": "npm:^9.2.1"
     "@vueuse/core": "npm:^13.1.0"
     daisyui: "npm:^5.0.0-beta.9"
     echarts: "npm:^5.6.0"
