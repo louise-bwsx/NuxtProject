@@ -1,19 +1,28 @@
 <template>
-  <div class="bbb min-h-screen overflow-hidden flex justify-center items-center">
-    <!-- TODO: 網址需要可以大小寫不分 -->
+  <div class="bbb min-h-screen overflow-hidden flex flex-col justify-center items-center">
     <NuxtLink to="/expenditureReport" class="btn btn-primary">
-      收支圖表 已更新https
+      收支圖表
     </NuxtLink>
 
     <NuxtLink to="/localized" class="btn btn-primary">
       切換語言測試
     </NuxtLink>
 
+    <!-- 手機sm ~ 320px -->
     <!-- Sony手機411 832 -->
     <div>Width: {{ width }}</div>
     <div>Height: {{ height }}</div>
+  </div>
+</template>
 
-    <!--
+<script setup>
+import { useWindowSize } from '@vueuse/core'
+
+const { width, height } = useWindowSize()
+</script>
+<!-- TODO: 網址需要可以大小寫不分 -->
+
+<!--
     
 Hangfire
     <div>一般登入</div>
@@ -51,11 +60,3 @@ Hangfire
     </div>
     <div>dev uat sit prd 環境設定</div>
     <div>rust</div> -->
-  </div>
-</template>
-
-<script setup>
-import { useWindowSize } from '@vueuse/core'
-
-const { width, height } = useWindowSize()
-</script>

@@ -1,7 +1,7 @@
 <template>
   <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-center items-center">
     <div class="bbb flex flex-col grow w-full">
-      <button v-if="isMobile" @click="test()">測試</button>
+      <button @click="test()">測試</button>
       <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
       <div v-if="csvContent">content.data.length: {{ csvContent.data.length }}</div>
       <div v-if="csvContent">content.data[0].length: {{ csvContent.data[0].length }}</div>
@@ -19,16 +19,15 @@
 
       <CSVTable v-if="csvText" :csvText="csvText"/>
       <ResponseDataTable v-else />
-      <MobileInput v-if="isMobile"/>
-
+      
     </div>
+    <MobileInput v-model:showMenu="showMenu"/>
     <Toast />
   </div>
 </template>
 
 <script setup>
 import { useToastStore } from '~/stores/toast';
-import { useWindowSize } from "@vueuse/core";
 import Toast from "/components/common/Toast"
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import MobileInput from "~/components/expenditure/MobileInput.vue";
@@ -36,14 +35,14 @@ import CSVTable from "~/components/expenditure/CSVTable.vue";
 
 const csvContent = ref(undefined);
 const csvText = ref(undefined);
-
-const isMobile = computed(() => useWindowSize().width.value < 991)
+const showMenu =ref(false)
 
 const test = async () => {
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
   // console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
-  const response = await useApi().get("/api/v1/test");
-  console.log(`response: ${JSON.stringify(response)}`)
+  // const response = await useApi().get("/api/v1/test");
+  // console.log(`response: ${JSON.stringify(response)}`)
+  showMenu.value = true
 }
 
 // Google登入成功時呼叫

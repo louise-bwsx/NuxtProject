@@ -8,7 +8,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ["@nuxtjs/i18n", "@pinia/nuxt", "nuxt-vue3-google-signin"],
+  modules: [
+    "@nuxtjs/i18n",
+    "@pinia/nuxt",
+    "nuxt-vue3-google-signin",
+    "@element-plus/nuxt",
+  ],
   i18n: {
     bundle: {
       // 為了關掉yarn dev顯示的warning true或false都可以
