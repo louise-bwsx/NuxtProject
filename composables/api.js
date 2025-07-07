@@ -7,32 +7,39 @@ export function useApi() {
   // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
 
   const apiFetch = async (endpoint, options = {}) => {
-    // console.log(import.meta.env.VITE_BASE_URL)
-    // 合併默認選項和用戶提供的選項
-    const mergedOptions = {
-      // TODO: baseURL 用env區分
-      // baseURL: config.public.apiBase,
-      baseURL: import.meta.env.VITE_BASE_URL,
-      // 合併用戶提供的選項
-      ...options,
-      // 合併 headers
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        // 加上Authorization後 會變成 "非簡單請求" 所以會預先發送OPTIONS 在後端沒有處理OPTIONS時 會CORS
-        // 需要給後端安裝中間件
-        Authorization: `Bearer ${accessToken}`,
-        ...(options.headers || {}),
-      },
-    };
+    // 必須要用try catch包起來 因為401 Error時 不會回傳response 而是直接Error
+    try {
+      // console.log(import.meta.env.VITE_BASE_URL)
+      // 合併默認選項和用戶提供的選項
+      const mergedOptions = {
+        // TODO: baseURL 用env區分
+        // baseURL: config.public.apiBase,
+        baseURL: import.meta.env.VITE_BASE_URL,
+        // 合併用戶提供的選項
+        ...options,
+        // 合併 headers
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          // 加上Authorization後 會變成 "非簡單請求" 所以會預先發送OPTIONS 在後端沒有處理OPTIONS時 會CORS
+          // 需要給後端安裝中間件
+          Authorization: `Bearer ${accessToken}`,
+          ...(options.headers || {}),
+        },
+      };
 
-    // 使用useApi是因為對SEO最友好
-    // 唯一的缺點就是這邊沒辦法拿response 雖然是data 但data.value才是response
-    // 20250422 louise 從useFetch改成$fetch 因為有warning
-    // 20250422 louise 從{ data }改成response 可能是因為改用$fetch的關係 本來的response變成undefined了
-    const response = await $fetch(endpoint, mergedOptions);
-    // console.log(`data: ${JSON.stringify(response)}`);
-    return response;
+      // 使用$fetch是因為對SEO最友好
+      // 20250422 louise 從useFetch改成$fetch 因為有warning
+      return await $fetch(endpoint, mergedOptions);
+    } catch(error) {
+      // 這是error.data
+      // { "code":1, "data":null, "message":"Token無效: token has invalid claims: token is expired" }
+      return {
+        status: error?.status || null,
+        message: error?.data?.message || error?.message || "Unknown error",
+        data: error?.data || null,
+      };
+    }
   };
 
   return {
