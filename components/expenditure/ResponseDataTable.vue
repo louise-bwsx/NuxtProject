@@ -83,20 +83,27 @@
 const expenditureList = ref(undefined)
 
 const handleSaveDay = async (index) => {
-  console.log(`儲存這一天: ${index}`);
-  // console.log(`早餐: ${expenditureList.value[index].breakfastCost}`);
-  console.log(`消費日期: ${expenditureList.value[index].costDate}`);
-  // const response = await useApi().post("/api/v1/report", {
-  //   costDate: expenditureList.value[index].costDate,
-  //   breakfastCost: expenditureList.value[index].breakfastCost,
-  //   breakfastType: expenditureList.value[index].breakfastType,
-  //   lunchCost: expenditureList.value[index].lunchCost,
-  //   lunchType: expenditureList.value[index].lunchType,
-  //   dinnerCost: expenditureList.value[index].dinnerCost,
-  //   dinnerType: expenditureList.value[index].dinnerType,
-  //   extraCost: expenditureList.value[index].extraCost,
-  //   extraType: expenditureList.value[index].extraType,
-  // });
+  try {
+    const response = await useApi().post("/api/v1/report", {
+      costDate: expenditureList.value[index].costDate,
+      breakfastCost: expenditureList.value[index].breakfastCost.toString(),
+      breakfastType: expenditureList.value[index].breakfastType,
+      lunchCost: expenditureList.value[index].lunchCost.toString(),
+      lunchType: expenditureList.value[index].lunchType,
+      dinnerCost: expenditureList.value[index].dinnerCost.toString(),
+      dinnerType: expenditureList.value[index].dinnerType,
+      extraCost: expenditureList.value[index].extraCost.toString(),
+      extraType: expenditureList.value[index].extraType,
+    });
+
+    if(response.code != 0) {
+      useToastStore().showToast(response.message, 'error')
+    } else {
+      useToastStore().showToast(response.message, 'success')
+    }
+  } catch (error) {
+    useToastStore().showToast('發生網路或未知錯誤', 'error')
+  }
 };
 
 onMounted(async () => {
