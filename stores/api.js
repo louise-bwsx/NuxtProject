@@ -6,6 +6,11 @@ export const useApiStore = defineStore("api", () => {
   const accessToken = ref(undefined);
 
   const getAccessToken = computed(() => {
+    // 20250709 louise 避免出現SSR Error ERROR  [unhandledRejection] localStorage is not defined
+    if (!process.client) {
+      return "";
+    }
+
     if (
       accessToken.value == null ||
       accessToken.value == "" ||
