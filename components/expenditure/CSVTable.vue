@@ -126,7 +126,7 @@ const delaySecends = (secends) => {
 
 const handleSaveDay = async (index) => {
   // console.log(`儲存這一天: ${costDate.value[index]}`);
-  const response = await useApi().post("/api/v1/report", {
+  const response = await useApiStore().post("/api/v1/report", {
     costDate: costDate.value[index],
     breakfastCost: breakfastCost.value[index],
     breakfastType: breakfastType.value[index],

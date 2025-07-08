@@ -11,7 +11,7 @@ export const useTranslateStore = defineStore('translate', () => {
     try {
       // 沒辦法在這邊直接call lingva的API 會Cors
       // 因為瀏覽器不允許直接從前端呼叫外部 API
-      const response = await useApi().post("/api/translate", body);
+      const response = await useApiStore().post("/api/translate", body);
 
       console.log(`translation: ${response.translation}`);
       return response.translation;

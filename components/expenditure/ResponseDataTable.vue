@@ -84,7 +84,7 @@ const expenditureList = ref(undefined)
 
 const handleSaveDay = async (index) => {
   try {
-    const response = await useApi().post("/api/v1/report", {
+    const response = await useApiStore().post("/api/v1/report", {
       costDate: expenditureList.value[index].costDate,
       breakfastCost: expenditureList.value[index].breakfastCost.toString(),
       breakfastType: expenditureList.value[index].breakfastType,
@@ -107,7 +107,7 @@ const handleSaveDay = async (index) => {
 };
 
 onMounted(async () => {
-  const response = await useApi().get("/api/v1/report");
+  const response = await useApiStore().get("/api/v1/report");
   expenditureList.value = response.data.expenditureReports;
 });
 </script>

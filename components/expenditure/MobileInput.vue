@@ -106,7 +106,7 @@ const expenditure = ref({})
 const handleSaveDay = async () => {
   // console.log(`早餐: ${expenditure.value[index].breakfastCost}`);
   console.log(`消費日期: ${expenditure.value.costDate}`);
-  const response = await useApi().post("/api/v1/report", {
+  const response = await useApiStore().post("/api/v1/report", {
     costDate: expenditure.value.costDate,
     // toString是必要的 為了填入min 不轉型Go會Error
     breakfastCost: expenditure.value.breakfastCost.toString(),
