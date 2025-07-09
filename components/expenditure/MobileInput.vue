@@ -17,15 +17,12 @@
   >
     <div v-if="props.showMenu && isMobile" class="fixed min-h-screen min-w-screen bg-black/50" @click.stop="closeMenu">
       <!-- 20250707 故意留一個空的@click.stop 避免點擊白色區域後關閉 -->
-      <div 
-        v-if="props.showMenu && isMobile"
-        @click.stop=""
-        ref="menu"
-        class="fixed w-full z-20 bottom-0 bg-white flex flex-col space-y-3 justify-between p-2 text-black rounded-t-[16px]"
-      >
+      <div v-if="props.showMenu && isMobile" @click.stop="" ref="menu"
+        class="fixed w-full z-[20] bottom-0 bg-white flex flex-col space-y-3 justify-between p-2 text-black rounded-t-[16px]">
         <div class="w-full flex justify-center">
           <div class="w-[50px] h-[5px] rounded-full bg-[#C8C9C9]" />
         </div>
+
         <div class="flex justify-between">
           <div class="w-[24px] h-[24px]" />
           <div class="h-[24px] font-[700] text-[18px] w-full flex justify-center items-center">新增花費</div>
@@ -33,7 +30,7 @@
             <img src="~/assets/icons/close_24_24.svg" alt="">
           </button>
         </div>
-        
+
         <div class="flex items-center">
           <div class="w-[100px]">日期</div>
           <!-- 20250707 需要加上value-format 取得的數值才會跟預設的input一樣 不然會是2025-07-06T16:00:00.000Z -->
@@ -81,6 +78,16 @@
           <el-input class="grow" type="text" v-model="expenditure.extraType" placeholder="額外類型" clearable size="large"
             @keyup.enter="handleInputFinish" />
         </div>
+
+        <div class="flex w-full space-x-5">
+          <button @click="closeMenu" class="btn btn-soft bg-white border-[#0F2B47] text-[#0F2B47] grow">
+            取消
+          </button>
+          <button @click="handleSaveDay" class="btn btn-soft bg-[#0F2B47] grow">
+            <span v-if="useCostStore().isLoading" class="loading loading-spinner loading-xs"></span>
+            儲存
+          </button>
+        </div>
       </div>
     </div>
   </Transition>
@@ -103,10 +110,9 @@ const closeMenu = () => {
 const menu = ref(null)
 const expenditure = ref({})
 
-const handleSaveDay = async () => {
-  // console.log(`早餐: ${expenditure.value[index].breakfastCost}`);
-  console.log(`消費日期: ${expenditure.value.costDate}`);
-  const response = await useApiStore().post("/api/v1/report", {
+const handleInputFinish = (event) => {
+  focusNext(event)
+  useCostStore().handleSaveDay({
     costDate: expenditure.value.costDate,
     // toString是必要的 為了填入min 不轉型Go會Error
     breakfastCost: expenditure.value.breakfastCost.toString(),
@@ -117,32 +123,20 @@ const handleSaveDay = async () => {
     dinnerType: expenditure.value.dinnerType,
     extraCost: expenditure.value.extraCost.toString(),
     extraType: expenditure.value.extraType,
-  });
-};
-
-const handleInputFinish = (event) => {
-  focusNext(event)
-  handleSaveDay()
+  })
 }
 
 const focusNext = (event) => {
-  console.log(`focusNext`)
   const currentInput = event.target;
   const allInputs = menu.value.querySelectorAll('input');
-  console.log(`allInputs.length: ${allInputs.length}`)
   const currentIndex = Array.from(allInputs).indexOf(currentInput);
-  console.log(`currentIndex: ${currentIndex}`)
 
   if (currentIndex < allInputs.length - 1) {
     allInputs[currentIndex + 1].focus()
   }
 }
 
-onMounted(() => {
-  expenditure.value.costDate = new Date().toISOString().split('T')[0]
-  expenditure.value.breakfastCost = 0
-  expenditure.value.lunchCost = 0
-  expenditure.value.dinnerCost = 0
-  expenditure.value.extraCost = 0
+onMounted(async () => {
+  expenditure.value = await useCostStore().getTodayCost()
 })
 </script>

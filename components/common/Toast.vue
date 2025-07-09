@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute z-10">
+  <div class="absolute z-[100]">
     <!-- 進入時	從上方 20px 淡入下滑 -->
     <!-- 離開時	向上淡出 -->
     <!-- 持續時間	進入 300ms / 離開 200ms -->

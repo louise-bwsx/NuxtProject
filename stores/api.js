@@ -29,7 +29,7 @@ export const useApiStore = defineStore("api", () => {
   // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
 
   const apiFetch = async (endpoint, options = {}) => {
-    console.log(accessToken.value)
+    // console.log(accessToken.value)
     // 必須要用try catch包起來 因為401 Error時 不會回傳response 而是直接Error
     try {
       // console.log(import.meta.env.VITE_BASE_URL)

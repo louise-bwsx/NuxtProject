@@ -96,10 +96,10 @@ const handleSaveDay = async (index) => {
       extraType: expenditureList.value[index].extraType,
     });
 
-    if(response.code != 0) {
-      useToastStore().showToast(response.message, 'error')
+    if(response.code == 0) {
+      useToastStore().showToast("儲存成功", 'success')
     } else {
-      useToastStore().showToast(response.message, 'success')
+      useToastStore().showToast(`儲存失敗: ${response.message}`, 'error')
     }
   } catch (error) {
     useToastStore().showToast('發生網路或未知錯誤', 'error')

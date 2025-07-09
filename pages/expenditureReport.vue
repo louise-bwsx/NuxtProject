@@ -72,7 +72,7 @@ const verifyTokenWithBackend = async (token) => {
     }
   } catch(error) {
     console.log(error.message)
-    useToastStore().showToast(`登入失敗，請稍後再試: ${error.message}`, "error")
+    useToastStore().showToast(`不明原因 登入失敗，請稍後再試: ${error.message}`, "error")
   }
 }
 
