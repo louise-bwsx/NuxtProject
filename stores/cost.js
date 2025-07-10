@@ -6,7 +6,7 @@ export const useCostStore = defineStore("cost", () => {
   const todayCost = ref(undefined);
 
   const getTodayCost = async () => {
-    console.log(`expenditureList.value.length: ${expenditureList.value.length}`);
+    // console.log(`expenditureList.value.length: ${expenditureList.value.length}`);
     if (expenditureList.value.length <= 0) {
       await getCosts()
     }
@@ -14,16 +14,14 @@ export const useCostStore = defineStore("cost", () => {
     if (expenditureList.value[0].costDate.split("T")[0] == new Date().toISOString().split("T")[0]) {
       todayCost.value = expenditureList.value[0];
     } else {
-      console.log(222)
       todayCost.value = {
         breakfastCost: "0",
         breakfastType: "",
         costDate: new Date().toISOString().split("T")[0],
         dinnerCost: "0",
         dinnerType: "",
-        extraCost: "3715",
-        extraType: "信用卡帳單",
-        id: "2384",
+        extraCost: "0",
+        extraType: "",
         lunchCost: "0",
         lunchType: "",
       };

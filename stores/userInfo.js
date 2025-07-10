@@ -4,9 +4,10 @@ export const useUserInfoStore = defineStore('userInfo', () => {
   const userInfo = ref(undefined);
 
   const getUserInfo = computed(() => {
-    // 20250709 louise 避免出現SSR Error ERROR  [unhandledRejection] localStorage is not defined
-    if(!process.client) {
-      return ""
+    // 20250709 避免出現SSR Error ERROR  [unhandledRejection] localStorage is not defined
+    // 20250709 改用import.meta.client 因為process.client deprecate
+    if (!import.meta.client) {
+      return "";
     }
 
     if (

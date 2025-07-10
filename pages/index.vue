@@ -10,8 +10,11 @@
 
     <!-- 手機sm ~ 320px -->
     <!-- Sony手機411 832 -->
-    <div>Width: {{ width }}</div>
-    <div>Height: {{ height }}</div>
+    <!-- 20250710 避免Hyration警告 -->
+    <ClientOnly>
+      <div>Width: {{ width }}</div>
+      <div>Height: {{ height }}</div>
+    </ClientOnly>
   </div>
 </template>
 

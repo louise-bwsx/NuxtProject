@@ -1,5 +1,5 @@
 <template>
-  <!-- 20250705 louise 加上max-h-screen 在左側有三個區塊時會被擠爆 超出螢幕高度 -->
+  <!-- 20250705 加上max-h-screen 在左側有三個區塊時會被擠爆 超出螢幕高度 -->
   <div class="bbb min-w-screen min-h-screen max-h-screen flex overflow-y-hidden">
     <div class="bbb flex flex-col w-1/2">
       <DIYLocalized :appleCount="appleCount" :messageCount="messageCount" :itemCount="itemCount"

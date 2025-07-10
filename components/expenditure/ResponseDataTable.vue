@@ -73,9 +73,6 @@
         </tr>
       </tbody>
     </table>
-    <button @click="handleSaveMonth" class="bbb w-auto text-nowrap btn">
-      儲存這一個月
-    </button>
   </div>
 </template>
 
@@ -83,27 +80,17 @@
 const expenditureList = ref(undefined)
 
 const handleSaveDay = async (index) => {
-  try {
-    const response = await useApiStore().post("/api/v1/report", {
-      costDate: expenditureList.value[index].costDate,
-      breakfastCost: expenditureList.value[index].breakfastCost.toString(),
-      breakfastType: expenditureList.value[index].breakfastType,
-      lunchCost: expenditureList.value[index].lunchCost.toString(),
-      lunchType: expenditureList.value[index].lunchType,
-      dinnerCost: expenditureList.value[index].dinnerCost.toString(),
-      dinnerType: expenditureList.value[index].dinnerType,
-      extraCost: expenditureList.value[index].extraCost.toString(),
-      extraType: expenditureList.value[index].extraType,
-    });
-
-    if(response.code == 0) {
-      useToastStore().showToast("儲存成功", 'success')
-    } else {
-      useToastStore().showToast(`儲存失敗: ${response.message}`, 'error')
-    }
-  } catch (error) {
-    useToastStore().showToast('發生網路或未知錯誤', 'error')
-  }
+  await useCostStore().handleSaveDay({
+    costDate: expenditureList.value[index].costDate,
+    breakfastCost: expenditureList.value[index].breakfastCost.toString(),
+    breakfastType: expenditureList.value[index].breakfastType,
+    lunchCost: expenditureList.value[index].lunchCost.toString(),
+    lunchType: expenditureList.value[index].lunchType,
+    dinnerCost: expenditureList.value[index].dinnerCost.toString(),
+    dinnerType: expenditureList.value[index].dinnerType,
+    extraCost: expenditureList.value[index].extraCost.toString(),
+    extraType: expenditureList.value[index].extraType,
+  })
 };
 
 onMounted(async () => {

@@ -83,7 +83,7 @@
           <button @click="closeMenu" class="btn btn-soft bg-white border-[#0F2B47] text-[#0F2B47] grow">
             取消
           </button>
-          <button @click="handleSaveDay" class="btn btn-soft bg-[#0F2B47] grow">
+          <button @click="handleSaveClick" class="btn btn-soft bg-[#0F2B47] grow">
             <span v-if="useCostStore().isLoading" class="loading loading-spinner loading-xs"></span>
             儲存
           </button>
@@ -110,8 +110,7 @@ const closeMenu = () => {
 const menu = ref(null)
 const expenditure = ref({})
 
-const handleInputFinish = (event) => {
-  focusNext(event)
+const handleSaveClick = () => {
   useCostStore().handleSaveDay({
     costDate: expenditure.value.costDate,
     // toString是必要的 為了填入min 不轉型Go會Error
@@ -124,6 +123,11 @@ const handleInputFinish = (event) => {
     extraCost: expenditure.value.extraCost.toString(),
     extraType: expenditure.value.extraType,
   })
+}
+
+const handleInputFinish = (event) => {
+  focusNext(event)
+  handleSaveClick()
 }
 
 const focusNext = (event) => {

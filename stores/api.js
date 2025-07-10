@@ -1,13 +1,14 @@
 // import { useRuntimeConfig } from "#app";
 import { defineStore } from "pinia";
 
-// 20250708 louise 從composables/api.js 移到stores/api.js 因為在composables/api.js 不會即時更新 不知道是不是因為變數用let
+// 20250708 從composables/api.js 移到stores/api.js 因為在composables/api.js 不會即時更新 不知道是不是因為變數用let
 export const useApiStore = defineStore("api", () => {
   const accessToken = ref(undefined);
 
   const getAccessToken = computed(() => {
-    // 20250709 louise 避免出現SSR Error ERROR  [unhandledRejection] localStorage is not defined
-    if (!process.client) {
+    // 20250709 避免出現SSR Error ERROR [unhandledRejection] localStorage is not defined
+    // 20250709 改用import.meta.client 因為process.client deprecate
+    if (!import.meta.client) {
       return "";
     }
 
@@ -52,7 +53,7 @@ export const useApiStore = defineStore("api", () => {
       };
 
       // 使用$fetch是因為對SEO最友好
-      // 20250422 louise 從useFetch改成$fetch 因為有warning
+      // 20250422  從useFetch改成$fetch 因為有warning
       return await $fetch(endpoint, mergedOptions);
     } catch (error) {
       // 這是error.data

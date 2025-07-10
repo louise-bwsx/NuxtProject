@@ -1,12 +1,15 @@
 <template>
   <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-center items-center">
     <div class="bbb flex flex-col grow w-full">
-      <button @click="test()">測試{{ useUserInfoStore().getUserInfo.name }}</button>
+      <button @click="test()">測試{{ userName }}</button>
+
       <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
       <div v-if="csvContent">content.data.length: {{ csvContent.data.length }}</div>
       <div v-if="csvContent">content.data[0].length: {{ csvContent.data[0].length }}</div>
 
-      <!-- TODO: 目前前端會出現兩個Error 是因為GoogleSignInButton的關係 不確定為什麼 -->
+      <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
+      <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
+      <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
       <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
 
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
@@ -35,6 +38,7 @@ import CSVTable from "~/components/expenditure/CSVTable.vue";
 const csvContent = ref(undefined);
 const csvText = ref(undefined);
 const showMenu = ref(false)
+const userName = ref("")
 
 const test = async () => {
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
@@ -85,5 +89,8 @@ onMounted(async () => {
   // 讀取csv的做法
   // const res = await fetch('/開銷紀錄.csv');
   // const csvText = await res.text();
+  
+  // 不要直接在Template使用 useUserInfoStore().getUserInfo.name 會有Hydration Warning
+  userName.value = useUserInfoStore().getUserInfo.name;
 });
 </script>
