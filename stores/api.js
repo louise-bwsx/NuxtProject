@@ -3,29 +3,6 @@ import { defineStore } from "pinia";
 
 // 20250708 從composables/api.js 移到stores/api.js 因為在composables/api.js 不會即時更新 不知道是不是因為變數用let
 export const useApiStore = defineStore("api", () => {
-  const accessToken = ref(undefined);
-
-  const getAccessToken = computed(() => {
-    // 20250709 避免出現SSR Error ERROR [unhandledRejection] localStorage is not defined
-    // 20250709 改用import.meta.client 因為process.client deprecate
-    if (!import.meta.client) {
-      return "";
-    }
-
-    if (
-      accessToken.value == null ||
-      accessToken.value == "" ||
-      accessToken.value == undefined
-    ) {
-      accessToken.value = localStorage.getItem("accessToken");
-    }
-    return accessToken.value;
-  });
-
-  const setAccessToken = (newaccessToken) => {
-    accessToken.value = newaccessToken;
-    localStorage.setItem("accessToken", newaccessToken);
-  };
   // const userInfoObj = JSON.parse(userInfo);
   // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
 
@@ -47,7 +24,7 @@ export const useApiStore = defineStore("api", () => {
           Accept: "application/json",
           // 加上Authorization後 會變成 "非簡單請求" 所以會預先發送OPTIONS 在後端沒有處理OPTIONS時 會CORS
           // 需要給後端安裝中間件
-          Authorization: `Bearer ${getAccessToken.value}`,
+          Authorization: `Bearer ${useAuthStore().getAccessToken}`,
           ...(options.headers || {}),
         },
       };
@@ -67,8 +44,6 @@ export const useApiStore = defineStore("api", () => {
   };
 
   return { 
-    getAccessToken,
-    setAccessToken,
     get: (endpoint, options) =>
       apiFetch(endpoint, { method: "GET", ...options }),
     post: (endpoint, body, options) =>

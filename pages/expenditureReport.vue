@@ -2,15 +2,13 @@
   <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-center items-center">
     <div class="bbb flex flex-col grow w-full">
       <button @click="test()">測試{{ userName }}</button>
-
-      <!-- <div v-if="content">content.data: {{ content.data }}</div> -->
-      <div v-if="csvContent">content.data.length: {{ csvContent.data.length }}</div>
-      <div v-if="csvContent">content.data[0].length: {{ csvContent.data[0].length }}</div>
-
-      <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
-      <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
-      <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
-      <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
+      <div class="bbb flex justify-between">
+        <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
+        <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
+        <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
+        <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
+        <button class="btn flex-1" @click="showMenu = true">新增</button>
+      </div>
 
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
       <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
@@ -41,11 +39,11 @@ const showMenu = ref(false)
 const userName = ref("")
 
 const test = async () => {
+  console.log(`test`)
   // console.log(import.meta.env.BASE_URL); // /_nuxt/
   // console.log(import.meta.env.VITE_BASE_URL); // http://localhost:5001
   // const response = await useApiStore().get("/api/v1/test");
   // console.log(`response: ${JSON.stringify(response)}`)
-  showMenu.value = true
 }
 
 // Google登入成功時呼叫
@@ -68,8 +66,8 @@ const verifyTokenWithBackend = async (token) => {
   try {
     const response = await useApiStore().post("/api/v1/auth/verify", body)
     if (response.code === 0) {
-      useApiStore().setAccessToken(response.data.accessToken)
-      useUserInfoStore().setUserInfo(response.data.userInfo) 
+      useAuthStore().setAccessToken(response.data.accessToken)
+      useAuthStore().setUserInfo(response.data.userInfo) 
       useToastStore().showToast("登入成功", "success")
     } else {
       useToastStore().showToast(`登入失敗: ${response.message}`, "error")
@@ -91,6 +89,6 @@ onMounted(async () => {
   // const csvText = await res.text();
   
   // 不要直接在Template使用 useUserInfoStore().getUserInfo.name 會有Hydration Warning
-  userName.value = useUserInfoStore().getUserInfo.name;
+  userName.value = useAuthStore().getUserInfo.name;
 });
 </script>
