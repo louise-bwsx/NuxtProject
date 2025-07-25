@@ -88,5 +88,6 @@ export const useAuthStore = defineStore('auth', () => {
     getUserInfo,
     setUserInfo,
     getExp,
+    isExpire,
   };
 })

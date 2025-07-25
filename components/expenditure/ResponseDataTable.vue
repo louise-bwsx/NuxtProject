@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full grow overflow-y-auto">
     <table class="table table-xs">
       <thead>
         <tr>

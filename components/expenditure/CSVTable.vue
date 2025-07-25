@@ -1,5 +1,7 @@
 <template>
   <div class="w-full">
+    <!-- 不可以加() 會導致function的element 是undefined -->
+    <input type="file" @change="handleFiles" />
     <table class="table table-xs">
       <thead>
         <tr>
@@ -138,7 +140,7 @@ const handleSaveDay = async (index) => {
     extraType: extraType.value[index],
   });
 
-  if(response.code == 0) {
+  if (response.code == 0) {
     useToastStore().showToast("儲存成功", "success")
   }
 };
@@ -214,7 +216,15 @@ const loadCostDataForDay = (offset) => {
   extraType.value = [];
 };
 
+const handleFiles = async (element) => {
+  const file = element.target.files[0];
+  csvText.value = await file.text(); // 讀成文字
+};
+
 onMounted(() => {
+  // 讀取csv的做法
+  // const res = await fetch('/開銷紀錄.csv');
+  // const csvText = await res.text();
   parseExpenditureCsvData(props.csvText)
 })
 </script>
