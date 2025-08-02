@@ -16,31 +16,38 @@ const renderChart = () => {
   data.push(costsType.value.data.dinnerCost)
   data.push(costsType.value.data.extraCost)
 
+  const legendData = data.map(item => item.name)
+  // https://echarts.apache.org/examples/en/editor.html?c=pie-legend
   chartInstance.setOption({
-    tooltip: { trigger: 'item', },
+    title: { text: '各類型總支出', textStyle: { color: 'white' }, left: 'center' },
+    tooltip: { trigger: 'item', formatter: '{b} : {c}元 ({d}%)' },
+    legend: {
+      type: 'scroll',
+      orient: 'vertical',        // 垂直排列
+      right: 50,                 // 距離右邊 50px
+      top: 'middle',             // 垂直居中
+      data: legendData,
+      textStyle: { color: 'white' },
+      itemWidth: 14,
+      itemHeight: 14,
+      itemGap: 15               // legend 項目間距
+    },
     series: [
       {
         type: 'pie',
-        radius: '100%',
+        radius: '50%',
+        center: ['35%', '50%'],   // 圖表位置：左側 35%，垂直居中
         data,
-        label: {
-          show: true,
-          position: 'inside',
-          color: '#fff',
-          fontSize: 14,
-          formatter: '{b}',
-        },
         labelLine: {
           show: true, // ✅ 關閉連線
           position: 'inside'
         },
         emphasis: {
-          scale: false, // 避免hover時的動畫才切
           itemStyle: {
-            shadowBlur: 0,
+            shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'transparent'
-          },
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
         }
       }
     ]
