@@ -1,5 +1,5 @@
 <template>
-  <div class="bbb min-h-screen overflow-hidden flex flex-col justify-center items-center">
+  <div class="bbb w-full h-full flex flex-col justify-center items-center">
     <NuxtLink to="/expenditureReport" class="btn btn-primary">
       收支圖表
     </NuxtLink>
