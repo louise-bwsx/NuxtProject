@@ -1,4 +1,5 @@
 <template>
+  <!-- 已經用不到了 -->
   <div class="w-full">
     <!-- 不可以加() 會導致function的element 是undefined -->
     <input type="file" @change="handleFiles" />

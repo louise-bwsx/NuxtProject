@@ -13,63 +13,23 @@
           <th>晚餐類型</th>
           <th>額外花費</th>
           <th>花費類型</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
         <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
-        <tr v-for="(data, index) in expenditureList" :key="index">
-          <td>{{ index }}</td>
-
-          <!-- 這邊從:value改成v-model後才能在handleSave中取得修改後的數值 -->
-          <!-- 日期 -->
-          <td>
-            <input type="date" v-model="data.costDate.split('T')[0]" />
-          </td>
-
-          <!-- 早餐金額 -->
-          <td>
-            <input type="number" v-model="data.breakfastCost" />
-          </td>
-
-          <!-- 早餐類型 -->
-          <td>
-            <input type="text" v-model="data.breakfastType" />
-          </td>
-
-          <!-- 午餐金額 -->
-          <td>
-            <input type="number" v-model="data.lunchCost" />
-          </td>
-
-          <!-- 午餐類型 -->
-          <td>
-            <input type="text" v-model="data.lunchType" />
-          </td>
-
-          <!-- 晚餐金額 -->
-          <td>
-            <input type="number" v-model="data.dinnerCost" />
-          </td>
-
-          <!-- 晚餐類型 -->
-          <td>
-            <input type="text" v-model="data.dinnerType" />
-          </td>
-
-          <!-- 額外花費 -->
-          <td>
-            <input type="number" v-model="data.extraCost" />
-          </td>
-
-          <!-- 花費類型 -->
-          <td>
-            <input type="text" v-model="data.extraType" />
-          </td>
-
-          <!-- 儲存這一天 -->
-          <td class="w-auto text-nowrap">
-            <button @click="handleSaveDay(index)" class="btn">儲存這一天</button>
-          </td>
+        <tr v-for="(data, index) in expenditureList" :key="index" class="w-[100px]">
+          <td class="!py-[0px] ">{{ index }}</td>
+          <td class="!py-[0px] "><input class="w-[90px]" type="date" v-model="data.costDate.split('T')[0]" /></td>
+          <td class="!py-[0px] "><input class="w-full" type="number" v-model="data.breakfastCost" /></td>
+          <td class="!py-[0px] "><input class="w-[100px]" type="text" v-model="data.breakfastType" /></td>
+          <td class="!py-[0px] "><input class="w-full" type="number" v-model="data.lunchCost" /></td>
+          <td class="!py-[0px] "><input class="w-[100px]" type="text" v-model="data.lunchType" /></td>
+          <td class="!py-[0px] "><input class="w-full" type="number" v-model="data.dinnerCost" /></td>
+          <td class="!py-[0px] "><input class="w-[100px]" type="text" v-model="data.dinnerType" /></td>
+          <td class="!py-[0px] "><input class="w-full" type="number" v-model="data.extraCost" /></td>
+          <td class="!py-[0px] "><input class="w-[100px]" type="text" v-model="data.extraType" /></td>
+          <td class="!py-[0px] w-auto text-nowrap"><button @click="handleSaveDay(index)" class="btn">儲存這一天</button></td>
         </tr>
       </tbody>
     </table>

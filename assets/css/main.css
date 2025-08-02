@@ -8,12 +8,47 @@
   logs: true;
 }
 
+html,
+body {
+  /* 避免滑動 */
+  overflow: hidden;
+}
+
+/* input在type="number"的情況下不顯示 arrowButton */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 .aaa {
   border: 1px solid black;
 }
 
 .bbb {
   border: 1px solid white;
+}
+
+/* 從MaintenanceList抄來的skeleton動畫 */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 20250729 louise animate-pulse因為和線上報修列表重名 會導致在線上報修列表背景變成純灰 所以改名成skeleton-pulse */
+.skeleton-pulse {
+  background-color: oklch(87.2% 0.01 258.338);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  border-radius: 4px;
 }
 
 /* 預設背景色 #1D232A */

@@ -1,6 +1,6 @@
 <template>
-  <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-center items-center">
-    <div class="bbb flex flex-col grow w-full">
+  <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-start items-center">
+    <div class="bbb flex flex-col w-full">
       <button @click="test()">測試{{ userName }}</button>
       <div class="bbb flex justify-between">
         <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
