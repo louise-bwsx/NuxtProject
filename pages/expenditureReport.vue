@@ -1,5 +1,5 @@
 <template>
-  <div class="bbb min-h-screen max-h-screen overflow-hidden flex flex-col justify-start items-center">
+  <div class="bbb w-full flex flex-col justify-start items-center">
     <div class="bbb flex flex-col w-full">
       <button @click="test()">測試{{ userName }}</button>
       <div class="bbb flex justify-between">
@@ -21,9 +21,9 @@
 
 <script setup>
 import { useToastStore } from '~/stores/toast';
-import Toast from "/components/common/Toast"
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import MobileInput from "~/components/expenditure/MobileInput.vue";
+import Toast from '~/components/common/Toast.vue';
 
 const showMenu = ref(false)
 const userName = ref("")
