@@ -24,7 +24,7 @@ const renderChart = () => {
     legend: {
       type: 'scroll',
       orient: 'vertical',        // 垂直排列
-      right: 50,                 // 距離右邊 50px
+      left: 10,                 // 距離右邊 50px
       top: 'middle',             // 垂直居中
       data: legendData,
       textStyle: { color: 'white' },

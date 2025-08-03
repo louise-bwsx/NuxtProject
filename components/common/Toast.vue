@@ -1,16 +1,16 @@
 <template>
-  <div class="absolute z-[100]">
+  <div class="absolute z-[100] top-[20px]">
     <!-- 進入時	從上方 20px 淡入下滑 -->
     <!-- 離開時	向上淡出 -->
     <!-- 持續時間	進入 300ms / 離開 200ms -->
     <!-- 緩動曲線	ease-out (進入) / ease-in (離開) -->
     <!-- Tailwind內建的 -->
-    <Transition 
-      enter-active-class="transition ease-out duration-300" 
+    <Transition
+      enter-active-class="transition ease-out duration-300"
       enter-from-class="opacity-0 translate-y-2"
-      enter-to-class="opacity-100 translate-y-0" 
+      enter-to-class="opacity-100 translate-y-0"
       leave-active-class="transition ease-in duration-200"
-      leave-from-class="opacity-100 translate-y-0" 
+      leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 translate-y-2"
     >
       <div v-if="toastStore.toastType == 'info'" class="alert alert-info bg-[#44BAFE] flex justify-center">
