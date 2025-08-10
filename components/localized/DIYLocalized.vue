@@ -34,7 +34,7 @@
     </div>
 
     <!-- TODOWarning: 在切換語言時不應該清掉 -->
-    <div class="bbb overflow-auto h-full space-y-2 w-[250px] px-2 flex flex-col">
+    <div class="bbb overflow-auto h-full gap-2 w-[250px] px-2 flex flex-col">
       <div>總共: {{ props.customInput.length }}</div>
       <div v-for="value in props.customInput" :key="value.origin">{{ languageStore.L(value.origin) || value.translated }}</div>
       <div v-for="value in props.customInput">{{ languageStore.L(value.origin) || value.translated }}</div>

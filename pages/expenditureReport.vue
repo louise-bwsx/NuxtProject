@@ -1,18 +1,17 @@
 <template>
   <div class="bbb w-full flex flex-col justify-start items-center">
-    <div class="bbb flex flex-col w-full">
-      <button @click="test()">測試{{ userName }}</button>
-      <div class="bbb flex justify-between">
-        <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
-        <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
-        <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
-        <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
-        <button class="btn flex-1" @click="handleClickAddButton">新增</button>
-      </div>
-
+    <div class="bbb flex w-full justify-between items-center w-full">
+      <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
+      <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
+      <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
+      <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
+      <button class="btn flex-1 whitespace-nowrap" @click="test()">測試{{ userName }}</button>
+      <button class="btn flex-1 whitespace-nowrap" @click="showSearchInput = !showSearchInput">搜尋</button>
+      <button class="btn flex-1 whitespace-nowrap" @click="handleClickAddButton">新增</button>
       <!-- 沒辦法在畫面顯示 import.meta.env.VITE_BASE_URL 只能用console.log -->
       <!-- <div>env: {{ import.meta.env.VITE_BASE_URL }}</div> -->
     </div>
+    <SearchInput v-model:showSearchInput="showSearchInput"/>
     <ResponseDataTable />
     <MobileInput v-model:showMenu="showMenu" />
     <Toast />
@@ -23,8 +22,10 @@
 import { useToastStore } from '~/stores/toast';
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import MobileInput from "~/components/expenditure/MobileInput.vue";
+import SearchInput from '~/components/expenditure/SearchInput.vue';
 import Toast from '~/components/common/Toast.vue';
 
+const showSearchInput = ref(false)
 const showMenu = ref(false)
 const userName = ref("")
 
