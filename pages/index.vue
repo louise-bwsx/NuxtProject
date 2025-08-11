@@ -8,6 +8,10 @@
       收支圖表
     </NuxtLink>
 
+    <NuxtLink to="/notes" class="btn btn-primary">
+      筆記列表
+    </NuxtLink>
+
     <NuxtLink to="/localized" class="btn btn-primary">
       切換語言測試
     </NuxtLink>
@@ -30,7 +34,7 @@ const { width, height } = useWindowSize()
 <!-- TODO: 網址需要可以大小寫不分 -->
 
 <!--
-    
+
 Hangfire
     <div>一般登入</div>
     <div>JWTToken</div>
