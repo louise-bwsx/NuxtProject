@@ -37,13 +37,10 @@ const { width, height } = useWindowSize()
 
 Hangfire
     <div>一般登入</div>
-    <div>JWTToken</div>
-    <div>JWTToken解析</div>
     <div>Google登入</div>
     <div>Apple登入</div>
     <div>FB登入</div>
     <div>X登入</div>
-    <div>權限設定</div>
     <div>mdeditor</div>
     <div>Github專案轉移</div>
     <div>轉移md</div>

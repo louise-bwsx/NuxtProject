@@ -6,6 +6,9 @@ export const useCostStore = defineStore("cost", () => {
   const expenditureList = ref([]);
   const isLoading = ref(false);
   const todayCost = ref(undefined);
+  const page = ref(1)
+  const limit = ref(30)
+  const hasNoMoreData = ref(false)
 
   const getTodayCost = async () => {
     // console.log(`expenditureList.value.length: ${expenditureList.value.length}`);
@@ -62,13 +65,20 @@ export const useCostStore = defineStore("cost", () => {
       if (endDate) {
         params.append('endDate', endDate);
       }
+      params.append('page', page.value);
+      params.append('limit', limit.value);
 
       // 建構完整的 API URL
       const apiUrl = `/api/v1/report${params.toString() ? '?' + params.toString() : ''}`;
 
       const response = await useApiStore().get(apiUrl);
-      expenditureList.value = response.data.expenditureReports;
+      if (page.value == 1) {
+        expenditureList.value = response.data.expenditureReports;
+      } else {
+        expenditureList.value.push(...response.data.expenditureReports)
+      }
 
+      page.value++;
     } catch (error) {
       useToastStore().showToast(
         `不明原因 無法取得資料 請稍後再試: ${error}', 'error`
@@ -99,5 +109,11 @@ export const useCostStore = defineStore("cost", () => {
     isLoading.value = false;
   };
 
-  return { expenditureList, isLoading, getTodayCost, getCosts, searchCosts, handleSaveDay, };
+  // 重置加載狀態的函數（可供外部調用）
+  const resetLoadingState = () => {
+    hasNoMoreData.value = false
+    isLoading.value = false
+  }
+
+  return { expenditureList, isLoading, page, limit, hasNoMoreData, getTodayCost, getCosts, searchCosts, handleSaveDay, resetLoadingState };
 });

@@ -62,6 +62,10 @@ const shortcuts = [
 const onReset = async () => {
   detail.value = ""
   dateRange.value = ""
+  // 固定給1 在searchCost callAPI後會++ page 1 才會重置資料
+  costStore.page = 1
+  // 重置hasNoMoreData 避免捲動時取得錯誤狀態
+  costStore.resetLoadingState()
 
   await router.push({
     query: {
@@ -76,6 +80,11 @@ const onReset = async () => {
 }
 
 const onSearch = async () => {
+  // 固定給1 在searchCost callAPI後會++ page 1 才會重置資料
+  costStore.page = 1
+  // 重置hasNoMoreData 避免捲動時取得錯誤狀態
+  costStore.resetLoadingState()
+
   // 使用 router.push 更新 query 參數
   // 或是改用router.replace 就不會留下紀錄 上一頁就不會顯示上一個搜尋條件
   await router.push({
