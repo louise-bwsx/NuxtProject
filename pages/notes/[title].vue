@@ -1,10 +1,13 @@
 <template>
-  <div class="markdown-content" v-html="renderedContent"></div>
+  <div class="ooo w-screen">
+    <div class="markdown-content" v-html="renderedContent"></div>
+  </div>
 </template>
 
 <script setup>
 import MarkdownIt from 'markdown-it'
 
+const notesStore = useNotesStore()
 // 配置 markdown-it
 const md = new MarkdownIt({
   html: true,
@@ -13,36 +16,7 @@ const md = new MarkdownIt({
 })
 
 // 你的 Markdown 內容（之後可以從 API 獲取）
-const content = ref(`
-# 我的筆記
-
-這裡是我的筆記內容。
-
-## 第一篇筆記
-
-筆記內容...
-
-### 更多功能
-- 列表項目 1
-- 列表項目 2
-- 列表項目 3
-
-**粗體文字** 和 *斜體文字*
-
-這是一個段落，包含一些 \`inline code\`。
-
-\`\`\`javascript
-// 程式碼區塊
-function hello() {
-  console.log('Hello World!')
-  return 'success'
-}
-\`\`\`
-
-> 這是一個引用區塊
-
-[這是一個連結](https://example.com)
-`)
+const content = ref(``)
 
 // 計算渲染後的 HTML
 const renderedContent = computed(() => {
@@ -59,11 +33,15 @@ const updateContent = (newContent) => {
 // if (apiContent) {
 //   content.value = apiContent
 // }
+
+onMounted(async() => {
+  const data = await notesStore.getNote();
+  content.value = data == undefined ? "" : data.content
+})
 </script>
 
 <style scoped>
 .markdown-content {
-  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   line-height: 1.6;

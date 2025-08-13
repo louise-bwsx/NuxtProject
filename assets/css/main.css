@@ -32,6 +32,10 @@ input[type='number'] {
   border: 1px solid white;
 }
 
+.ooo {
+  border: 1px solid orange;
+}
+
 /* 從MaintenanceList抄來的skeleton動畫 */
 @keyframes pulse {
   0%,

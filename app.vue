@@ -18,6 +18,5 @@
 </template>
 
 <script>
-import { NuxtPage } from "#components";
 // import Toast from "~/components/common/Toast.vue";
 </script>
