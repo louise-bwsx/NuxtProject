@@ -1,14 +1,15 @@
 <template>
-  <div class="aaa h-screen w-full overflow-hidden">
+  <div class="h-screen w-full overflow-hidden">
     <!-- 超讚的elmentplus 瀑布流 -->
-    <div v-infinite-scroll="load" class="infinite-list overflow-y-scroll aaa w-full h-full p-0 m-0" style="overflow: auto">
+    <div v-infinite-scroll="load" class="infinite-list overflow-y-scroll w-full h-full p-0 m-0" style="overflow: auto">
       <!-- 目前只有這個有瀑布流 不知道為什麼底下div沒有 -->
       <!-- <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li> -->
 
       <div v-for="note in notesStore.notes" :key="note"
-        class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] aaa p-[8px] bg-black overflow-x-hidden">
+        class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] bg-black overflow-x-hidden">
         <NuxtLink :to="`/notes/${note.title}`" class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">{{ note.title }}</NuxtLink>
-        <div class="ooo whitespace-nowrap text-end">{{ note.createDate.split('T')[0] }}</div>
+        <!-- 20250814 故意寫死90px 避免因為數字盡量小 大小不一 -->
+        <div class="ooo whitespace-nowrap text-end w-[90px]">{{ note.createDate.split('T')[0] }}</div>
         <!-- <div class="">{{ note.updateDate }}</div> -->
       </div>
     </div>

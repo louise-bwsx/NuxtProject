@@ -1,6 +1,8 @@
 <template>
-  <div class="ooo w-screen">
-    <div class="markdown-content" v-html="renderedContent"></div>
+  <div class="ooo w-screen min-h-screen overflow-y-scroll">
+    <div>{{ title }}</div>
+    <div>{{ createDate.split("T")[0] }}</div>
+    <div class="aaa markdown-content"  v-html="renderedContent"></div>
   </div>
 </template>
 
@@ -8,6 +10,13 @@
 import MarkdownIt from 'markdown-it'
 
 const notesStore = useNotesStore()
+
+// Markdown 內容
+const content = ref(``)
+const title = ref(``)
+const createDate = ref(``)
+const updateDate = ref(``)
+
 // 配置 markdown-it
 const md = new MarkdownIt({
   html: true,
@@ -15,8 +24,19 @@ const md = new MarkdownIt({
   typographer: true
 })
 
-// 你的 Markdown 內容（之後可以從 API 獲取）
-const content = ref(``)
+// 顯示md裡面的圖片
+const originalImageRender = md.renderer.rules.image
+md.renderer.rules.image = function (tokens, idx, options, env, renderer) {
+  const token = tokens[idx]
+  const src = token.attrs[token.attrIndex('src')][1]
+
+  // 為了讓dev production都看到同一個圖片
+  if (src.includes('http://localhost:5001')) {
+    token.attrs[token.attrIndex('src')][1] = src.replace('http://localhost:5001', import.meta.env.VITE_BASE_URL)
+  }
+
+  return originalImageRender ? originalImageRender(tokens, idx, options, env, renderer) : renderer.renderToken(tokens, idx, options)
+}
 
 // 計算渲染後的 HTML
 const renderedContent = computed(() => {
@@ -37,6 +57,9 @@ const updateContent = (newContent) => {
 onMounted(async() => {
   const data = await notesStore.getNote();
   content.value = data == undefined ? "" : data.content
+  title.value = data == undefined ? "" : data.title
+  createDate.value = data == undefined ? "" : data.createDate
+  updateDate.value = data == undefined ? "" : data.updateDate
 })
 </script>
 

@@ -1,20 +1,13 @@
-// import { useRuntimeConfig } from "#app";
 import { defineStore } from "pinia";
 
 // 20250708 從composables/api.js 移到stores/api.js 因為在composables/api.js 不會即時更新 不知道是不是因為變數用let
 export const useApiStore = defineStore("api", () => {
-  // const userInfoObj = JSON.parse(userInfo);
-  // const token = userInfoObj.access_token ? userInfoObj.access_token : "";
-
   const apiFetch = async (endpoint, options = {}) => {
-    // console.log(accessToken.value)
     // 必須要用try catch包起來 因為401 Error時 不會回傳response 而是直接Error
     try {
       // console.log(import.meta.env.VITE_BASE_URL)
       // 合併默認選項和用戶提供的選項
       const mergedOptions = {
-        // TODO: baseURL 用env區分
-        // baseURL: config.public.apiBase,
         baseURL: import.meta.env.VITE_BASE_URL,
         // 合併用戶提供的選項
         ...options,
@@ -43,7 +36,7 @@ export const useApiStore = defineStore("api", () => {
     }
   };
 
-  return { 
+  return {
     get: (endpoint, options) =>
       apiFetch(endpoint, { method: "GET", ...options }),
     post: (endpoint, body, options) =>
@@ -54,19 +47,3 @@ export const useApiStore = defineStore("api", () => {
       apiFetch(endpoint, { method: "DELETE", ...options }),
   };
 });
-
-// TODO: 錯誤處理
-// const apiFetch = async (endpoint, options = {}) => {
-//   try {
-//     const { data, error } = await useFetch(endpoint, mergedOptions);
-//     if (error.value) {
-//       // 处理错误
-//       console.error("API 错误:", error.value);
-//       return { error: error.value };
-//     }
-//     return data.value;
-//   } catch (e) {
-//     console.error("请求异常:", e);
-//     return { error: e };
-//   }
-// };

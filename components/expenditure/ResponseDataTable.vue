@@ -21,11 +21,6 @@
       </tbody>
     </table>
 
-    <div>
-      <div>isLoading: {{ isLoading }}</div>
-      <div>costStore.hasNoMoreData: {{ costStore.hasNoMoreData }}</div>
-    </div>
-
     <div v-if="isLoading" class="flex justify-center items-center py-4">
       <div class="loading loading-spinner loading-md"></div>
       <span class="ml-2">載入中...</span>
