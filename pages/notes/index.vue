@@ -7,12 +7,19 @@
 
       <div v-for="note in notesStore.notes" :key="note"
         class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] bg-black overflow-x-hidden">
-        <NuxtLink :to="`/notes/${note.title}`" class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">{{ note.title }}</NuxtLink>
+        <NuxtLink :to="`/notes/${note.title}`" class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
+          {{ note.title }}
+        </NuxtLink>
         <!-- 20250814 故意寫死90px 避免因為數字盡量小 大小不一 -->
         <div class="ooo whitespace-nowrap text-end w-[90px]">{{ note.createDate.split('T')[0] }}</div>
         <!-- <div class="">{{ note.updateDate }}</div> -->
       </div>
     </div>
+
+    <NuxtLink to="/notes/create"
+      class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
+      <img src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
+    </NuxtLink>
   </div>
 </template>
 
@@ -21,6 +28,8 @@ import { ref } from 'vue'
 const notesStore = useNotesStore()
 
 onMounted(() => {
+  // 避免從詳細頁返回時 再call一次出現重複資料
+  notesStore.page = 1
   notesStore.searchNotes()
 })
 

@@ -2,16 +2,11 @@
   <div class="ooo w-screen min-h-screen overflow-y-scroll relative">
     <div class="bbb flex w-full justify-between items-center w-full">
       <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
-      <button @click="onDeleteClick" class="btn">
-        <img src="~/assets/icons/delete_24_24_white.svg" class="w-[24px] h-[24px]">
-      </button>
     </div>
 
     <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
-    <div v-else>{{ title }}</div>
 
-    <div>{{ createDate.split("T")[0] }}</div>
-    <textarea v-if="isEdit" class="aaa w-full h-full p-[20px]" v-model="content" />
+    <textarea v-if="isEdit" class="bbb w-full h-full p-[20px]" v-model="content" />
     <div v-else class="aaa markdown-content" v-html="renderedContent" />
 
     <button @click="onVisibilityChange"
@@ -25,15 +20,10 @@
 <script setup>
 import MarkdownIt from 'markdown-it'
 
-const notesStore = useNotesStore()
-
 // Markdown 內容
 const content = ref(``)
-const uid = ref("0")
 const title = ref(``)
-const createDate = ref(``)
-const updateDate = ref(``)
-const isEdit = ref(false)
+const isEdit = ref(true)
 
 // Google登入成功時呼叫
 const handleLoginSuccess = (response) => {
@@ -97,27 +87,13 @@ const renderedContent = computed(() => {
 const onVisibilityChange = () => {
   if (isEdit.value) {
     const body = {
-      uid: uid.value,
       title: title.value,
       content: content.value,
     }
-    useApiStore().put('/api/v1/notes/', body);
+    useApiStore().post('/api/v1/notes/', body);
   }
   isEdit.value = !isEdit.value
 }
-
-const onDeleteClick = () => {
-  useApiStore().delete(`/api/v1/notes/${uid.value}`);
-}
-
-onMounted(async () => {
-  const data = await notesStore.getNote();
-  uid.value = data == undefined ? "" : data.uid
-  content.value = data == undefined ? "" : data.content
-  title.value = data == undefined ? "" : data.title
-  createDate.value = data == undefined ? "" : data.createDate
-  updateDate.value = data == undefined ? "" : data.updateDate
-})
 </script>
 
 <style scoped>

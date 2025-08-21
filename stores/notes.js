@@ -71,5 +71,5 @@ export const useNotesStore = defineStore("notes", () => {
     hasNoMoreData.value = false
   }
 
-  return { notes, searchNotes, resetLoadingState, getNote};
+  return { notes, page, searchNotes, resetLoadingState, getNote};
 });
