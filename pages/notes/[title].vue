@@ -10,9 +10,23 @@
     <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
     <div v-else>{{ title }}</div>
 
-    <div>{{ createDate.split("T")[0] }}</div>
-    <textarea v-if="isEdit" class="aaa w-full h-full p-[20px]" v-model="content" />
+    <div>{{ (createDate ? createDate.split("T")[0] : '') }}</div>
+    <textarea v-if="isEdit" ref="textareaRef" class="aaa w-full h-full p-[20px]" v-model="content" @paste="handlePaste" @dragover.prevent
+      @drop="handleDrop" />
     <div v-else class="aaa markdown-content" v-html="renderedContent" />
+
+    <div v-if="uploadingFiles.length > 0" class="fixed top-5 right-5 bg-white shadow-lg rounded-lg p-4 max-w-sm">
+      <div v-for="file in uploadingFiles" :key="file.id" class="mb-2 last:mb-0">
+        <div class="flex items-center justify-between text-sm">
+          <span class="truncate mr-2">{{ file.name }}</span>
+          <span>{{ file.progress }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-500 h-2 rounded-full transition-all" :style="{ width: file.progress + '%' }"></div>
+        </div>
+      </div>
+    </div>
+
 
     <button @click="onVisibilityChange"
       class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
@@ -34,6 +48,8 @@ const title = ref(``)
 const createDate = ref(``)
 const updateDate = ref(``)
 const isEdit = ref(false)
+const textareaRef = ref(null)
+const uploadingFiles = ref([])
 
 // Google登入成功時呼叫
 const handleLoginSuccess = (response) => {
@@ -75,6 +91,109 @@ const md = new MarkdownIt({
   typographer: true
 })
 
+// 檢查文件是否為圖片
+const isImageFile = (file) => {
+  return file && file.type && file.type.startsWith('image/')
+}
+
+const uploadFile = async (file) => {
+  try {
+    // 先插入一個占位符
+    const placeholder = `![上傳中...](uploading-${file.name})\n`
+    insertTextAtCursor(placeholder)
+
+    // 上傳圖片
+    // const imageUrl = await uploadImage(file)
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await useApiStore().post('/api/v1/image', formData);
+    const newFileName = response.data.fileName;
+
+    // 替換占位符為實際的圖片鏈接
+    const imageName = file.name.replace(/\.[^/.]+$/, '') // 移除副檔名作為 alt text
+    const imageMarkdown = `![${imageName}](http://www.louise.tw/static/images/${newFileName})\n`
+
+    // 找到並替換占位符
+    const currentContent = content.value
+    const placeholderRegex = new RegExp(`!\\[上傳中\\.\\.\\.\\]\\(uploading-[^)]+\\)\\n?`)
+    content.value = currentContent.replace(placeholderRegex, imageMarkdown)
+
+  } catch (error) {
+    console.error('上傳失敗:', error)
+    // 移除占位符
+    const currentContent = content.value
+    const placeholderRegex = new RegExp(`!\\[上傳中\\.\\.\\.\\]\\(uploading-[^)]+\\)\\n?`)
+    content.value = currentContent.replace(placeholderRegex, `<!-- 圖片上傳失敗: ${error.message} -->\n`)
+
+    // 可以添加錯誤提示
+    ElMessage.error(`圖片上傳失敗: ${error.message}`)
+  }
+}
+
+// 在游標位置插入文本
+const insertTextAtCursor = (text) => {
+  const textarea = textareaRef.value
+  if (!textarea) return
+
+  const startPos = textarea.selectionStart
+  const endPos = textarea.selectionEnd
+  const beforeText = content.value.substring(0, startPos)
+  const afterText = content.value.substring(endPos)
+
+  content.value = beforeText + text + afterText
+
+  // 設置新的游標位置
+  nextTick(() => {
+    const newPos = startPos + text.length
+    textarea.setSelectionRange(newPos, newPos)
+    textarea.focus()
+  })
+}
+
+// 處理粘貼事件
+const handlePaste = async (event) => {
+  const clipboardData = event.clipboardData || window.clipboardData
+  if (!clipboardData) return
+
+  const items = Array.from(clipboardData.items)
+  const imageItems = items.filter(item => isImageFile(item.getAsFile()))
+
+  if (imageItems.length === 0) return
+
+  // 阻止默認的粘貼行為
+  event.preventDefault()
+
+  // 處理每個圖片
+  for (const item of imageItems) {
+    const file = item.getAsFile()
+    if (!file) continue
+
+    await uploadFile(file)
+  }
+}
+
+// 處理拖放事件
+const handleDrop = async (event) => {
+  event.preventDefault()
+
+  const files = Array.from(event.dataTransfer.files)
+  const imageFiles = files.filter(isImageFile)
+
+  if (imageFiles.length === 0) return
+
+  // 設置游標位置到拖放位置
+  const textarea = textareaRef.value
+  if (textarea) {
+    textarea.focus()
+    // 這裡可以根據需要計算精確的拖放位置
+  }
+
+  // 處理每個圖片文件（與粘貼邏輯相同）
+  for (const file of imageFiles) {
+    await uploadFile(file)
+  }
+}
+
 // 顯示md裡面的圖片
 const originalImageRender = md.renderer.rules.image
 md.renderer.rules.image = function (tokens, idx, options, env, renderer) {
@@ -91,7 +210,7 @@ md.renderer.rules.image = function (tokens, idx, options, env, renderer) {
 
 // 計算渲染後的 HTML
 const renderedContent = computed(() => {
-  return md.render(content.value)
+  return content.value ? md.render(content.value) : ''
 })
 
 const onVisibilityChange = () => {
@@ -101,7 +220,7 @@ const onVisibilityChange = () => {
       title: title.value,
       content: content.value,
     }
-    useApiStore().put('/api/v1/notes/', body);
+    useApiStore().post('/api/v1/notes', body);
   }
   isEdit.value = !isEdit.value
 }
@@ -121,105 +240,5 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.markdown-content {
-  margin: 0 auto;
-  padding: 20px;
-  line-height: 1.6;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-/* 標題樣式 */
-.markdown-content :deep(h1) {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 0.5rem;
-  /* color: #1f2937; */
-}
-
-.markdown-content :deep(h2) {
-  font-size: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  /* color: #374151; */
-}
-
-.markdown-content :deep(h3) {
-  font-size: 1.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  /* color: #4b5563; */
-}
-
-/* 段落和文字 */
-.markdown-content :deep(p) {
-  margin-bottom: 1rem;
-  /* color: #374151; */
-}
-
-.markdown-content :deep(strong) {
-  font-weight: 600;
-  /* color: #1f2937; */
-}
-
-.markdown-content :deep(em) {
-  font-style: italic;
-  /* color: #6b7280; */
-}
-
-/* 列表 */
-.markdown-content :deep(ul) {
-  margin-left: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.markdown-content :deep(li) {
-  margin-bottom: 0.5rem;
-  /* color: #374151; */
-}
-
-/* 程式碼 inline code */
-.markdown-content :deep(code) {
-  background-color: #1F2C2E;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
-  font-size: 0.9rem;
-  /* color: #dc2626; */
-}
-
-/* 程式碼區塊 */
-.markdown-content :deep(pre) {
-  background-color: #1f2937;
-  /* color: #f9fafb; */
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  margin-bottom: 1rem;
-}
-
-.markdown-content :deep(pre code) {
-  background-color: transparent;
-  padding: 0;
-  /* color: #f9fafb; */
-}
-
-/* 引用 */
-.markdown-content :deep(blockquote) {
-  border-left: 4px solid #e5e7eb;
-  padding-left: 1rem;
-  margin: 1rem 0;
-  font-style: italic;
-  color: #6b7280;
-}
-
-/* 連結 */
-.markdown-content :deep(a) {
-  color: #3b82f6;
-  text-decoration: underline;
-}
-
-.markdown-content :deep(a:hover) {
-  color: #1d4ed8;
-}
+@import url("~/assets/css/markdown.css");
 </style>

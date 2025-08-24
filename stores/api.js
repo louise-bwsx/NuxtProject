@@ -13,7 +13,9 @@ export const useApiStore = defineStore("api", () => {
         ...options,
         // 合併 headers
         headers: {
-          "Content-Type": "application/json",
+          // 在使用FormData時 不使用ContentType 為了讓上傳圖片功能可以 可以自動識別 而不是寫死application/json
+          ...(!(options.body instanceof FormData) && !options.headers?.['Content-Type'] ?
+              { "Content-Type": "application/json" } : {}),
           Accept: "application/json",
           // 加上Authorization後 會變成 "非簡單請求" 所以會預先發送OPTIONS 在後端沒有處理OPTIONS時 會CORS
           // 需要給後端安裝中間件

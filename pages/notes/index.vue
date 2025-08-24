@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <NuxtLink to="/notes/create"
+    <NuxtLink to="/notes/c"
       class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
     </NuxtLink>

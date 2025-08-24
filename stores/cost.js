@@ -93,6 +93,7 @@ export const useCostStore = defineStore("cost", () => {
     try {
       const response = await useApiStore().post("/api/v1/report", body);
 
+      // TODO: 需要維持搜尋條件下刷新
       // 刷新
       await getCosts()
 
