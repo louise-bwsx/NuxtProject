@@ -58,7 +58,7 @@ export const useNotesStore = defineStore("notes", () => {
       }
 
       // 建構完整的 API URL
-      const apiUrl = `/api/v1/notes/${title}`;
+      const apiUrl = `/api/v1/notes/${encodeURIComponent(title)}`;
 
       const response = await useApiStore().get(apiUrl);
       return response.data

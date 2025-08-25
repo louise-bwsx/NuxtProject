@@ -8,11 +8,11 @@
     </div>
 
     <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
-    <div v-else class="bbb">{{ title }}</div>
+    <div v-else-if="title" class="bbb">{{ title }}</div>
 
-    <div class="bbb">{{ (createDate ? createDate.split("T")[0] : '') }}</div>
+    <div v-if="createDate" class="bbb">{{ createDate.split("T")[0] }}</div>
 
-    <textarea v-if="isEdit" ref="textareaRef" class="aaa w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
+    <textarea v-if="isEdit" ref="textareaRef" class="aaa outline-none w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
       @drop="handleDrop" />
     <div v-else class="aaa markdown-content overflow-y-auto" v-html="renderedContent" />
 

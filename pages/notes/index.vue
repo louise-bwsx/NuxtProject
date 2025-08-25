@@ -7,7 +7,8 @@
 
       <div v-for="note in notesStore.notes" :key="note"
         class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] bg-black overflow-x-hidden">
-        <NuxtLink :to="`/notes/${note.title}`" class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
+        <!-- 20250825 louise 為了避免 title中因為其他字符 # 導致在搜尋時被截斷 使用encodeURIComponent -->
+        <NuxtLink :to="`/notes/${encodeURIComponent(note.title)}`" class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
           {{ note.title }}
         </NuxtLink>
         <!-- 20250814 故意寫死90px 避免因為數字盡量小 大小不一 -->
