@@ -53,6 +53,9 @@ export const useNotesStore = defineStore("notes", () => {
     try {
       // 從 route.query 或傳入的參數中獲取搜尋條件
       const title = route.params.title;
+      if (title == "create") {
+        return;
+      }
 
       // 建構完整的 API URL
       const apiUrl = `/api/v1/notes/${title}`;

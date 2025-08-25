@@ -1,5 +1,4 @@
 .markdown-content {
-  margin: 0 auto;
   padding: 20px;
   line-height: 1.6;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -46,13 +45,42 @@
 
 /* 列表 */
 .markdown-content :deep(ul) {
-  margin-left: 1.5rem;
   margin-bottom: 1rem;
+  overflow-x: auto;
+  list-style: none; /* 移除預設的列表樣式 */
 }
 
-.markdown-content :deep(li) {
+/* 只針對 ul 底下的 li 設定樣式 */
+.markdown-content :deep(ul li) {
   margin-bottom: 0.5rem;
+  position: relative;
+  /* 為原點留出空間 */
+  padding-left: 1.5rem;
   /* color: #374151; */
+}
+
+.markdown-content :deep(ul li::before) {
+  content: '•'; /* 原點符號 */
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* 原點顏色，可以調整 */
+  /* color: #6b7280;  */
+  font-weight: bold;
+  /* 稍微放大原點 */
+  font-size: 1.2em;
+  /* 調整行高讓原點對齊 */
+  line-height: 1.2;
+  padding-left: 0.5rem;
+}
+
+.markdown-content :deep(ol) {
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  /* 強制顯示數字 */
+  list-style-type: decimal;
+  /* 確保有足夠空間顯示數字 */
+  padding-left: 2rem;
 }
 
 /* 程式碼 inline code */

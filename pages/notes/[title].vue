@@ -1,5 +1,5 @@
 <template>
-  <div class="ooo w-screen min-h-screen overflow-y-scroll relative">
+  <div class="ooo w-screen h-screen overflow-y-auto relative flex flex-col">
     <div class="bbb flex w-full justify-between items-center w-full">
       <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
       <button @click="onDeleteClick" class="btn">
@@ -8,25 +8,13 @@
     </div>
 
     <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
-    <div v-else>{{ title }}</div>
+    <div v-else class="bbb">{{ title }}</div>
 
-    <div>{{ (createDate ? createDate.split("T")[0] : '') }}</div>
-    <textarea v-if="isEdit" ref="textareaRef" class="aaa w-full h-full p-[20px]" v-model="content" @paste="handlePaste" @dragover.prevent
+    <div class="bbb">{{ (createDate ? createDate.split("T")[0] : '') }}</div>
+
+    <textarea v-if="isEdit" ref="textareaRef" class="aaa w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
       @drop="handleDrop" />
-    <div v-else class="aaa markdown-content" v-html="renderedContent" />
-
-    <div v-if="uploadingFiles.length > 0" class="fixed top-5 right-5 bg-white shadow-lg rounded-lg p-4 max-w-sm">
-      <div v-for="file in uploadingFiles" :key="file.id" class="mb-2 last:mb-0">
-        <div class="flex items-center justify-between text-sm">
-          <span class="truncate mr-2">{{ file.name }}</span>
-          <span>{{ file.progress }}%</span>
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-2">
-          <div class="bg-blue-500 h-2 rounded-full transition-all" :style="{ width: file.progress + '%' }"></div>
-        </div>
-      </div>
-    </div>
-
+    <div v-else class="aaa markdown-content overflow-y-auto" v-html="renderedContent" />
 
     <button @click="onVisibilityChange"
       class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
@@ -49,7 +37,6 @@ const createDate = ref(``)
 const updateDate = ref(``)
 const isEdit = ref(false)
 const textareaRef = ref(null)
-const uploadingFiles = ref([])
 
 // Google登入成功時呼叫
 const handleLoginSuccess = (response) => {
