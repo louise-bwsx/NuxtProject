@@ -26,8 +26,11 @@
 
 <script setup>
 import MarkdownIt from 'markdown-it'
+import { useRoute } from 'vue-router'
 
 const notesStore = useNotesStore()
+const route = useRoute()
+const router = useRouter()
 
 // Markdown 內容
 const content = ref(``)
@@ -94,6 +97,11 @@ const uploadFile = async (file) => {
     const formData = new FormData()
     formData.append('file', file)
     const response = await useApiStore().post('/api/v1/image', formData);
+    if (response.code === 0) {
+      useToastStore().showToast("上傳成功", "success")
+    } else {
+      useToastStore().showToast(`上傳失敗: ${response.message}`, "error")
+    }
     const newFileName = response.data.fileName;
 
     // 替換占位符為實際的圖片鏈接
@@ -200,16 +208,37 @@ const renderedContent = computed(() => {
   return content.value ? md.render(content.value) : ''
 })
 
-const onVisibilityChange = () => {
+const onVisibilityChange = async () => {
   if (isEdit.value) {
     const body = {
       uid: uid.value,
       title: title.value,
       content: content.value,
     }
-    useApiStore().post('/api/v1/notes', body);
+
+    const response = useApiStore().post('/api/v1/notes', body);
+
+    if (response.code === 0) {
+      useToastStore().showToast("上傳成功", "success")
+    } else {
+      useToastStore().showToast(`上傳失敗: ${response.message}`, "error")
+    }
   }
   isEdit.value = !isEdit.value
+  route.query.isEdit = isEdit.value
+
+  const newQuery = { ...route.query }
+
+  if (isEdit.value) {
+    newQuery.isEdit = 'true'
+  } else {
+    delete newQuery.isEdit // 移除參數而不是設為 false
+  }
+  console.log(`newQuery: ${JSON.stringify(newQuery)}`)
+
+  await router.replace({
+    query: newQuery
+  })
 }
 
 const onDeleteClick = () => {
@@ -217,6 +246,8 @@ const onDeleteClick = () => {
 }
 
 onMounted(async () => {
+  isEdit.value = route.query.isEdit
+
   const data = await notesStore.getNote();
   uid.value = data == undefined ? "" : data.uid
   content.value = data == undefined ? "" : data.content

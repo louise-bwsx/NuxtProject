@@ -16,6 +16,16 @@
       切換語言測試
     </NuxtLink>
 
+    <NuxtLink to="/googleLogin/GoogleSign-inButton" class="btn btn-primary">
+      GoogleSign-inButton
+    </NuxtLink>
+    <NuxtLink to="/googleLogin/useCodeClient" class="btn btn-primary">
+      useCodeClient
+    </NuxtLink>
+    <NuxtLink to="/googleLogin/useTokenClient" class="btn btn-primary">
+      useTokenClient
+    </NuxtLink>
+
     <!-- 手機sm ~ 320px -->
     <!-- Sony手機411 832 -->
     <!-- 20250710 避免Hyration警告 -->

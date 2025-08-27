@@ -5,19 +5,19 @@
       <!-- 目前只有這個有瀑布流 不知道為什麼底下div沒有 -->
       <!-- <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li> -->
 
-      <div v-for="note in notesStore.notes" :key="note"
+      <NuxtLink v-for="note in notesStore.notes" :key="note" :to="`/notes/${encodeURIComponent(note.title)}`"
         class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] bg-black overflow-x-hidden">
         <!-- 20250825 louise 為了避免 title中因為其他字符 # 導致在搜尋時被截斷 使用encodeURIComponent -->
-        <NuxtLink :to="`/notes/${encodeURIComponent(note.title)}`" class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
+        <div class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
           {{ note.title }}
-        </NuxtLink>
+        </div>
         <!-- 20250814 故意寫死90px 避免因為數字盡量小 大小不一 -->
-        <div class="ooo whitespace-nowrap text-end w-[90px]">{{ note.createDate.split('T')[0] }}</div>
+        <div class="ooo whitespace-nowrap text-end w-[100px]">{{ note.createDate.split('T')[0] }}</div>
         <!-- <div class="">{{ note.updateDate }}</div> -->
-      </div>
+      </NuxtLink>
     </div>
 
-    <NuxtLink to="/notes/create"
+    <NuxtLink to="/notes/create?isEdit=true"
       class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
     </NuxtLink>
