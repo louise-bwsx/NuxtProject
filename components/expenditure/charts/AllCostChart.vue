@@ -1,5 +1,5 @@
 <template>
-  <div ref="allCostChartRef" class="w-full h-full" />
+  <div ref="allCostChartRef" class="w-full h-full min-h-[100px]" />
 </template>
 
 <script setup>
@@ -36,7 +36,7 @@ const renderChart = () => {
       {
         type: 'pie',
         radius: '50%',
-        center: ['35%', '50%'],   // 圖表位置：左側 35%，垂直居中
+        center: ['50%', '50%'],   // 圖表位置：水平置中, 垂直置中
         data,
         labelLine: {
           show: true, // ✅ 關閉連線
@@ -70,6 +70,7 @@ onMounted(async () => {
   await getCostsSum()
 
   chartInstance = echarts.init(allCostChartRef.value)
+
   renderChart()
 
   window.addEventListener('resize', () => {

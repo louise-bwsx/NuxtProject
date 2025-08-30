@@ -1,6 +1,6 @@
 <template>
-  <button class="bbb" :disabled="!isReady" @click="login()">
-    <img src="@/assets/icons/account_40_40_white.svg" class="w-[40px] h-[40px] bbb bg-black rounded-full">
+  <button :disabled="!isReady" @click="login()">
+    <img src="@/assets/icons/account_40_40_white.svg" class="w-[40px] h-[40px] bg-black rounded-full ooo">
   </button>
 </template>
 

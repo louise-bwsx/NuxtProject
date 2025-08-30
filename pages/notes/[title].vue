@@ -1,12 +1,5 @@
 <template>
   <div class="ooo w-screen h-screen overflow-y-auto relative flex flex-col">
-    <div class="bbb flex w-full justify-between items-center w-full">
-      <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
-      <button @click="onDeleteClick" class="btn">
-        <img src="~/assets/icons/delete_24_24_white.svg" class="w-[24px] h-[24px]">
-      </button>
-    </div>
-
     <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
     <div v-else-if="title" class="bbb">{{ title }}</div>
 
@@ -15,6 +8,11 @@
     <textarea v-if="isEdit" ref="textareaRef" class="aaa outline-none w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
       @drop="handleDrop" />
     <div v-else class="aaa markdown-content overflow-y-auto" v-html="renderedContent" />
+
+    <button @click="haneldClickSearchButton"
+      class="fixed bottom-5 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
+      <img src="~/assets/icons/delete_24_24_white.svg" class="w-[24px] h-[24px]">
+    </button>
 
     <button @click="onVisibilityChange"
       class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
@@ -40,39 +38,6 @@ const createDate = ref(``)
 const updateDate = ref(``)
 const isEdit = ref(false)
 const textareaRef = ref(null)
-
-// Google登入成功時呼叫
-const handleLoginSuccess = (response) => {
-  // console.log(`response: ${JSON.stringify(response)}`)
-  const { credential } = response;
-  // console.log(`credential: ${credential}`)
-  verifyTokenWithBackend(credential)
-};
-
-// Google登入出現錯誤時呼叫
-const handleLoginError = () => {
-  useToastStore().showToast("登入失敗", "error")
-};
-
-const verifyTokenWithBackend = async (token) => {
-  const body = {
-    token: token
-  }
-
-  try {
-    const response = await useApiStore().post("/api/v1/auth/verify", body)
-    if (response.code === 0) {
-      useAuthStore().setAccessToken(response.data.accessToken)
-      useAuthStore().setUserInfo(response.data.userInfo)
-      useToastStore().showToast("登入成功", "success")
-    } else {
-      useToastStore().showToast(`登入失敗: ${response.message}`, "error")
-    }
-  } catch (error) {
-    console.log(error.message)
-    useToastStore().showToast(`不明原因 登入失敗，請稍後再試: ${error.message}`, "error")
-  }
-}
 
 // 配置 markdown-it
 const md = new MarkdownIt({

@@ -1,5 +1,5 @@
 <template>
-  <div class="bbb w-full flex flex-col justify-start items-center">
+  <div class="bbb w-full h-full flex flex-col justify-start items-center">
     <AllCostChart />
     <AllTypeChart />
     <Toast />
