@@ -1,6 +1,6 @@
 <template>
   <div v-show="props.showSearchInput" class="flex flex-col bbb p-[8px] gap-[8px] w-screen">
-    <el-input class="flex-1" type="text" v-model="detail" placeholder="明細" clearable size="large" />
+    <el-input ref="keywordInputRef" class="flex-1" type="text" v-model="keyword" placeholder="搜尋" clearable size="large" @keydown.enter="onSearch" @keydown.esc="onReset"/>
 
     <el-date-picker class="flex-1 min-w-full" v-model="dateRange" type="daterange" unlink-panels range-separator="到"
       start-placeholder="起始日" end-placeholder="結束日" :shortcuts="shortcuts" size="large" format="YYYY/MM/DD"
@@ -15,20 +15,18 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { useCostStore } from '#imports';
 
 const route = useRoute()
 const router = useRouter()
-const costStore = useCostStore()
 
 const props = defineProps({
   showSearchInput: Boolean
 });
+const emit = defineEmits(['onReset', 'onSearch'])
 
-// 為了讓watch immediate 需要使用true
-const needToSearch = ref(true)
-const detail = ref("")
-const dateRange = ref("")
+const keywordInputRef = ref(null)
+const keyword = ref("")
+const dateRange = ref([])
 const shortcuts = [
   {
     text: '一個禮拜前',
@@ -60,60 +58,48 @@ const shortcuts = [
 ]
 
 const onReset = async () => {
-  detail.value = ""
-  dateRange.value = ""
-  // 固定給1 在searchCost callAPI後會++ page 1 才會重置資料
-  costStore.page = 1
-  // 重置hasNoMoreData 避免捲動時取得錯誤狀態
-  costStore.resetLoadingState()
+  keyword.value = ""
+  dateRange.value = []
 
-  await router.push({
-    query: {
-      ...route.query, // 保留現有的 query 參數
-      detail: detail.value,
-      startDate: dateRange.value[0],
-      endDate: dateRange.value[1]
-    }
-  })
+  await router.push({query: {}})
 
-  needToSearch.value = true
+  emit('onReset')
 }
 
 const onSearch = async () => {
-  // 固定給1 在searchCost callAPI後會++ page 1 才會重置資料
-  costStore.page = 1
-  // 重置hasNoMoreData 避免捲動時取得錯誤狀態
-  costStore.resetLoadingState()
-
   // 使用 router.push 更新 query 參數
   // 或是改用router.replace 就不會留下紀錄 上一頁就不會顯示上一個搜尋條件
   await router.push({
     query: {
       ...route.query, // 保留現有的 query 參數
-      detail: detail.value,
+      keyword: keyword.value,
       startDate: dateRange.value[0],
       endDate: dateRange.value[1]
     }
   })
 
-  needToSearch.value = true
+  emit('onSearch')
 }
 
+onMounted(() => {
+  keyword.value = route.query.keyword
+  dateRange.value[0] = route.query.startDate
+  dateRange.value[1] = route.query.endDate
+})
+
 watch(
-  () => needToSearch.value,
-  (newVal) => {
-    if (!newVal) {
-      return;
-    }
+  () => props.showSearchInput,
+  async (newVal) => {
+    if (!newVal)
+      return
 
-    //  避免重新整理出現ssr 跑進來
-    if (!import.meta.client) {
-      return;
-    }
+    keyword.value = route.query.keyword
+    dateRange.value[0] = route.query.startDate
+    dateRange.value[1] = route.query.endDate
 
-    costStore.searchCosts()
-
-    needToSearch.value = false
+    // 開啟時自動focus
+    await nextTick()
+    keywordInputRef.value?.focus()
   },
   { immediate: true }
 )

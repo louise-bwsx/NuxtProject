@@ -51,13 +51,13 @@ export const useCostStore = defineStore("cost", () => {
       const params = new URLSearchParams();
 
       // 從 route.query 或傳入的參數中獲取搜尋條件
-      const detail = route.query.detail;
+      const keyword = route.query.keyword;
       const startDate = route.query.startDate;
       const endDate = route.query.endDate;
 
       // 只添加有值的參數
-      if (detail) {
-        params.append('detail', detail);
+      if (keyword) {
+        params.append('keyword', keyword);
       }
       if (startDate) {
         params.append('startDate', startDate);
@@ -93,9 +93,8 @@ export const useCostStore = defineStore("cost", () => {
     try {
       const response = await useApiStore().post("/api/v1/report", body);
 
-      // TODO: 需要維持搜尋條件下刷新
-      // 刷新
-      await getCosts()
+      // 需要維持搜尋條件下刷新
+      await searchCosts()
 
       if (response.code == 0) {
         useToastStore().showToast("儲存成功", "success");

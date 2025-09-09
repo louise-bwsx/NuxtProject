@@ -3,7 +3,7 @@
     <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
     <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
     <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
-    <SearchInput v-model:showSearchInput="showSearchInput"/>
+    <SearchInput v-model:showSearchInput="showSearchInput" @onReset="onReset" @onSearch="onSearch"/>
 
     <ResponseDataTable />
 
@@ -25,10 +25,19 @@
 
 <script setup>
 import { useToastStore } from '~/stores/toast';
+import { useCostStore } from '#imports';
+import { useAuthStore } from '#imports';
+import { useRoute } from 'vue-router';
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import MobileInput from "~/components/expenditure/MobileInput.vue";
 import SearchInput from '~/components/expenditure/SearchInput.vue';
 import Toast from '~/components/common/Toast.vue';
+
+const toastStore = useToastStore()
+const costStore = useCostStore()
+const authStore = useAuthStore()
+
+const route = useRoute()
 
 const showSearchInput = ref(false)
 const showMenu = ref(false)
@@ -39,17 +48,37 @@ const haneldClickSearchButton = () => {
 }
 
 const handleClickAddButton = () => {
-  const accessToken = useAuthStore().getAccessToken
-  console.log(`isExpire: ${useAuthStore().isExpire(accessToken)}`)
-  if (useAuthStore().isExpire(accessToken)) {
-    useToastStore().showToast('請重新登入', "error")
+  const accessToken = authStore.getAccessToken
+  if (authStore.isExpire(accessToken)) {
+    toastStore.showToast('請重新登入', "error")
     return
   }
   showMenu.value = true
 }
 
+const onReset = () => {
+  // 固定給1 在searchCost callAPI後會++ page 1 才會重置資料
+  costStore.page = 1
+  // 重置hasNoMoreData 避免捲動時取得錯誤狀態
+  costStore.resetLoadingState()
+  costStore.searchCosts()
+}
+
+const onSearch = () => {
+  // 固定給1 在searchCost callAPI後會++ page 1 才會重置資料
+  costStore.page = 1
+  // 重置hasNoMoreData 避免捲動時取得錯誤狀態
+  costStore.resetLoadingState()
+  costStore.searchCosts()
+}
+
 onMounted(async () => {
   // 不要直接在Template使用 useUserInfoStore().getUserInfo.name 會有Hydration Warning
-  userName.value = useAuthStore().getUserInfo.name;
+  userName.value = authStore.getUserInfo.name;
+
+  // 不能直接用 route.query != {} 即使logroute.query顯示{} 還是會回傳true
+  showSearchInput.value = Object.keys(route.query).length > 0
+
+  await costStore.searchCosts()
 });
 </script>

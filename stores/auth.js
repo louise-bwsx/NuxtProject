@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.clear("accessToken");
       localStorage.clear("userInfo");
       accessToken.value = "";
-    } 
+    }
     return accessToken.value;
   });
 
@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
     // 20250709 避免出現SSR Error ERROR  [unhandledRejection] localStorage is not defined
     // 20250709 改用import.meta.client 因為process.client deprecate
     if (!import.meta.client) {
-      return "";
+      return undefined;
     }
 
     if (
@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
     ) {
       var storedUserInfo = localStorage.getItem("userInfo");
       if (storedUserInfo == "[object Object]") {
-        return "";
+        return undefined;
       }
       userInfo.value = JSON.parse(storedUserInfo);
     }
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.clear("userInfo");
       accessToken.value = "";
       userInfo.value = {}
-    } 
+    }
 
     return userInfo.value;
   });
@@ -75,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isExpire = (token) => {
     if (token == "" || token == null) {
       return true;
-    } 
+    }
 
     const timestampNow = Date.now() / 1000;
     const decoded = jwtDecode(token);
@@ -84,8 +84,9 @@ export const useAuthStore = defineStore('auth', () => {
 
   return {
     getAccessToken,
-    setAccessToken,
     getUserInfo,
+
+    setAccessToken,
     setUserInfo,
     getExp,
     isExpire,
