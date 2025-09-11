@@ -10,9 +10,9 @@
   <Transition enter-active-class="transition ease-out duration-300" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition ease-in duration-200" leave-from-class="opacity-100"
     leave-to-class="opacity-0">
-    <div v-if="props.showMenu" class="fixed min-h-screen min-w-screen bg-black/50" @click.stop="closeMenu">
+    <div v-if="costStore.showMenu" class="fixed min-h-screen min-w-screen bg-black/50 z-100" @click.stop="closeMenu">
       <!-- 20250707 故意留一個空的@click.stop 避免點擊白色區域後關閉 -->
-      <div v-if="props.showMenu" @click.stop="" ref="menu"
+      <div v-if="costStore.showMenu" @click.stop="" ref="menu"
         class="fixed w-full z-[20] bottom-0 bg-white flex flex-col gap-3 justify-between p-2 text-black rounded-t-[16px]">
         <div class="w-full flex justify-center">
           <div class="w-[50px] h-[5px] rounded-full bg-[#C8C9C9]" />
@@ -79,7 +79,7 @@
             取消
           </button>
           <button @click="handleSaveClick" class="btn btn-soft bg-[#0F2B47] flex-1">
-            <span v-if="useCostStore().isLoading" class="loading loading-spinner loading-xs"></span>
+            <span v-if="costStore.isLoading" class="loading loading-spinner loading-xs"></span>
             儲存
           </button>
         </div>
@@ -89,24 +89,27 @@
 </template>
 
 <script setup>
-import { useWindowSize } from "@vueuse/core";
+import { useCostStore } from '#imports';
 
-const isMobile = computed(() => useWindowSize().width.value <= 640)
-const props = defineProps({
-  showMenu: Boolean
-});
+// const isMobile = computed(() => useWindowSize().width.value <= 640)
+// const props = defineProps({
+//   showMenu: Boolean
+// });
 
-const emit = defineEmits(['update:showMenu']);
+// const emit = defineEmits(['update:showMenu']);
+
+const costStore = useCostStore()
 
 const closeMenu = () => {
-  emit('update:showMenu', false);
+  costStore.showMenu = false
+  // emit('update:showMenu', false);
 };
 
 const menu = ref(null)
 const expenditure = ref({})
 
 const handleSaveClick = () => {
-  useCostStore().handleSaveDay({
+  costStore.handleSaveDay({
     costDate: expenditure.value.costDate,
     // toString是必要的 為了填入min 不轉型Go會Error
     breakfastCost: expenditure.value.breakfastCost.toString(),
@@ -137,10 +140,10 @@ const focusNext = (event) => {
 
 // 20250810 避免在沒開啟的狀態下 呼叫getTodayCost 導致呼叫兩次/report
 watch(
-  () => props.showMenu,
+  () => costStore.showMenu, // props.showMenu,
   async (newVal) => {
     if (newVal) {
-      expenditure.value = await useCostStore().getTodayCost()
+      expenditure.value = await costStore.getTodayCost()
     }
   }
 )

@@ -42,6 +42,9 @@ const verifyTokenWithBackend = async (code) => {
     if (response.code === 0) {
       authStore.setAccessToken(response.data.accessToken)
       authStore.setUserInfo(response.data.userInfo)
+      // 登入後即時更新
+      isLogin.value = true
+      picture.value = authStore.getUserInfo.picture
       toastStore.showToast("登入成功", "success")
     } else {
       toastStore.showToast(`登入失敗: ${response.message}`, "error")
@@ -54,7 +57,7 @@ const verifyTokenWithBackend = async (code) => {
 
 onMounted(() => {
   // 避免Hydration node mismatch 將結果存起來
-  isLogin.value = authStore.getUserInfo != undefined
+  isLogin.value = authStore.getUserInfo != undefined && !isEmptyObject(authStore.getUserInfo)
   picture.value = isLogin.value ? authStore.getUserInfo.picture : ''
 })
 </script>

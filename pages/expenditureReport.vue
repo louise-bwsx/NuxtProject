@@ -17,8 +17,6 @@
       <img src="@/assets/icons/add_40_40_white.svg" class="w-[24px] h-[24px]">
     </button>
 
-    <MobileInput v-model:showMenu="showMenu" />
-
     <Toast />
   </div>
 </template>
@@ -29,7 +27,6 @@ import { useCostStore } from '#imports';
 import { useAuthStore } from '#imports';
 import { useRoute } from 'vue-router';
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
-import MobileInput from "~/components/expenditure/MobileInput.vue";
 import SearchInput from '~/components/expenditure/SearchInput.vue';
 import Toast from '~/components/common/Toast.vue';
 
@@ -40,7 +37,6 @@ const authStore = useAuthStore()
 const route = useRoute()
 
 const showSearchInput = ref(false)
-const showMenu = ref(false)
 const userName = ref("")
 
 const haneldClickSearchButton = () => {
@@ -53,7 +49,7 @@ const handleClickAddButton = () => {
     toastStore.showToast('請重新登入', "error")
     return
   }
-  showMenu.value = true
+  costStore.showMenu = true
 }
 
 const onReset = () => {

@@ -14,10 +14,13 @@
     <!-- 為了顯示pages的index.vue內建的功能 -->
     <NuxtPage />
 
+    <!-- 20250911 為了讓mask覆蓋整個螢幕 將MobileInput從expenditureReport移到這裡 -->
+    <MobileInput />
   </div>
 </template>
 
 <script setup>
 import GoogleLoginButton from './components/common/GoogleLoginButton.vue';
+import MobileInput from './components/expenditure/MobileInput.vue';
 // import Toast from "~/components/common/Toast.vue";
 </script>

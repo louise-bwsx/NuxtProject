@@ -9,6 +9,7 @@ export const useCostStore = defineStore("cost", () => {
   const page = ref(1)
   const limit = ref(30)
   const hasNoMoreData = ref(false)
+  const showMenu = ref(false)
 
   const getTodayCost = async () => {
     // console.log(`expenditureList.value.length: ${expenditureList.value.length}`);
@@ -115,5 +116,18 @@ export const useCostStore = defineStore("cost", () => {
     isLoading.value = false
   }
 
-  return { expenditureList, isLoading, page, limit, hasNoMoreData, getTodayCost, getCosts, searchCosts, handleSaveDay, resetLoadingState };
+  return {
+    expenditureList,
+    isLoading,
+    page,
+    limit,
+    hasNoMoreData,
+    showMenu,
+
+    getTodayCost,
+    getCosts,
+    searchCosts,
+    handleSaveDay,
+    resetLoadingState
+  };
 });
