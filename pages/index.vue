@@ -32,6 +32,7 @@
     <ClientOnly>
       <div>Width: {{ width }}</div>
       <div>Height: {{ height }}</div>
+      <button @click="useToastStore().showToast('aaa','success')" class="btn">showToast</button>
     </ClientOnly>
   </div>
 </template>

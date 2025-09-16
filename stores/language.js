@@ -21,6 +21,7 @@ export const useLanguageStore = defineStore('language', () => {
     }
 
     // { 這也能分嗎？ 如果超級巢狀勒？
+    // TODO: 筆記新增完後即時更新
 
     var translateV = "";
     switch (language.value) {

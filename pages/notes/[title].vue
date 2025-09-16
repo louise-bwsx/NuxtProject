@@ -9,7 +9,7 @@
       @drop="handleDrop" />
     <div v-else class="aaa markdown-content overflow-y-auto" v-html="renderedContent" />
 
-    <button @click="haneldClickSearchButton"
+    <button @click="onDeleteClick"
       class="fixed bottom-5 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="~/assets/icons/delete_24_24_white.svg" class="w-[24px] h-[24px]">
     </button>
@@ -181,7 +181,7 @@ const onVisibilityChange = async () => {
       content: content.value,
     }
 
-    const response = useApiStore().post('/api/v1/notes', body);
+    const response = await useApiStore().post('/api/v1/notes', body);
 
     if (response.code === 0) {
       useToastStore().showToast("上傳成功", "success")
@@ -206,8 +206,14 @@ const onVisibilityChange = async () => {
   })
 }
 
-const onDeleteClick = () => {
-  useApiStore().delete(`/api/v1/notes/${uid.value}`);
+const onDeleteClick = async () => {
+  const response = await useApiStore().delete(`/api/v1/notes/${uid.value}`);
+  if (response.code === 0) {
+    useToastStore().showToast("刪除成功", "success")
+  } else {
+    useToastStore().showToast(`刪除失敗: ${response.message}`, "error")
+  }
+  router.push('/notes')
 }
 
 onMounted(async () => {
