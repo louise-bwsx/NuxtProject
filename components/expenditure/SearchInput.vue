@@ -1,12 +1,12 @@
 <template>
-  <div v-show="props.showSearchInput" class="flex flex-col bbb p-[8px] gap-[8px] w-screen">
+  <div v-show="props.showSearchInput" class="flex flex-col  p-[8px] gap-[8px] w-screen">
     <el-input ref="keywordInputRef" class="flex-1" type="text" v-model="keyword" placeholder="搜尋" clearable size="large" @keydown.enter="onSearch" @keydown.esc="onReset"/>
 
     <el-date-picker class="flex-1 min-w-full" v-model="dateRange" type="daterange" unlink-panels range-separator="到"
       start-placeholder="起始日" end-placeholder="結束日" :shortcuts="shortcuts" size="large" format="YYYY/MM/DD"
       value-format="YYYY-MM-DD" />
 
-    <div class="bbb flex w-full gap-[8px]">
+    <div class=" flex w-full gap-[8px]">
       <button @click="onReset" class="btn flex-1">重設</button>
       <button @click="onSearch" class="btn flex-1">搜尋</button>
     </div>

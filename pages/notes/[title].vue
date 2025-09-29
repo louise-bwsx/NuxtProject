@@ -1,13 +1,13 @@
 <template>
-  <div class="ooo w-screen h-screen overflow-y-auto relative flex flex-col">
+  <div class=" w-screen h-screen overflow-y-auto relative flex flex-col">
     <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
-    <div v-else-if="title" class="bbb">{{ title }}</div>
+    <div v-else-if="title" class="">{{ title }}</div>
 
-    <div v-if="createDate" class="bbb">{{ createDate.split("T")[0] }}</div>
+    <div v-if="createDate" class="">{{ createDate.split("T")[0] }}</div>
 
-    <textarea v-if="isEdit" ref="textareaRef" class="aaa outline-none w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
+    <textarea v-if="isEdit" ref="textareaRef" class=" outline-none w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
       @drop="handleDrop" />
-    <div v-else class="aaa markdown-content overflow-y-auto" v-html="renderedContent" />
+    <div v-else class=" markdown-content overflow-y-auto" v-html="renderedContent" />
 
     <button @click="onDeleteClick"
       class="fixed bottom-5 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">

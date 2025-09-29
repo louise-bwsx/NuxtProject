@@ -1,5 +1,5 @@
 <template>
-  <div class="grow bbb">
+  <div class="grow ">
     <div>BeforeLocalized</div>
 
     <!-- t() - 基本翻譯函數 -->

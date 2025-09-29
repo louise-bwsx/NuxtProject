@@ -1,7 +1,7 @@
 <template>
   <!-- 20250705 加上max-h-screen 在左側有三個區塊時會被擠爆 超出螢幕高度 -->
-  <div class="bbb min-w-screen min-h-screen max-h-screen flex overflow-y-hidden">
-    <div class="bbb flex flex-col w-1/2">
+  <div class=" min-w-screen min-h-screen max-h-screen flex overflow-y-hidden">
+    <div class=" flex flex-col w-1/2">
       <DIYLocalized :appleCount="appleCount" :messageCount="messageCount" :itemCount="itemCount"
         :selectedLanguage="selectedLanguage" :name="name" :date="date" :customInput="customInput"/>
 
@@ -11,8 +11,8 @@
       <I18NLocalized :appleCount="appleCount" :messageCount="messageCount" :itemCount="itemCount" :i18n="$i18n"
         :name="name" :date="date"/>
     </div>
-    <ControlPanel 
-      :selectedLanguage="selectedLanguage" 
+    <ControlPanel
+      :selectedLanguage="selectedLanguage"
       :appleCount="appleCount"
       :messageCount="messageCount"
       :itemCount="itemCount"
@@ -39,7 +39,7 @@ const { $i18n } = useNuxtApp()
 const selectedLanguage = ref("")
 const { locale } = useI18n()
 const appleCount = ref(2)    // 0 顯示：沒有蘋果
-const messageCount = ref("B")  // "B" 顯示：1 則訊息 
+const messageCount = ref("B")  // "B" 顯示：1 則訊息
 const itemCount = ref(false)     // false 顯示：1 個商品
 const name = ref("aaa")
 const date = ref("bbb")
@@ -106,10 +106,10 @@ const onCustomInput = async (newVal) => {
   if (!useSheetStore().hasSameKey(newVal)) {
     useSheetStore().cacheIndex += 1;
     const lastIndex = useSheetStore().getLastRowIndex()
-    
+
     const translationZhToEn = await useTranslateStore().translate('zh', 'en', newVal)
     const translationZhToJa = await useTranslateStore().translate('zh', 'ja', newVal)
-    
+
     console.log("翻譯完成")
     switch (useLanguageStore().language) {
       case "zh":
@@ -135,7 +135,7 @@ const onCustomInput = async (newVal) => {
 onMounted(async() => {
   // console.log('Current locale:', locale.value) // ✅ 顯示 "en"
   // selectedLanguage.value = locale.value
-  
+
   selectedLanguage.value = useLanguageStore().language
 })
 </script>

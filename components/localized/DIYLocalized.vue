@@ -1,5 +1,5 @@
 <template>
-  <div class="grow bbb flex justify-between">
+  <div class="grow  flex justify-between">
     <!-- 等取得資料再顯示 不然都是-1 -->
     <div v-if="sheet.length > 0">
       <div>土炮</div>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- TODOWarning: 在切換語言時不應該清掉 -->
-    <div class="bbb overflow-auto h-full gap-2 w-[250px] px-2 flex flex-col">
+    <div class=" overflow-auto h-full gap-2 w-[250px] px-2 flex flex-col">
       <div>總共: {{ props.customInput.length }}</div>
       <div v-for="value in props.customInput" :key="value.origin">{{ languageStore.L(value.origin) || value.translated }}</div>
       <div v-for="value in props.customInput">{{ languageStore.L(value.origin) || value.translated }}</div>

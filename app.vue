@@ -1,7 +1,7 @@
 <template>
   <!-- 很重要 限制高度寬度 這樣兩個childComponent都用full時才會對半分 -->
-  <div class="flex flex-col h-screen w-screen relative">
-    <div class="px-4 py-2 shadow w-full h-[48px] flex justify-between items-center">
+  <div class="flex flex-col h-dvh w-screen relative">
+    <div class="px-4 py-2 shadow w-full h-[48px] flex justify-between items-center aaa">
       <div></div>
       <GoogleLoginButton />
     </div>

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex w-full bbb">
-    <div class="flex flex-col w-[300px] gap-[8px] aaa">
+  <div class="flex w-full ">
+    <div class="flex flex-col w-[300px] gap-[8px] ">
       <div class="w-full font-[600] text-[20px] text-center">資料修改</div>
       <div class="flex items-center w-full gap-[4px]">
         <div class="whitespace-nowrap">舊資料:</div>
@@ -15,7 +15,7 @@
       <button @click="changeDetail" class="btn" :disabled="oldTypeName.length <= 0">儲存</button>
     </div>
 
-    <div ref="allTypeChartRef" class="flex-1 min-h-[100px] aaa" />
+    <div ref="allTypeChartRef" class="flex-1 min-h-[100px] " />
   </div>
 </template>
 

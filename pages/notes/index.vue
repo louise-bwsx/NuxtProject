@@ -9,11 +9,11 @@
       <NuxtLink v-for="note in notesStore.notes" :key="note" :to="`/notes/${encodeURIComponent(note.title)}`"
         class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] bg-black overflow-x-hidden">
         <!-- 20250825 louise 為了避免 title中因為其他字符 # 導致在搜尋時被截斷 使用encodeURIComponent -->
-        <div class="bbb whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
+        <div class=" whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
           {{ note.title }}
         </div>
         <!-- 20250814 故意寫死90px 避免因為數字盡量小 大小不一 -->
-        <div class="ooo whitespace-nowrap text-end w-[100px]">{{ note.createDate.split('T')[0] }}</div>
+        <div class=" whitespace-nowrap text-end w-[100px]">{{ note.createDate.split('T')[0] }}</div>
       </NuxtLink>
     </div>
 

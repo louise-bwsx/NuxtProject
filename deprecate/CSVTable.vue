@@ -76,7 +76,7 @@
         </tr>
       </tbody>
     </table>
-    <button @click="handleSaveMonth" class="bbb w-auto text-nowrap btn">
+    <button @click="handleSaveMonth" class=" w-auto text-nowrap btn">
       儲存這一個月
     </button>
   </div>

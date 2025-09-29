@@ -28,7 +28,7 @@
       <button class="w-full flex justify-start" @click="useSheetStore().getColumnTop(1)">getColumnTop</button>
     </div>
 
-    <div class="bbb">
+    <div class="">
       <div>土炮</div>
       <div>1. 網站上如何切換語言: </div>
       <div>2. 程式架構打算怎麼修改: </div>
@@ -46,7 +46,7 @@
       <div>在很多人使用的情況下可能會重複覆蓋 導致資料錯誤</div>
     </div>
 
-    <div class="bbb">
+    <div class="">
       <div>i18n</div>
       <div>1. 網站上如何切換語言: $i18n.setLocale</div>
       <div>2. 程式架構打算怎麼修改: 需要翻譯的字要用$t()框住</div>
