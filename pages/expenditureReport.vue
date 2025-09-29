@@ -7,12 +7,12 @@
 
     <ResponseDataTable />
 
-    <button @click="haneldClickSearchButton"
+    <button @click="onClickSearchButton"
       class="fixed bottom-20 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="@/assets/icons/search_40_40_white.svg" class="w-[24px] h-[24px]">
     </button>
 
-    <button @click="handleClickAddButton"
+    <button @click="onClickAddButton"
       class="fixed bottom-20 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="@/assets/icons/add_40_40_white.svg" class="w-[24px] h-[24px]">
     </button>
@@ -21,8 +21,6 @@
 
 <script setup>
 import { useToastStore } from '~/stores/toast';
-import { useCostStore } from '#imports';
-import { useAuthStore } from '#imports';
 import { useRoute } from 'vue-router';
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import SearchInput from '~/components/expenditure/SearchInput.vue';
@@ -30,17 +28,18 @@ import SearchInput from '~/components/expenditure/SearchInput.vue';
 const toastStore = useToastStore()
 const costStore = useCostStore()
 const authStore = useAuthStore()
+const keybindStore = useKeybindStore()
 
 const route = useRoute()
 
 const showSearchInput = ref(false)
 const userName = ref("")
 
-const haneldClickSearchButton = () => {
+const onClickSearchButton = () => {
   showSearchInput.value = !showSearchInput.value
 }
 
-const handleClickAddButton = () => {
+const onClickAddButton = () => {
   const accessToken = authStore.getAccessToken
   if (authStore.isExpire(accessToken)) {
     toastStore.showToast('請重新登入', "error")
@@ -71,6 +70,7 @@ onMounted(async () => {
 
   // 不能直接用 route.query != {} 即使logroute.query顯示{} 還是會回傳true
   showSearchInput.value = Object.keys(route.query).length > 0
+  keybindStore.setListener("expenditureReport", onClickSearchButton)
 
   await costStore.searchCosts()
 });

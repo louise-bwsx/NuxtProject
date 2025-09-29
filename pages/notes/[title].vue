@@ -10,12 +10,12 @@
     <div v-else class=" markdown-content overflow-y-auto" v-html="renderedContent" />
 
     <button @click="onDeleteClick"
-      class="fixed bottom-5 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
+      class="fixed bottom-20 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="~/assets/icons/delete_24_24_white.svg" class="w-[24px] h-[24px]">
     </button>
 
     <button @click="onVisibilityChange"
-      class="fixed bottom-5 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
+      class="fixed bottom-20 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img v-if="isEdit" src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
       <img v-else src="~/assets/icons/visibility_24_24_white.svg" class="w-[24px] h-[24px]">
     </button>

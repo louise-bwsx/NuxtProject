@@ -22,4 +22,14 @@ import GoogleLoginButton from './components/common/GoogleLoginButton.vue';
 import MobileInput from './components/expenditure/MobileInput.vue';
 import Toast from "~/components/common/Toast.vue";
 import Dock from './components/common/Dock.vue';
+
+const keybindStore = useKeybindStore()
+
+onMounted(() => {
+  keybindStore.registerGlobalShortcuts()
+})
+
+onUnmounted(() => {
+  keybindStore.unregisterGlobalShortcuts()
+})
 </script>

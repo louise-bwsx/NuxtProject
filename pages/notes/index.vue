@@ -17,7 +17,7 @@
       </NuxtLink>
     </div>
 
-    <button @click="haneldClickSearchButton"
+    <button @click="onClickSearchButton"
       class="fixed bottom-20 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="@/assets/icons/search_40_40_white.svg" class="w-[24px] h-[24px]">
     </button>
@@ -31,16 +31,17 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useNotesStore } from '#imports'
 import { useRoute } from 'vue-router'
 import SearchInput from '~/components/expenditure/SearchInput.vue'
 
 const notesStore = useNotesStore()
+const keybindStore = useKeybindStore()
+
 const route = useRoute()
 
 const showSearchInput = ref(false)
 
-const haneldClickSearchButton = () => {
+const onClickSearchButton = () => {
   showSearchInput.value = !showSearchInput.value
 }
 
@@ -63,5 +64,6 @@ const load = async () => {
 onMounted(async() => {
   // 不能直接用 route.query != {} 即使logroute.query顯示{} 還是會回傳true
   showSearchInput.value = Object.keys(route.query).length > 0
+  keybindStore.setListener("notes", onClickSearchButton)
 })
 </script>
