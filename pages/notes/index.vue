@@ -3,7 +3,7 @@
     <!-- 超讚的elmentplus 瀑布流 -->
     <div v-infinite-scroll="load" class="overflow-y-scroll w-full h-full p-0 m-0" style="overflow: auto">
 
-      <SearchInput v-model:showSearchInput="showSearchInput" @onReset="onReset" @onSearch="onSearch"/>
+      <SearchInput v-model:showSearchInput="showSearchInput" @onReset="onReset" @onSearch="onSearch" />
 
       <!-- TODO: 沒有筆記時 顯示沒有筆記 -->
       <NuxtLink v-for="note in notesStore.notes" :key="note" :to="`/notes/${encodeURIComponent(note.title)}`"
@@ -61,7 +61,7 @@ const load = async () => {
   await notesStore.searchNotes()
 }
 
-onMounted(async() => {
+onMounted(async () => {
   // 不能直接用 route.query != {} 即使logroute.query顯示{} 還是會回傳true
   showSearchInput.value = Object.keys(route.query).length > 0
   keybindStore.setListener("notes", onClickSearchButton)

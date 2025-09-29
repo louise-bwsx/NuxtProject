@@ -8,7 +8,7 @@
 
     <NuxtRouteAnnouncer />
     <!-- 為了顯示pages的index.vue內建的功能 -->
-    <NuxtPage/>
+    <NuxtPage />
     <Dock />
 
     <!-- 20250911 為了讓mask覆蓋整個螢幕 將MobileInput從expenditureReport移到這裡 -->

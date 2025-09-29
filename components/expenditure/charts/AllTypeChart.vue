@@ -4,7 +4,7 @@
       <div class="w-full font-[600] text-[20px] text-center">資料修改</div>
       <div class="flex items-center w-full gap-[4px]">
         <div class="whitespace-nowrap">舊資料:</div>
-        <el-input type="text" v-model="oldTypeName" clearable size="large" class="w-full" disabled />
+        <el-input type="text" v-model="oldTypeName" clearable size="large" class="w-full" />
       </div>
 
       <div class="flex items-center w-full gap-[4px]">
@@ -15,7 +15,7 @@
       <button @click="changeDetail" class="btn" :disabled="oldTypeName.length <= 0">儲存</button>
     </div>
 
-    <div ref="allTypeChartRef" class="flex-1 min-h-[100px] " />
+    <div ref="allTypeChartRef" class="flex-1 min-h-[380px] " />
   </div>
 </template>
 
@@ -96,15 +96,16 @@ const changeDetail = async () => {
   try {
     const response = await useApiStore().put("/api/v1/charts/type", body)
     if (response.code != 0) {
-      useToastStore().showToast(`取得開銷細節失敗: ${response.message}`, "error")
+      useToastStore().showToast(`支出明細修改失敗: ${response.message}`, "error")
     } else {
       await getCostsDetail()
+      useToastStore().showToast(`支出明細修改成功`, "success")
       chartInstance = echarts.init(allTypeChartRef.value)
       renderChart()
     }
   } catch (error) {
     console.log(error.message)
-    useToastStore().showToast(`不明原因 取得開銷細節失敗，請稍後再試: ${error.message}`, "error")
+    useToastStore().showToast(`不明原因 支出明細修改失敗，請稍後再試: ${error.message}`, "error")
   }
 }
 

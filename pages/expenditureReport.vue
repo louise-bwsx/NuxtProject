@@ -1,9 +1,9 @@
 <template>
-  <div class=" w-full flex flex-col justify-start items-center overflow-y-auto">
+  <div class="w-full flex flex-col justify-start items-center overflow-y-auto">
     <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
     <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
     <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
-    <SearchInput v-model:showSearchInput="showSearchInput" @onReset="onReset" @onSearch="onSearch"/>
+    <SearchInput v-model:showSearchInput="showSearchInput" @onReset="onReset" @onSearch="onSearch" />
 
     <ResponseDataTable />
 
