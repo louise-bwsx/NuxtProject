@@ -1,23 +1,38 @@
 <template>
-  <div class=" w-screen h-screen overflow-y-auto relative flex flex-col">
-    <el-input v-if="isEdit" class="" type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
+  <div class="w-screen h-screen overflow-y-auto relative flex flex-col">
+    <el-input v-if="currentMode == 'edit'" class="" type="text" v-model="title" placeholder="請輸入標題" clearable
+      size="large" />
     <div v-else-if="title" class="">{{ title }}</div>
 
     <div v-if="createDate" class="">{{ createDate.split("T")[0] }}</div>
 
-    <textarea v-if="isEdit" ref="textareaRef" class=" outline-none w-full h-full" v-model="content" @paste="handlePaste" @dragover.prevent
-      @drop="handleDrop" />
-    <div v-else class=" markdown-content overflow-y-auto" v-html="renderedContent" />
+    <textarea v-if="currentMode == 'edit'" ref="textareaRef" class=" outline-none w-full h-full" v-model="content"
+      @paste="handlePaste" @dragover.prevent @drop="handleDrop" />
+
+    <!-- 20251001 使用flex-1佔滿剩餘空間 加上overflow-hidden避免在水平分割時 出現多餘的捲軸 -->
+    <div v-if="currentMode == 'split'" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <textarea ref="textareaRef" class="outline-none resize-none w-full lg:w-1/2 h-[50dvh] lg:h-full aaa"
+        v-model="content" @paste="handlePaste" @dragover.prevent @drop="handleDrop" />
+      <div class="markdown-content overflow-y-auto w-full lg:w-1/2 h-[50dvh] lg:h-full aaa" v-html="renderedContent" />
+    </div>
+
+    <div v-else class="markdown-content overflow-y-auto" v-html="renderedContent" />
 
     <button @click="onDeleteClick"
       class="fixed bottom-20 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="~/assets/icons/delete_24_24_white.svg" class="w-[24px] h-[24px]">
     </button>
 
-    <button @click="onVisibilityChange"
+    <button @click="onVisibilityClick"
       class="fixed bottom-20 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
-      <img v-if="isEdit" src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
+      <img v-if="currentMode == 'edit'" src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
       <img v-else src="~/assets/icons/visibility_24_24_white.svg" class="w-[24px] h-[24px]">
+    </button>
+
+    <button @click="onSplitClick"
+      class="fixed bottom-35 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
+      <img src="~/assets/icons/splitVertical_24_24_white.svg" class="hidden lg:flex w-[24px] h-[24px]">
+      <img src="~/assets/icons/splitHorizontal_24_24_white.svg" class="lg:hidden w-[24px] h-[24px]">
     </button>
   </div>
 </template>
@@ -25,6 +40,7 @@
 <script setup>
 import MarkdownIt from 'markdown-it'
 import { useRoute } from 'vue-router'
+import { deleteNote, saveNote } from '~/api/notes'
 
 const notesStore = useNotesStore()
 const route = useRoute()
@@ -36,8 +52,8 @@ const uid = ref("0")
 const title = ref(``)
 const createDate = ref(``)
 const updateDate = ref(``)
-const isEdit = ref(false)
 const textareaRef = ref(null)
+const currentMode = ref(`view`) // split, edit
 
 // 配置 markdown-it
 const md = new MarkdownIt({
@@ -173,51 +189,39 @@ const renderedContent = computed(() => {
   return content.value ? md.render(content.value) : ''
 })
 
-const onVisibilityChange = async () => {
-  if (isEdit.value) {
-    const body = {
-      uid: uid.value,
-      title: title.value,
-      content: content.value,
-    }
-
-    const response = await useApiStore().post('/api/v1/notes', body);
-
-    if (response.code === 0) {
-      useToastStore().showToast("上傳成功", "success")
-    } else {
-      useToastStore().showToast(`上傳失敗: ${response.message}`, "error")
-    }
+const onVisibilityClick = async () => {
+  if (currentMode.value == 'edit') {
+    await saveNote(uid.value, title.value, content.value);
   }
-  isEdit.value = !isEdit.value
-  route.query.isEdit = isEdit.value
+
+  currentMode.value = currentMode.value == 'edit' ? 'view' : 'edit'
+  route.query.mode = currentMode.value
 
   const newQuery = { ...route.query }
 
-  if (isEdit.value) {
-    newQuery.isEdit = 'true'
+  if (currentMode.value == 'edit') {
+    newQuery.mode = 'edit'
   } else {
-    delete newQuery.isEdit // 移除參數而不是設為 false
+    delete newQuery.mode // 移除參數而不是設為 false
   }
-  console.log(`newQuery: ${JSON.stringify(newQuery)}`)
 
   await router.replace({
     query: newQuery
   })
 }
 
+const onSplitClick = async () => {
+  currentMode.value = 'split'
+  await saveNote(uid.value, title.value, content.value);
+}
+
 const onDeleteClick = async () => {
-  const response = await useApiStore().delete(`/api/v1/notes/${uid.value}`);
-  if (response.code === 0) {
-    useToastStore().showToast("刪除成功", "success")
-  } else {
-    useToastStore().showToast(`刪除失敗: ${response.message}`, "error")
-  }
+  await deleteNote(uid.value);
   router.push('/notes')
 }
 
 onMounted(async () => {
-  isEdit.value = route.query.isEdit
+  currentMode.value = route.query.mode
 
   const data = await notesStore.getNote();
   uid.value = data == undefined ? "" : data.uid

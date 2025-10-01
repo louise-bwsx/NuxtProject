@@ -22,16 +22,15 @@
 
 .markdown-content :deep(h3) {
   font-size: 1.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   /* color: #4b5563; */
 }
 
 /* 段落和文字 */
 .markdown-content :deep(p) {
   margin-bottom: 1rem;
-  /* TODO: 因為沒有\n 所以在textarea 換行沒辦法應用到viewonly */
-  /* white-space: pre-line; */
+  /* 20251001 為了讓viewonly可以換行 取消註解 */
+  white-space: pre-line;
   /* color: #374151; */
 }
 
@@ -130,4 +129,8 @@
 
 .markdown-content :deep(a:hover) {
   color: #1d4ed8;
+}
+
+:deep(img) {
+  max-width: 50%;
 }

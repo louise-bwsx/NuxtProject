@@ -22,7 +22,7 @@
       <img src="@/assets/icons/search_40_40_white.svg" class="w-[24px] h-[24px]">
     </button>
 
-    <NuxtLink to="/notes/create?isEdit=true"
+    <NuxtLink to="/notes/create?mode=view"
       class="fixed bottom-20 right-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">
       <img src="~/assets/icons/edit_24_24_white.svg" class="w-[24px] h-[24px]">
     </NuxtLink>
