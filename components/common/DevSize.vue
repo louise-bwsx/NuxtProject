@@ -1,4 +1,6 @@
 <template>
+  <!-- 手機sm ~ 320px -->
+  <!-- Sony手機411 832 -->
   <div class="fixed flex space-x-4 aaa">
     <div class="hidden 2xl:flex">2xl</div>
     <div class="hidden xl:flex">xl</div>
@@ -13,6 +15,13 @@
 import { useWindowSize } from '@vueuse/core';
 
 const windowSize = useWindowSize()
-const width = windowSize.width
-const height = windowSize.height
+const width = ref(0)
+const height = ref(0)
+
+onMounted(() => {
+  // 避免Hyrdation Mismatch
+  width.value = windowSize.width
+  height.value = windowSize.height
+
+})
 </script>

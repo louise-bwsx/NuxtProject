@@ -70,8 +70,11 @@ export const useNotesStore = defineStore("notes", () => {
   }
 
   // 重置加載狀態的函數（可供外部調用）
-  const resetLoadingState = () => {
+  const resetLoadingState = async () => {
+    page.value = 1
+    notes.value = []
     hasNoMoreData.value = false
+    await searchNotes()
   }
 
   return { notes, page, searchNotes, resetLoadingState, getNote};

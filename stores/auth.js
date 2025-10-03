@@ -21,8 +21,8 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     if (isExpire(accessToken.value)) {
-      localStorage.clear("accessToken");
-      localStorage.clear("userInfo");
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("userInfo")
       accessToken.value = "";
     }
     return accessToken.value;
@@ -53,8 +53,8 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     if (isExpire(getAccessToken.value)) {
-      localStorage.clear("accessToken");
-      localStorage.clear("userInfo");
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("userInfo")
       accessToken.value = "";
       userInfo.value = {}
     }

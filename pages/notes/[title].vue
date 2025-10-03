@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen overflow-y-auto relative flex flex-col">
-    <el-input v-if="currentMode == 'edit'" class="" type="text" v-model="title" placeholder="請輸入標題" clearable
-      size="large" />
+    <el-input v-if="currentMode == 'edit' || currentMode == 'split'" class="" type="text" v-model="title"
+      placeholder="請輸入標題" clearable size="large" />
     <div v-else-if="title" class="">{{ title }}</div>
 
     <div v-if="createDate" class="">{{ createDate.split("T")[0] }}</div>
@@ -10,7 +10,7 @@
       @paste="handlePaste" @dragover.prevent @drop="handleDrop" />
 
     <!-- 20251001 使用flex-1佔滿剩餘空間 加上overflow-hidden避免在水平分割時 出現多餘的捲軸 -->
-    <div v-if="currentMode == 'split'" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+    <div v-else-if="currentMode == 'split'" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
       <textarea ref="textareaRef" class="outline-none resize-none w-full lg:w-1/2 h-[50dvh] lg:h-full aaa"
         v-model="content" @paste="handlePaste" @dragover.prevent @drop="handleDrop" />
       <div class="markdown-content overflow-y-auto w-full lg:w-1/2 h-[50dvh] lg:h-full aaa" v-html="renderedContent" />
@@ -217,11 +217,12 @@ const onSplitClick = async () => {
 
 const onDeleteClick = async () => {
   await deleteNote(uid.value);
+  await notesStore.resetLoadingState()
   router.push('/notes')
 }
 
 onMounted(async () => {
-  currentMode.value = route.query.mode
+  currentMode.value = route.query.mode == undefined ? 'view' : route.query.mode
 
   const data = await notesStore.getNote();
   uid.value = data == undefined ? "" : data.uid

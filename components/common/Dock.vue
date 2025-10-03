@@ -48,6 +48,12 @@
       </svg>
       <span>筆記</span>
     </NuxtLink>
+
+    <NuxtLink to="/currencyConverter" class="flex flex-col justify-center items-center">
+      <!-- https://fontawesome.com/ -->
+      <img src="~/assets/icons/currency_24_24_white.svg" alt="">
+      <span>匯率計算機</span>
+    </NuxtLink>
   </div>
 
   <!-- 直接使用dock會導致內容裁切 -->
