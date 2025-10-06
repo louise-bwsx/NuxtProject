@@ -40,7 +40,7 @@
 <script setup>
 import MarkdownIt from 'markdown-it'
 import { useRoute } from 'vue-router'
-import { deleteNote, saveNote } from '~/api/notes'
+import { deleteNote, createNote, saveNote } from '~/api/notes'
 
 const notesStore = useNotesStore()
 const route = useRoute()
@@ -48,7 +48,7 @@ const router = useRouter()
 
 // Markdown 內容
 const content = ref(``)
-const uid = ref("0")
+const uid = ref("")
 const title = ref(``)
 const createDate = ref(``)
 const updateDate = ref(``)
@@ -191,7 +191,16 @@ const renderedContent = computed(() => {
 
 const onVisibilityClick = async () => {
   if (currentMode.value == 'edit') {
-    await saveNote(uid.value, title.value, content.value);
+    // 20251006 補上createNote 為了解決新增筆記時 同一個筆記會被新增很多次 post不再有put的功能
+    // 沒有uid代表是新增
+    if (uid.value == "" || uid.value == undefined) {
+      const response = await createNote(title.value, content.value);
+      uid.value = response.data.lastInsertID
+      return;
+    }
+
+    // 20251006 後端只吃int64 不確定為什麼沒辦法用json 所以用struct
+    await saveNote(+uid.value, title.value, content.value);
   }
 
   currentMode.value = currentMode.value == 'edit' ? 'view' : 'edit'
@@ -212,11 +221,14 @@ const onVisibilityClick = async () => {
 
 const onSplitClick = async () => {
   currentMode.value = 'split'
-  await saveNote(uid.value, title.value, content.value);
+
+  // 20251006 後端只吃int64 不確定為什麼沒辦法用json 所以用struct
+  await saveNote(+uid.value, title.value, content.value);
 }
 
 const onDeleteClick = async () => {
-  await deleteNote(uid.value);
+  // 20251006 後端只吃int64 不確定為什麼沒辦法用json 所以用struct
+  await deleteNote(+uid.value);
   await notesStore.resetLoadingState()
   router.push('/notes')
 }
