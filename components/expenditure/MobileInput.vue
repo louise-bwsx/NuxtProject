@@ -4,9 +4,6 @@
   <!-- 持續時間	進入 300ms / 離開 200ms -->
   <!-- 緩動曲線	ease-out (進入) / ease-in (離開) -->
   <!-- Tailwind內建的 -->
-  <!-- <Transition enter-active-class="transition ease-out duration-300" enter-from-class="opacity-0 translate-y-2"
-    enter-to-class="opacity-100 translate-y-0" leave-active-class="transition ease-in duration-200"
-    leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-2"> -->
   <Transition enter-active-class="transition ease-out duration-300" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition ease-in duration-200" leave-from-class="opacity-100"
     leave-to-class="opacity-0">
@@ -89,27 +86,17 @@
 </template>
 
 <script setup>
-import { useCostStore } from '#imports';
-
-// const isMobile = computed(() => useWindowSize().width.value <= 640)
-// const props = defineProps({
-//   showMenu: Boolean
-// });
-
-// const emit = defineEmits(['update:showMenu']);
-
 const costStore = useCostStore()
 
 const closeMenu = () => {
   costStore.showMenu = false
-  // emit('update:showMenu', false);
 };
 
 const menu = ref(null)
 const expenditure = ref({})
 
-const handleSaveClick = () => {
-  costStore.handleSaveDay({
+const handleSaveClick = async () => {
+  await costStore.handleSaveDay({
     costDate: expenditure.value.costDate,
     // toString是必要的 為了填入min 不轉型Go會Error
     breakfastCost: expenditure.value.breakfastCost.toString(),
@@ -121,6 +108,13 @@ const handleSaveClick = () => {
     extraCost: expenditure.value.extraCost.toString(),
     extraType: expenditure.value.extraType,
   })
+
+  // 20251006 在新增支出時即時更新列表
+  costStore.expenditureList = []
+  costStore.page = 1
+
+  // 需要維持搜尋條件下刷新
+  await costStore.searchCosts();
 }
 
 const handleInputFinish = (event) => {
