@@ -25,6 +25,9 @@
     <NuxtLink to="/googleLogin/useTokenClient" class="btn btn-primary">
       useTokenClient
     </NuxtLink>
+    <NuxtLink to="/short" class="btn btn-primary">
+      短網址
+    </NuxtLink>
 
     <!-- 手機sm ~ 320px -->
     <!-- Sony手機411 832 -->
@@ -32,7 +35,7 @@
     <ClientOnly>
       <div>Width: {{ width }}</div>
       <div>Height: {{ height }}</div>
-      <button @click="useToastStore().showToast('aaa','success')" class="btn">showToast</button>
+      <button @click="useToastStore().showToast('aaa', 'success')" class="btn">showToast</button>
     </ClientOnly>
   </div>
 </template>
@@ -48,13 +51,11 @@ const { width, height } = useWindowSize()
 
 Hangfire
     <div>一般登入</div>
-    <div>Google登入</div>
     <div>Apple登入</div>
     <div>FB登入</div>
     <div>X登入</div>
     <div>mdeditor</div>
     <div>Github專案轉移</div>
-    <div>轉移md</div>
     <div>Github專案轉移</div>
     <div>C#API</div>
     <div>Github專案轉移</div>
@@ -77,5 +78,4 @@ Hangfire
     <div>
       https://www.google.com/search?q=swiftUI+flex+wrap&oq=swiftUI+flex+wrap&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIKCAEQABiABBiiBDIHCAIQABjvBTIHCAMQABjvBTIHCAQQABjvBdIBCDU3MjRqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8
     </div>
-    <div>dev uat sit prd 環境設定</div>
     <div>rust</div> -->
