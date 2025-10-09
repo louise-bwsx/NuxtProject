@@ -51,6 +51,9 @@ const load = async () => {
 }
 
 onMounted(async () => {
+  // 20251009 為了即時更新筆記列表
+  notesStore.resetLoadingState()
+
   // 不能直接用 route.query != {} 即使logroute.query顯示{} 還是會回傳true
   showSearchInput.value = Object.keys(route.query).length > 0
   keybindStore.setListener("notes", onClickSearchButton)
