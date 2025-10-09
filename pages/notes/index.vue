@@ -3,7 +3,8 @@
     <!-- 超讚的elmentplus 瀑布流 -->
     <div v-infinite-scroll="load" class="overflow-y-scroll w-full h-full p-0 m-0" style="overflow: auto">
 
-      <SearchInput v-model:showSearchInput="showSearchInput" @onReset="notesStore.resetLoadingState()"
+      <!-- 20251009 從v-model:showSearchInput改成:showSearchInput 避免出現Error提示 -->
+      <SearchInput :showSearchInput="showSearchInput" @onReset="notesStore.resetLoadingState()"
         @onSearch="notesStore.resetLoadingState()" />
 
       <!-- TODO: 沒有筆記時 顯示沒有筆記 -->
