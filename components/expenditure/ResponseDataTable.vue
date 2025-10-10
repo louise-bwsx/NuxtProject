@@ -3,7 +3,6 @@
     <table class="table table-xs">
       <thead>
         <tr>
-          <th>序號</th>
           <th>日期</th>
           <th>早餐金額</th>
           <th>早餐類型</th>
@@ -18,19 +17,19 @@
       </thead>
       <tbody>
         <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
-        <tr v-for="(data, index) in costStore.expenditureList" :key="index">
-          <td class="!py-[0px]">{{ index }}</td>
-          <td class="!py-[0px]"><input class="w-[90px]" type="date" v-model="data.costDate.split('T')[0]" /></td>
-          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.breakfastCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.breakfastType" /></td>
-          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.lunchCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.lunchType" /></td>
-          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.dinnerCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.dinnerType" /></td>
-          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.extraCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.extraType" /></td>
+        <tr class="" v-for="data in costStore.expenditureList" :key="data">
+          <td class="!py-[0px]"><input class="w-[90px] h-[30px]" type="date" v-model="data.costDate.split('T')[0]" />
+          </td>
+          <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.breakfastCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.breakfastType" /></td>
+          <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.lunchCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.lunchType" /></td>
+          <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.dinnerCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.dinnerType" /></td>
+          <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.extraCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.extraType" /></td>
           <td class="!py-[0px] text-nowrap flex justify-center"><button @click="onSaveDay(index)"
-              class="btn">儲存這一天</button></td>
+              class="btn">儲存</button></td>
         </tr>
       </tbody>
     </table>

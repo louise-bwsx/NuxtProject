@@ -2,9 +2,9 @@
   <div class="w-screen h-screen overflow-y-auto relative flex flex-col">
     <el-input v-if="currentMode == 'edit' || currentMode == 'split'" class="" type="text" v-model="title"
       placeholder="請輸入標題" clearable size="large" />
-    <div v-else-if="title" class="">{{ title }}</div>
+    <div v-else-if="title" class="aaa">{{ title }}</div>
 
-    <div v-if="createDate" class="">{{ createDate.split("T")[0] }}</div>
+    <div v-if="createDate" class="aaa">{{ createDate.split("T")[0] }}</div>
 
     <textarea v-if="currentMode == 'edit'" ref="textareaRef" class=" outline-none w-full h-full" v-model="content"
       @paste="handlePaste" @dragover.prevent @drop="handleDrop" />

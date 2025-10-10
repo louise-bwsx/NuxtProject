@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-screen overflow-hidden">
-    <!-- 超讚的elmentplus 瀑布流 -->
-    <div class="overflow-y-scroll w-full h-full p-0 m-0" style="overflow: auto" ref="scrollContainer"
-      @scroll="onScroll">
-
+    <div class="overflow-y-scroll w-full h-full p-0 m-0 overflow-auto" ref="scrollContainer" @scroll="onScroll">
       <!-- 20251009 從v-model:showSearchInput改成:showSearchInput 避免出現Error提示 -->
       <SearchInput :showSearchInput="showSearchInput" @onReset="notesStore.resetLoadingState"
         @onSearch="notesStore.resetLoadingState()" />
