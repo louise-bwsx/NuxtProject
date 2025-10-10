@@ -4,7 +4,7 @@
 
     <button @click="resetSort" class="btn px-4 py-2">清除存檔排序</button>
 
-    <div ref="currencyListRef" class="flex-1 overflow-auto drag-handle bbb">
+    <div ref="currencyListRef" class="flex-1 overflow-auto drag-handle">
       <div v-for="rate in convertedRates" :key="rate.key"
         class="flex w-full justify-between items-center border-b py-3 relative">
         <div class="flex space-x-4 ps-3 w-[200px]">
@@ -21,7 +21,7 @@
 
 
     <div class="flex space-x-2">
-      <div class="w-[150px] bbb">
+      <div class="w-[150px]">
         <select v-model="selectedCurrency" class="w-full h-full px-1">
           <option v-for="([code, name]) in Object.entries(currencyCNMap)" :key="code" :value="name">
             {{ name }}

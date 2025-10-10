@@ -1,5 +1,5 @@
 <template>
-  <div ref="allCostSumChartRef" class="w-full min-h-[380px] aaa" />
+  <div ref="allCostSumChartRef" class="w-full min-h-[380px]" />
 </template>
 
 <script setup>
@@ -16,6 +16,12 @@ let chartInstance = null
 
 const renderChart = () => {
   chartInstance.setOption({
+    title: {
+      text: '各種開銷明細總和',
+      textStyle: {
+        color: `white`
+      }
+    },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -38,21 +44,17 @@ const renderChart = () => {
         axisLabel: {
           rotate: -90,      // 旋轉 90 度，文字垂直顯示
           interval: 0,     // 強制顯示所有標籤（避免太多時自動隱藏）
-          margin: 10       // 與軸線的間距，避免貼太近
+          margin: 10,       // 與軸線的間距，避免貼太近
+          color: 'white'
         }
-        // axisLabel: {
-        //   interval: 0,
-        //   margin: 10,
-        //   formatter: function (value) {
-        //     // 把每個字拆成換行
-        //     return value.split('').join('\n')
-        //   }
-        // }
       }
     ],
     yAxis: [
       {
-        type: 'value'
+        type: 'value',
+        axisLabel: {
+          color: 'white'
+        }
       }
     ],
     series: [
