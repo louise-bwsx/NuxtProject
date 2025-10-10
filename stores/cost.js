@@ -83,7 +83,7 @@ export const useCostStore = defineStore("cost", () => {
     }
   }
 
-  const handleSaveDay = async (body) => {
+  const onSaveDay = async (body) => {
     if (isLoading.value) return
     isLoading.value = true
 
@@ -96,8 +96,8 @@ export const useCostStore = defineStore("cost", () => {
         useToastStore().showToast(`儲存失敗: ${response.message}`, `error`)
       }
 
-      // 不要在handleSaveDay()裡面searchCosts()
-      // searchCost跟handleSaveDay沒有關聯
+      // 不要在onSaveDay()裡面searchCosts()
+      // searchCost跟onSaveDay沒有關聯
     } catch (error) {
       useToastStore().showToast(`不明原因 儲存失敗 請稍後再試: ${error}', 'error`)
     }
@@ -121,7 +121,7 @@ export const useCostStore = defineStore("cost", () => {
     getTodayCost,
     getCosts,
     searchCosts,
-    handleSaveDay,
+    onSaveDay,
     resetLoadingState,
   }
 })

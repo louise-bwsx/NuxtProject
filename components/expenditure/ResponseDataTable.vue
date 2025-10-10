@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex-1 overflow-y-auto" ref="scrollContainer" @scroll="handleScroll">
+  <div class="w-full flex-1 overflow-y-auto" ref="scrollContainer" @scroll="onScroll">
     <table class="table table-xs">
       <thead>
         <tr>
@@ -17,7 +17,21 @@
         </tr>
       </thead>
       <tbody>
-        <CostDataItems />
+        <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
+        <tr v-for="(data, index) in costStore.expenditureList" :key="index">
+          <td class="!py-[0px]">{{ index }}</td>
+          <td class="!py-[0px]"><input class="w-[90px]" type="date" v-model="data.costDate.split('T')[0]" /></td>
+          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.breakfastCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.breakfastType" /></td>
+          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.lunchCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.lunchType" /></td>
+          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.dinnerCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.dinnerType" /></td>
+          <td class="!py-[0px]"><input class="w-[50px]" type="number" v-model="data.extraCost" /></td>
+          <td class="!py-[0px]"><input class="flex-1" type="text" v-model="data.extraType" /></td>
+          <td class="!py-[0px] text-nowrap flex justify-center"><button @click="onSaveDay(index)"
+              class="btn">儲存這一天</button></td>
+        </tr>
       </tbody>
     </table>
 
@@ -34,8 +48,6 @@
 </template>
 
 <script setup>
-import CostDataItems from './CostDataItems.vue';
-
 const costStore = useCostStore()
 
 // 瀑布流範例
@@ -43,28 +55,8 @@ const costStore = useCostStore()
 const scrollContainer = ref(null)
 const isLoading = ref(false)
 
-// 節流函數，避免頻繁觸發
-const throttle = (func, delay) => {
-  let timeoutId
-  let lastExecTime = 0
-  return function (...args) {
-    const currentTime = Date.now()
-
-    if (currentTime - lastExecTime > delay) {
-      func.apply(this, args)
-      lastExecTime = currentTime
-    } else {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => {
-        func.apply(this, args)
-        lastExecTime = Date.now()
-      }, delay - (currentTime - lastExecTime))
-    }
-  }
-}
-
 // 滾動事件處理函數
-const handleScroll = throttle(async (event) => {
+const onScroll = async (event) => {
   const container = event.target
   const scrollTop = container.scrollTop
   const scrollHeight = container.scrollHeight
@@ -77,8 +69,7 @@ const handleScroll = throttle(async (event) => {
   if (scrollPercentage >= threshold && !isLoading.value && !costStore.hasNoMoreData) {
     await loadMoreData()
   }
-}, 200) // 200ms 節流
-
+}
 
 // 加載更多數據的函數
 const loadMoreData = async () => {
@@ -109,15 +100,17 @@ const loadMoreData = async () => {
   }
 }
 
-// 組件卸載時清理
-onUnmounted(() => {
-  if (scrollContainer.value) {
-    scrollContainer.value.removeEventListener('scroll', handleScroll)
-  }
-})
-
-// 目前搜尋交給 SearchInput 這裡先註解
-// onMounted(async () => {
-//   expenditureList.value = await costStore.getCosts()
-// });
+const onSaveDay = async (index) => {
+  await costStore.onSaveDay({
+    costDate: costStore.expenditureList[index].costDate,
+    breakfastCost: costStore.expenditureList[index].breakfastCost.toString(),
+    breakfastType: costStore.expenditureList[index].breakfastType,
+    lunchCost: costStore.expenditureList[index].lunchCost.toString(),
+    lunchType: costStore.expenditureList[index].lunchType,
+    dinnerCost: costStore.expenditureList[index].dinnerCost.toString(),
+    dinnerType: costStore.expenditureList[index].dinnerType,
+    extraCost: costStore.expenditureList[index].extraCost.toString(),
+    extraType: costStore.expenditureList[index].extraType,
+  })
+};
 </script>

@@ -96,7 +96,7 @@ const menu = ref(null)
 const expenditure = ref({})
 
 const handleSaveClick = async () => {
-  await costStore.handleSaveDay({
+  await costStore.onSaveDay({
     costDate: expenditure.value.costDate,
     // toString是必要的 為了填入min 不轉型Go會Error
     breakfastCost: expenditure.value.breakfastCost.toString(),
