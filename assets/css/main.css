@@ -24,14 +24,13 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* 測試用border */
 .aaa {
   border: 1px solid black;
 }
-
 .bbb {
   border: 1px solid white;
 }
-
 .ooo {
   border: 1px solid orange;
 }
@@ -42,7 +41,6 @@ input[type='number'] {
   100% {
     opacity: 1;
   }
-
   50% {
     opacity: 0.5;
   }
@@ -56,4 +54,4 @@ input[type='number'] {
 }
 
 /* 預設背景色 #1D232A */
-/* DeepL底色 primary #0F2B47 */
+/* DeepL底色 primary #0d263fff */

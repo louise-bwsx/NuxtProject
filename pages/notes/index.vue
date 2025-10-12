@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen overflow-hidden">
+  <div class="w-full h-full">
     <div class="overflow-y-scroll w-full h-full p-0 m-0 overflow-auto" ref="scrollContainer" @scroll="onScroll">
       <!-- 20251009 從v-model:showSearchInput改成:showSearchInput 避免出現Error提示 -->
       <SearchInput :showSearchInput="showSearchInput" @onReset="notesStore.resetLoadingState"

@@ -1,6 +1,5 @@
 <template>
-  <div class="flex min-h-[60px] aaa justify-around items-center">
-    <!-- <div class="fixed bottom-0 left-0 flex w-full min-h-[60px] bg-[#1D232A] aaa justify-around items-center"> -->
+  <div class="flex min-h-[60px] justify-around items-center aaa">
     <NuxtLink to="/" class="flex flex-col justify-center items-center">
       <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt">
@@ -28,9 +27,7 @@
       </svg>
       <span>收支表單</span>
     </NuxtLink>
-    <!-- https://pictogrammers.com/ -->
 
-    <!-- #EBF9FF -->
     <NuxtLink to="/costCharts" class="flex flex-col justify-center items-center">
       <!-- https://fontawesome.com/ -->
       <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 640 640">
@@ -74,6 +71,3 @@
     </button>
   </div> -->
 </template>
-
-<script setup>
-</script>

@@ -1,0 +1,7 @@
+.chat-bubble{
+    max-width: 100% !important;
+}
+
+button{
+    cursor: pointer;
+}

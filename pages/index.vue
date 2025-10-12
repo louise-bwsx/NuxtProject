@@ -31,6 +31,9 @@
     <NuxtLink to="/short" class="btn btn-primary">
       短網址
     </NuxtLink>
+    <NuxtLink to="/chat" class="btn btn-primary">
+      AIChat
+    </NuxtLink>
 
     <!-- 手機sm ~ 320px -->
     <!-- Sony手機411 832 -->
