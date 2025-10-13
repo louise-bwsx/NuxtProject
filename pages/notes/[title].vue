@@ -1,5 +1,6 @@
 <template>
-  <div class="w-screen h-screen overflow-y-auto relative flex flex-col">
+  <!-- 20251013 從h-screen改成h-full 避免出現窗雙重卷軸 -->
+  <div class="w-screen h-full overflow-y-auto relative flex flex-col">
     <el-input v-if="currentMode == 'edit' || currentMode == 'split'" class="" type="text" v-model="title"
       placeholder="請輸入標題" clearable size="large" />
     <div v-else-if="title" class="aaa">{{ title }}</div>

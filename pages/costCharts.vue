@@ -1,5 +1,6 @@
 <template>
-  <div class="w-full h-screen overflow-hidden flex flex-col justify-start items-center">
+  <!-- 20251013 從h-screen改成h-full 避免出現窗雙重卷軸 -->
+  <div class="w-full h-full overflow-hidden flex flex-col justify-start items-center">
     <div class="overflow-y-scroll w-full h-full p-0 m-0">
       <YearCostChart />
       <MonthCostChart />
