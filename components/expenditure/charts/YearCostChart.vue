@@ -39,31 +39,15 @@ const costList = ref([])
 const renderChart = () => {
   // https://echarts.apache.org/examples/en/editor.html?c=pie-legend
   chartInstance.setOption({
-    title: {
-      text: '每月支出總和',
-      textStyle: {
-        color: `white`
-      }
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
+    title: { text: '每月支出總和' },
+    tooltip: { trigger: 'axis' },
     legend: {},
     xAxis: {
       type: 'category',
       boundaryGap: false,
       data: monthList.value,
-      axisLabel: {
-        color: `white`,
-        margin: 0
-      }
     },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        color: `white`
-      }
-    },
+    yAxis: { type: 'value', },
     series: [
       {
         type: 'line',
@@ -91,7 +75,7 @@ onMounted(async () => {
   monthList.value = response.data.monthList
   costList.value = response.data.costList
 
-  chartInstance = echarts.init(yearCostChartRef.value)
+  chartInstance = echarts.init(yearCostChartRef.value, `dark`)
   renderChart()
 
   window.addEventListener('resize', () => {

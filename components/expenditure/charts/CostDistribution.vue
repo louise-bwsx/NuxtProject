@@ -31,12 +31,7 @@ const series = ref([])
 
 const renderChart = () => {
   chartInstance.setOption({
-    title: {
-      text: '每月支出分佈',
-      textStyle: {
-        color: `white`
-      }
-    },
+    title: { text: '每月支出分佈' },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -47,16 +42,10 @@ const renderChart = () => {
     xAxis: {
       type: 'value',
       boundaryGap: [0, 0.01],
-      axisLabel: {
-        color: `white`,
-      }
     },
     yAxis: {
       type: 'category',
       data: yAxisData.value,
-      axisLabel: {
-        color: `white`
-      }
     },
     series: series.value
   })
@@ -72,7 +61,7 @@ onMounted(async () => {
   yAxisData.value = response.data.yAxisData
   series.value = response.data.series
 
-  chartInstance = echarts.init(costDistributionRef.value)
+  chartInstance = echarts.init(costDistributionRef.value, 'dark')
   renderChart()
 
   window.addEventListener('resize', () => {

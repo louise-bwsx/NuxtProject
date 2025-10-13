@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full ">
+  <!-- <div class="flex w-full ">
     <div class="flex flex-col w-[300px] gap-[8px] ">
       <div class="w-full font-[600] text-[20px] text-center">資料修改</div>
       <div class="flex items-center w-full gap-[4px]">
@@ -16,11 +16,29 @@
     </div>
 
     <div ref="allTypeChartRef" class="flex-1 min-h-[380px] " />
-  </div>
+  </div> -->
+  <div ref="allTypeChartRef" class="w-full min-h-[380px] " />
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core';
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent
+} from 'echarts/components';
+import { PieChart } from 'echarts/charts';
+import { LabelLayout } from 'echarts/features';
+import { CanvasRenderer } from 'echarts/renderers';
+
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  PieChart,
+  CanvasRenderer,
+  LabelLayout
+]);
 
 const costDetails = ref({})
 const allTypeChartRef = ref(null)
@@ -39,7 +57,7 @@ const renderChart = () => {
   const legendData = data.map(item => item.name)
   // https://echarts.apache.org/examples/en/editor.html?c=pie-legend
   chartInstance.setOption({
-    title: { text: '各種開銷明細次數', textStyle: { color: 'white' }, left: 'center' },
+    title: { text: '各種開銷明細次數', left: 'center' },
     tooltip: { trigger: 'item', formatter: '{b} : {c}次 ({d}%)' },
     legend: {
       type: 'scroll',
@@ -47,7 +65,6 @@ const renderChart = () => {
       left: 10,
       top: 'middle',             // 垂直居中
       data: legendData,
-      textStyle: { color: 'white' },
       // align: "end",
       itemWidth: 14,
       itemHeight: 14,
@@ -112,7 +129,7 @@ const changeDetail = async () => {
 onMounted(async () => {
   await getCostsDetail()
 
-  chartInstance = echarts.init(allTypeChartRef.value)
+  chartInstance = echarts.init(allTypeChartRef.value, `dark`)
   renderChart()
 
   window.addEventListener('resize', () => {

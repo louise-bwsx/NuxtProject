@@ -3,7 +3,24 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core';
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent
+} from 'echarts/components';
+import { PieChart } from 'echarts/charts';
+import { LabelLayout } from 'echarts/features';
+import { CanvasRenderer } from 'echarts/renderers';
+
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  PieChart,
+  CanvasRenderer,
+  LabelLayout
+]);
 
 const costsType = ref({})
 const allCostChartRef = ref()
@@ -19,7 +36,7 @@ const renderChart = () => {
   const legendData = data.map(item => item.name)
   // https://echarts.apache.org/examples/en/editor.html?c=pie-legend
   chartInstance.setOption({
-    title: { text: '各類型總支出', textStyle: { color: 'white' }, left: 'center' },
+    title: { text: '各類型總支出', left: 'center' },
     tooltip: { trigger: 'item', formatter: '{b} : {c}元 ({d}%)' },
     legend: {
       type: 'scroll',
@@ -27,7 +44,6 @@ const renderChart = () => {
       left: 10,                 // 距離右邊 50px
       top: 'middle',             // 垂直居中
       data: legendData,
-      textStyle: { color: 'white' },
       itemWidth: 14,
       itemHeight: 14,
       itemGap: 15               // legend 項目間距
@@ -69,7 +85,7 @@ const getCostsSum = async () => {
 onMounted(async () => {
   await getCostsSum()
 
-  chartInstance = echarts.init(allCostChartRef.value)
+  chartInstance = echarts.init(allCostChartRef.value, `dark`)
 
   renderChart()
 

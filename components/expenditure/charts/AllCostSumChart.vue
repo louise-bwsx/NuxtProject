@@ -7,8 +7,9 @@ import * as echarts from 'echarts/core';
 import { TooltipComponent, GridComponent } from 'echarts/components';
 import { BarChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
+import { DataZoomComponent } from 'echarts/components';
 
-echarts.use([TooltipComponent, GridComponent, BarChart, CanvasRenderer]);
+echarts.use([TooltipComponent, GridComponent, BarChart, CanvasRenderer, DataZoomComponent]);
 const allCostSumChartRef = ref()
 const costNames = ref([])
 const costValues = ref([])
@@ -16,12 +17,7 @@ let chartInstance = null
 
 const renderChart = () => {
   chartInstance.setOption({
-    title: {
-      text: '各種開銷明細總和',
-      textStyle: {
-        color: `white`
-      }
-    },
+    title: { text: '各種開銷明細總和', },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -32,7 +28,6 @@ const renderChart = () => {
       left: '3%',
       right: '4%',
       bottom: '5%',
-      containLabel: true
     },
     xAxis: [
       {
@@ -45,7 +40,6 @@ const renderChart = () => {
           rotate: -90,      // 旋轉 90 度，文字垂直顯示
           interval: 0,     // 強制顯示所有標籤（避免太多時自動隱藏）
           margin: 10,       // 與軸線的間距，避免貼太近
-          color: 'white'
         }
       }
     ],
@@ -100,7 +94,7 @@ const getCostsSum = async () => {
 onMounted(async () => {
   await getCostsSum()
 
-  chartInstance = echarts.init(allCostSumChartRef.value)
+  chartInstance = echarts.init(allCostSumChartRef.value, `dark`)
 
   renderChart()
 

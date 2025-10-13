@@ -39,12 +39,7 @@ const detailList = ref([])
 
 const renderChart = () => {
   chartInstance.setOption({
-    title: {
-      text: '每日支出總和',
-      textStyle: {
-        color: `white`
-      }
-    },
+    title: { text: '每日支出總和', },
     tooltip: {
       trigger: 'axis',
       formatter: (params) => {
@@ -77,16 +72,8 @@ const renderChart = () => {
       type: 'category',
       boundaryGap: false,
       data: dayList.value,
-      axisLabel: {
-        color: `white`
-      }
     },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        color: `white`
-      }
-    },
+    yAxis: { type: 'value', },
     series: [
       {
         type: 'line',
@@ -115,7 +102,7 @@ onMounted(async () => {
   costList.value = response.data.costList
   detailList.value = response.data.detailList
 
-  chartInstance = echarts.init(monthCostChartRef.value)
+  chartInstance = echarts.init(monthCostChartRef.value, `dark`)
   renderChart()
 
   window.addEventListener('resize', () => {
