@@ -30,7 +30,9 @@ export const useDateTimeStore = defineStore("dateTime", () => {
     // console.log(`${now.toJSON()}`) // 2025-09-03T07:15:02.244Z
     // console.log(`${now.toTimeString()}`) // 15:15:02 GMT+0800 (台北標準時間)
     // console.log(`${now.toUTCString()}`) // Wed, 03 Sep 2025 07:15:02 GMT
-    return new Date()
+
+    // 20251013 不知道為什麼 顯示的時間是-8 補上.toLocaleString("sv-SE")
+    return new Date().toLocaleString("sv-SE")
   }
 
   const getTimeAfter15Minutes = (useUtc = false, baseDate = null) => {

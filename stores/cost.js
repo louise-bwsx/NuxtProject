@@ -12,7 +12,6 @@ export const useCostStore = defineStore("cost", () => {
   const showMenu = ref(false)
 
   const getTodayCost = async () => {
-    // console.log(`expenditureList.value.length: ${expenditureList.value.length}`);
     if (expenditureList.value.length <= 0) {
       await getCosts()
     }
@@ -23,7 +22,7 @@ export const useCostStore = defineStore("cost", () => {
       todayCost.value = {
         breakfastCost: "0",
         breakfastType: "",
-        costDate: new Date().toISOString().split("T")[0],
+        costDate: useDateTimeStore().now().split(" ")[0],
         dinnerCost: "0",
         dinnerType: "",
         extraCost: "0",
