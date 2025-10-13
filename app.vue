@@ -1,6 +1,6 @@
 <template>
-  <!-- 很重要 限制高度寬度 這樣兩個childComponent都用full時才會對半分 -->
-  <div class="relative flex flex-col justify-between w-screen h-screen">
+  <!-- 20251012 避免Dock被網址覆蓋 -->
+  <div class="relative flex flex-col justify-between w-screen h-dvh">
     <div class="px-4 py-2 shadow w-full h-[48px] flex justify-between items-center">
       <NuxtLink to="/">
         <img src="~/assets/images/logoLight.png" alt="logo" class="w-[64px]">

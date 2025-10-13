@@ -53,7 +53,7 @@
           <div class="flex items-start space-x-3">
             <div class="chat chat-end justify-between">
               <div class="relative chat-bubble chat-bubble-primary w-full mb-3 ">
-                <div class="wrap-break-word">{{ chatObj.content }}</div>
+                <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }}</div>
                 <div class="absolute right-0 -bottom-6 flex justify-end space-x-3 opacity-50 text-xs">
                   <!-- 編輯按鈕 -->
                   <!-- <button @click="edit" class="w-[14px] h-[14px]">
@@ -85,7 +85,9 @@
               <div class="relative chat-bubble bg-base-100 text-base-content border border-base-300 w-full mb-3">
                 <span v-if="isEmptyObject(chatObj)" class="loading loading-dots loading-sm"></span>
                 <div v-else>
-                  <div class="wrap-break-word">{{ chatObj.content }}</div>
+                  <!-- 20251012 避免連續字無空格 超出chat-bubble 使用wrap-break-word -->
+                  <!-- 20251013 避免AI生成的內容無法換行 使用whitespace-pre-line -->
+                  <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }} </div>
                   <div class="absolute left-0 -bottom-6 flex  space-x-3 opacity-50 text-xs">
                     <div class="flex items-center whitespace-nowrap">{{ chatObj.createdAt }}</div>
 

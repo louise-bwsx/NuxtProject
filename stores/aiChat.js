@@ -9,17 +9,22 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
 
   const sendMessage = async () => {
     if (isLoading.value) return
-    if (!input.value.trim()) return
+
+    const content = input.value.trim()
+
+    if (!content) return
 
     isLoading.value = true
 
+    input.value = ``
     history.value.push({
       createdAt: useDateTimeStore().now(),
-      content: input.value,
+      content: content,
     })
+
     history.value.push({})
 
-    const response = await chat(input.value)
+    const response = await chat(content)
     if (response.code != 0) {
       response.data.createdAt = useDateTimeStore().now()
       response.data.message = response.message
@@ -30,7 +35,6 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
       createdAt: response.data.createdAt,
       content: response.data.message,
     }
-    input.value = ``
     isLoading.value = false
   }
 
