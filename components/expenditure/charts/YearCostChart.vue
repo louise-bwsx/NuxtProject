@@ -40,7 +40,7 @@ const renderChart = () => {
   // https://echarts.apache.org/examples/en/editor.html?c=pie-legend
   chartInstance.setOption({
     title: {
-      text: '每年支出',
+      text: '每月支出總和',
       textStyle: {
         color: `white`
       }

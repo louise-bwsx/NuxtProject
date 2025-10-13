@@ -40,7 +40,7 @@ const detailList = ref([])
 const renderChart = () => {
   chartInstance.setOption({
     title: {
-      text: '每月支出',
+      text: '每日支出總和',
       textStyle: {
         color: `white`
       }
