@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <!-- 20250511 在csv只有4個row的情況下只會顯示4天 暫時增加csv row數量 -->
-        <tr class="" v-for="data in costStore.expenditureList" :key="data">
+        <tr class="" v-for="(data, index) in costStore.expenditureList" :key="data">
           <td class="!py-[0px]"><input class="w-[90px] h-[30px]" type="date" v-model="data.costDate.split('T')[0]" />
           </td>
           <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.breakfastCost" /></td>
