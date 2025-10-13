@@ -101,4 +101,9 @@ onMounted(async () => {
   showSearchInput.value = Object.keys(route.query).length > 0
   keybindStore.setListener("notes", onClickSearchButton)
 })
+
+// 20251013 避免在切換頁面後 仍然保持true的狀態 導致無法進入下一頁
+onUnmounted(() => {
+  notesStore.hasNoMoreData = false
+})
 </script>
