@@ -137,10 +137,10 @@ const refreshCurrency = async () => {
 
 const saveRefreshTime = () => {
   const now = dateTimeStore.now()
-  const newTime = now.toLocaleString()
-  lastRefreshTime.value = newTime
-  localStorage.setItem("formattedLastRefreshTime", newTime)
-  localStorage.setItem("lastRefreshTime", now.toISOString())
+  //20251013 取消now.toLocaleString now.toISOString 因為now的回傳值更改了
+  lastRefreshTime.value = now
+  localStorage.setItem("formattedLastRefreshTime", now)
+  localStorage.setItem("lastRefreshTime", now)
 }
 
 const resetSort = () => {
@@ -166,7 +166,8 @@ onMounted(async () => {
     sortedKeys.value = JSON.parse(storedKeys)
   }
 
-  const now = dateTimeStore.now()
+  // 改用 new Date() 取得當前時間的 Date 物件
+  const now = new Date()
   formattedLastRefreshTime.value = localStorage.getItem("formattedLastRefreshTime")
   console.log(`formattedLastRefreshTime: ${formattedLastRefreshTime.value}`)
   const last = localStorage.getItem("lastRefreshTime")
@@ -177,7 +178,7 @@ onMounted(async () => {
   }
 
   const lastDate = new Date(last)
-  const diff = now.getTime() - lastDate.getTime()
+  const diff = now - lastDate
   // 20250630 louise 避免舊版錯誤 導致不更新資料 新增Number.isNaN()
   if (diff > FIVE_MINUTES || Number.isNaN(diff)) {
     await refreshCurrency()
