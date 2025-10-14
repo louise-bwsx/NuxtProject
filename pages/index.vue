@@ -1,13 +1,9 @@
 <template>
-  <div class=" w-full h-full flex flex-col justify-center items-center p-8">
-    <NuxtLink to="/localized" class="btn btn-primary">
-      切換語言測試
-    </NuxtLink>
-
+  <div class="w-full flex flex-col justify-start items-center p-4 space-y-8">
     <!-- https://www.youtube.com/watch?v=SODClEHLeCA -->
     <!-- 如果遇到 [GSI_LOGGER]: The given origin is not allowed for the given client ID. -->
     <!-- 需要在GCP OAuth 2.0用戶端登入 將http:localhost 新增至 已授權的 JavaScript 來源 和 已授權的重新導向 URI -->
-    <NuxtLink to="/googleLogin/GoogleSign-inButton" class="btn btn-primary">
+    <!-- <NuxtLink to="/googleLogin/GoogleSign-inButton" class="btn btn-primary">
       GoogleSign-inButton
     </NuxtLink>
     <NuxtLink to="/googleLogin/useCodeClient" class="btn btn-primary">
@@ -22,13 +18,18 @@
     <NuxtLink to="/chat" class="btn btn-primary">
       AIChat
     </NuxtLink>
+    <NuxtLink to="/localized" class="btn btn-primary">
+      切換語言測試
+    </NuxtLink> -->
 
+    <Weather />
     <WorkTimeline />
   </div>
 </template>
 
 <script setup>
 import WorkTimeline from '~/components/common/WorkTimeline.vue';
+import Weather from '~/components/common/Weather.vue';
 
 </script>
 <!-- TODO: 網址需要可以大小寫不分 -->

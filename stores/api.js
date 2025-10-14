@@ -10,7 +10,7 @@ export const useApiStore = defineStore("api", () => {
       // console.log(import.meta.env.VITE_BASE_URL)
       // 合併默認選項和用戶提供的選項
       const mergedOptions = {
-        baseURL: import.meta.env.VITE_BASE_URL,
+        baseURL: options.baseUrl ?? import.meta.env.VITE_BASE_URL,
         // 合併用戶提供的選項
         ...options,
         // 合併 headers

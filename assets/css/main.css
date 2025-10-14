@@ -53,6 +53,10 @@ input[type='number'] {
   border-radius: 4px;
 }
 
+button{
+  cursor: pointer;
+}
+
 /* 預設背景色 #1D232A */
 /* 圖表背景色 #040810 */
 /* DeepL底色 primary #0d263fff */

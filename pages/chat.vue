@@ -145,6 +145,15 @@ const authStore = useAuthStore()
 
 const isLogin = ref(false)
 const picture = ref("")
+// const isMobile = ref("")
+
+// const onFocus = () => {
+//   if (!window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|Android)/i)) {
+//     isMobile.value = `isNotMobile`
+//     return
+//   }
+//   isMobile.value = `isMobile`
+// }
 
 onMounted(() => {
   isLogin.value = authStore.getUserInfo != undefined && !isEmptyObject(authStore.getUserInfo)

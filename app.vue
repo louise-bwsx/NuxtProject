@@ -1,11 +1,10 @@
 <template>
   <!-- 20251012 避免Dock被網址覆蓋 -->
   <div class="relative flex flex-col justify-between w-screen h-dvh">
-    <div class="px-4 py-2 shadow w-full h-[48px] flex justify-between items-center">
+    <div class="px-4 py-2 shadow w-full h-[48px] flex justify-between items-center aaa">
       <NuxtLink to="/">
         <img src="~/assets/images/logoLight.png" alt="logo" class="w-[64px]">
       </NuxtLink>
-
       <GoogleLoginButton />
     </div>
 
