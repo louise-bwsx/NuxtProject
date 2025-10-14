@@ -1,17 +1,5 @@
 <template>
-  <div class=" w-full h-full flex flex-col justify-center items-center">
-    <NuxtLink to="/expenditureReport" class="btn btn-primary">
-      收支表單
-    </NuxtLink>
-
-    <NuxtLink to="/costCharts" class="btn btn-primary">
-      收支圖表
-    </NuxtLink>
-
-    <NuxtLink to="/notes" class="btn btn-primary">
-      筆記列表
-    </NuxtLink>
-
+  <div class=" w-full h-full flex flex-col justify-center items-center p-8">
     <NuxtLink to="/localized" class="btn btn-primary">
       切換語言測試
     </NuxtLink>
@@ -35,21 +23,13 @@
       AIChat
     </NuxtLink>
 
-    <!-- 手機sm ~ 320px -->
-    <!-- Sony手機411 832 -->
-    <!-- 20250710 避免Hyration警告 -->
-    <ClientOnly>
-      <div>Width: {{ width }}</div>
-      <div>Height: {{ height }}</div>
-      <button @click="useToastStore().showToast('aaa', 'success')" class="btn">showToast</button>
-    </ClientOnly>
+    <WorkTimeline />
   </div>
 </template>
 
 <script setup>
-import { useWindowSize } from '@vueuse/core'
+import WorkTimeline from '~/components/common/WorkTimeline.vue';
 
-const { width, height } = useWindowSize()
 </script>
 <!-- TODO: 網址需要可以大小寫不分 -->
 
