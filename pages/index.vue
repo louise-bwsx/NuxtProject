@@ -12,18 +12,23 @@
     <NuxtLink to="/googleLogin/useTokenClient" class="btn btn-primary">
       useTokenClient
     </NuxtLink>
-    <NuxtLink to="/short" class="btn btn-primary">
-      短網址
-    </NuxtLink>
-    <NuxtLink to="/chat" class="btn btn-primary">
-      AIChat
-    </NuxtLink>
     <NuxtLink to="/localized" class="btn btn-primary">
       切換語言測試
     </NuxtLink> -->
 
     <Weather />
     <WorkTimeline />
+    <NuxtLink to="/chat" class="btn btn-primary">
+      AIChat
+    </NuxtLink>
+    <NuxtLink to="/short" class="btn btn-primary">
+      短網址
+    </NuxtLink>
+
+    <NuxtLink to="/cropper" class="btn btn-primary">
+      cropper圖片修改工具
+    </NuxtLink>
+    <!-- https://tabler.io/icons -->
   </div>
 </template>
 

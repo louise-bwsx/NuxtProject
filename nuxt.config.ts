@@ -14,6 +14,12 @@ export default defineNuxtConfig({
     "nuxt-vue3-google-signin",
     "@element-plus/nuxt",
   ],
+  // 為了避免進入/cropper時出現warning Failed to resolve component
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith('cropper-')
+    }
+  },
   i18n: {
     bundle: {
       // 為了關掉yarn dev顯示的warning true或false都可以
