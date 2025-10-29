@@ -17,10 +17,13 @@
     </NuxtLink> -->
 
     <Weather />
+
     <WorkTimeline />
-    <NuxtLink to="/chat" class="btn btn-primary">
+
+    <!-- <NuxtLink to="/chat" class="btn btn-primary">
       AIChat
-    </NuxtLink>
+    </NuxtLink> -->
+
     <NuxtLink to="/short" class="btn btn-primary">
       短網址
     </NuxtLink>
@@ -28,7 +31,6 @@
     <NuxtLink to="/cropper" class="btn btn-primary">
       cropper圖片修改工具
     </NuxtLink>
-    <!-- https://tabler.io/icons -->
   </div>
 </template>
 
