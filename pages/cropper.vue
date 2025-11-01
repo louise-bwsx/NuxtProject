@@ -2,9 +2,6 @@
   <div class="p-4">
     <h1>
       使用 Cropper.js 實作的圖片裁切小工具
-      <NuxtLink to="/notes/利用Cropperjs實作圖片裁切功能">
-        筆記
-      </NuxtLink>
     </h1>
 
     <!-- 圖片上傳區域 -->
