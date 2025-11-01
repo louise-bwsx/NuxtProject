@@ -9,7 +9,7 @@
       <!-- 20250825 為了避免 title中因為其他字符 # 導致在搜尋時被截斷 使用encodeURIComponent -->
       <!-- 20251101 改用query避免因為"/"導致無法取得正確的筆記內容 -->
       <NuxtLink v-for="note in notesStore.notes" :key="note" :to="`/notes/read?title=${encodeURIComponent(note.title)}`"
-        class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] bg-black overflow-x-hidden">
+        class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] overflow-x-hidden aaa">
         <div class="whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
           {{ note.title }}
         </div>
