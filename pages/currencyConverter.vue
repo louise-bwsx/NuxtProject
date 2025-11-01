@@ -4,21 +4,36 @@
 
     <button @click="resetSort" class="btn px-4 py-2">清除存檔排序</button>
 
-    <div ref="currencyListRef" class="flex-1 overflow-auto drag-handle">
+    <div ref="currencyListRef" class="flex-1 overflow-auto">
       <div v-for="rate in convertedRates" :key="rate.key"
         class="flex w-full justify-between items-center border-b py-3 relative">
-        <div class="flex space-x-4 ps-3 w-[200px]">
+        <div class="flex space-x-4 ps-3">
+          <!-- 20251101 修正手機無法上下捲動 加上drag-handle -->
+          <div class="drag-handle cursor-move flex items-center">
+            <!-- tabler icons -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-grip-vertical">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M9 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+              <path d="M9 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+              <path d="M9 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+              <path d="M15 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+              <path d="M15 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+              <path d="M15 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+            </svg>
+          </div>
           <img :src="getFlagSrc(rate.key)" :alt="rate.key" class="w-[32px] h-[32px]">
           <div class="text-lg font-semibold flex items-center">{{ currencyCNMap[rate.key] }}</div>
         </div>
 
         <div class="text-lg font-semibold flex items-center absolute left-[50%]">{{ rate.key }}</div>
 
-        <div class="text-lg font-semibold flex items-center pe-3">{{ (rate.convertedValue * amount).toFixed(2) }}
+        <div class="text-lg font-semibold flex items-center pe-3">
+          {{ (rate.convertedValue * amount).toFixed(2) }}
         </div>
       </div>
     </div>
-
 
     <div class="flex space-x-2">
       <div class="w-[150px]">
