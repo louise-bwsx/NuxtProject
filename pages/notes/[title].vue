@@ -223,6 +223,14 @@ const onVisibilityClick = async () => {
 const onSplitClick = async () => {
   currentMode.value = 'split'
 
+  // 20251101 修正新建筆記時沒辦法透過split進行儲存
+  // 沒有uid代表是新增
+  if (uid.value == "" || uid.value == undefined) {
+    const response = await createNote(title.value, content.value);
+    uid.value = response.data.lastInsertID
+    return;
+  }
+
   // 20251006 後端只吃int64 不確定為什麼沒辦法用json 所以用struct
   await saveNote(+uid.value, title.value, content.value);
 }
