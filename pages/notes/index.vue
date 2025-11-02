@@ -1,23 +1,11 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full border-s border-e border-black">
     <div class="overflow-y-scroll w-full h-full p-0 m-0 overflow-auto" ref="scrollContainer" @scroll="onScroll">
       <!-- 20251009 從v-model:showSearchInput改成:showSearchInput 避免出現Error提示 -->
       <SearchInput :showSearchInput="showSearchInput" @onReset="notesStore.resetLoadingState"
         @onSearch="notesStore.resetLoadingState()" />
 
-      <!-- TODO: 沒有筆記時 顯示沒有筆記 -->
-      <!-- 20250825 為了避免 title中因為其他字符 # 導致在搜尋時被截斷 使用encodeURIComponent -->
-      <!-- 20251101 改用query避免因為"/"導致無法取得正確的筆記內容 -->
-      <NuxtLink v-for="note in notesStore.notes" :key="note" :to="`/notes/read?title=${encodeURIComponent(note.title)}`"
-        class="flex justify-between items-center gap-[8px] flex-1 h-[50px] m-[10px] p-[8px] overflow-x-hidden aaa">
-        <div class="whitespace-nowrap text-ellipsis flex-1 overflow-hidden">
-          {{ note.title }}
-        </div>
-        <!-- 20250814 故意寫死90px 避免因為數字盡量小 大小不一 -->
-        <div class="whitespace-nowrap text-end w-[100px]">
-          {{ note.createDate.split('T')[0] }}
-        </div>
-      </NuxtLink>
+      <Item v-for="note in notesStore.notes" :key="note" :note="note" />
     </div>
 
     <button @click="onClickSearchButton"
@@ -36,6 +24,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SearchInput from '~/components/expenditure/SearchInput.vue'
+import Item from '~/components/notes/item.vue'
 
 const notesStore = useNotesStore()
 const keybindStore = useKeybindStore()
