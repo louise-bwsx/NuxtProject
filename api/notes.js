@@ -51,3 +51,17 @@ export const saveNote = async (uid, title, content) => {
   }
   return response
 }
+
+export const interaction = async (noteId, userId, action) => {
+  const body = {
+    noteId: noteId,
+    userId: userId,
+    action: action,
+  }
+
+  const response = await useApiStore().put("/api/v1/notes/action", body)
+  if (response.code != 0) {
+    useToastStore().showToast(`上傳失敗: ${response.message}`, "error")
+  }
+  return response
+}

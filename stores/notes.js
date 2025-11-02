@@ -30,6 +30,7 @@ export const useNotesStore = defineStore("notes", () => {
       }
       params.append("page", page.value)
       params.append("limit", limit.value)
+      params.append("userId", useAuthStore().getUserInfo.id)
 
       // 建構完整的 API URL
       const apiUrl = `/api/v1/notes${params.toString() ? "?" + params.toString() : ""}`
