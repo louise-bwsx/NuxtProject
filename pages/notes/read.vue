@@ -41,7 +41,7 @@
 <script setup>
 import MarkdownIt from 'markdown-it'
 import { useRoute } from 'vue-router'
-import { deleteNote, createNote, saveNote } from '~/api/notes'
+import { deleteNote, createNote, saveNote, postView } from '~/api/notes'
 
 const notesStore = useNotesStore()
 const route = useRoute()
@@ -251,6 +251,8 @@ onMounted(async () => {
   title.value = data == undefined ? "" : data.title
   createDate.value = data == undefined ? "" : data.createDate
   updateDate.value = data == undefined ? "" : data.updateDate
+
+  await postView(uid.value, useAuthStore().getUserInfo.id)
 })
 </script>
 

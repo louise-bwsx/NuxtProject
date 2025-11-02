@@ -24,6 +24,18 @@ export const createNote = async (title, content) => {
   return response
 }
 
+export const postView = async (noteId, userId) => {
+  const body = {
+    noteId: noteId,
+    userId: userId,
+  }
+
+  const response = await useApiStore().post("/api/v1/notes/view", body)
+  if (response.code != 0) {
+    useToastStore().showToast(`上傳失敗: ${response.message}`, "error")
+  }
+}
+
 export const saveNote = async (uid, title, content) => {
   const body = {
     uid: uid,
