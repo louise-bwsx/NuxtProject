@@ -5,11 +5,12 @@
   <div :to="`/notes/read?title=${encodeURIComponent(note.title)}`"
     class="flex flex-col items-start flex-1 space-y-[8px] m-[10px] p-[8px] overflow-x-hidden aaa">
     <NuxtLink :to="`/notes/read?title=${encodeURIComponent(note.title)}`"
-      class="text-ellipsis flex-1 overflow-hidden text-lg font-semibold line-clamp-2">
+      class="text-ellipsis flex-1 overflow-hidden text-lg font-semibold line-clamp-2 w-full">
       {{ note.title }}
     </NuxtLink>
 
-    <div class="flex w-full space-x-[4px] flex-wrap">
+    <!-- 20251103 使用space-y-[4px]會和flex-wrap衝突 導致最後一個tag會比較大 改用gap-[4px] -->
+    <div class="flex w-full gap-[4px] flex-wrap">
       <div v-for="tag in note.tags" :key="tag"
         class="aaa inline-flex items-center space-x-[6px] px-2.5 py-1 rounded-full text-xs font-medium">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"

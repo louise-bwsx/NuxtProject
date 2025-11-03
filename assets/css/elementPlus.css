@@ -3,6 +3,12 @@
     --el-input-bg-color: #1D232A !important;
 }
 
+.el-input-tag {
+    /* input輸入框背景顏色 */
+    /* --el-input-bg-color: #1D232A !important; */
+    --el-fill-color-blank: #1D232A !important;
+}
+
 .el-input__inner{
     --el-input-text-color: white
 }

@@ -1,11 +1,43 @@
 <template>
   <!-- 20251013 從h-screen改成h-full 避免出現窗雙重卷軸 -->
   <div class="w-screen h-full overflow-y-auto relative flex flex-col">
-    <el-input v-if="currentMode == 'edit' || currentMode == 'split'" class="" type="text" v-model="title"
-      placeholder="請輸入標題" clearable size="large" />
-    <div v-else-if="title" class="aaa">{{ title }}</div>
+    <div v-if="currentMode == 'edit' || currentMode == 'split'">
+      <el-input type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
+      <el-input-tag v-model="tags" placeholder="請輸入標籤" size="large" @add-tag="onAddTag" @remove-tag="onRemoveTag" />
+    </div>
 
-    <div v-if="createDate" class="aaa">{{ createDate.split("T")[0] }}</div>
+    <div v-else-if="title" class="border-s border-b border-e border-black">
+      <div class="flex justify-between items-start px-4 py-1 border-b border-black">
+        <div class="text-lg font-semibold">{{ title }}</div>
+      </div>
+
+      <div v-if="createDate" class="flex space-x-1 items-center px-4 py-1 border-b border-black">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#FFFFFF">
+          <path
+            d="M216-96q-29.7 0-50.85-21.5Q144-139 144-168v-528q0-29 21.15-50.5T216-768h72v-96h72v96h240v-96h72v96h72q29.7 0 50.85 21.5Q816-725 816-696v528q0 29-21.15 50.5T744-96H216Zm0-72h528v-360H216v360Zm0-432h528v-96H216v96Zm0 0v-96 96Z" />
+        </svg>
+        <div class="text-xs whitespace-nowrap">
+          {{ createDate.split("T")[0] }}
+        </div>
+      </div>
+
+      <!-- 20251103 使用space-y-[4px]會和flex-wrap衝突 導致最後一個tag會比較大 改用gap-[4px] -->
+      <div v-if="tags" class="flex w-full gap-[4px] flex-wrap px-4 py-1">
+        <div v-for="tag in tags" :key="tag"
+          class="flex items-center space-x-[6px] px-2.5 py-1 rounded-full text-xs font-medium aaa">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-tag">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+            <path
+              d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" />
+          </svg>
+
+          <div>{{ tag }}</div>
+        </div>
+      </div>
+    </div>
 
     <textarea v-if="currentMode == 'edit'" ref="textareaRef" class=" outline-none w-full h-full" v-model="content"
       @paste="handlePaste" @dragover.prevent @drop="handleDrop" />
@@ -41,7 +73,7 @@
 <script setup>
 import MarkdownIt from 'markdown-it'
 import { useRoute } from 'vue-router'
-import { deleteNote, createNote, saveNote, postView } from '~/api/notes'
+import { deleteNote, createNote, saveNote, postView, postTag } from '~/api/notes'
 
 const notesStore = useNotesStore()
 const route = useRoute()
@@ -55,6 +87,9 @@ const createDate = ref(``)
 const updateDate = ref(``)
 const textareaRef = ref(null)
 const currentMode = ref(`view`) // split, edit
+const tags = ref([])
+// 用於追蹤已存在的標籤，避免重複
+const existingTags = ref(new Set())
 
 // 配置 markdown-it
 const md = new MarkdownIt({
@@ -190,6 +225,32 @@ const renderedContent = computed(() => {
   return content.value ? md.render(content.value) : ''
 })
 
+const onAddTag = async (tag) => {
+  // 檢查是否重複
+  if (existingTags.value.has(tag)) {
+    // 移除剛剛加入的重複標籤
+    const index = tags.value.lastIndexOf(tag)
+    if (index > -1) {
+      tags.value.splice(index, 1)
+    }
+    return
+  }
+
+  // 呼叫 API
+  await postTag(uid.value, tag, 'Add')
+
+  // 加入到已存在集合
+  existingTags.value.add(tag)
+}
+
+const onRemoveTag = async (tag) => {
+  // 呼叫 API
+  await postTag(uid.value, tag, 'Remove')
+
+  // 從已存在集合移除
+  existingTags.value.delete(tag)
+}
+
 const onVisibilityClick = async () => {
   if (currentMode.value == 'edit') {
     // 20251006 補上createNote 為了解決新增筆記時 同一個筆記會被新增很多次 post不再有put的功能
@@ -251,8 +312,12 @@ onMounted(async () => {
   title.value = data == undefined ? "" : data.title
   createDate.value = data == undefined ? "" : data.createDate
   updateDate.value = data == undefined ? "" : data.updateDate
+  tags.value = data == undefined ? "" : data.tags
 
-  await postView(uid.value, useAuthStore().getUserInfo.id)
+  // 避免新增筆記時觸發增加觀看數 導致出現ErrorToast
+  if (uid.value != "") {
+    await postView(uid.value, useAuthStore().getUserInfo.id)
+  }
 })
 </script>
 

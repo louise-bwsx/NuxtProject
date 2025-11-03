@@ -24,7 +24,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SearchInput from '~/components/expenditure/SearchInput.vue'
-import Item from '~/components/notes/item.vue'
+import Item from '~/components/notes/Item.vue'
 
 const notesStore = useNotesStore()
 const keybindStore = useKeybindStore()
