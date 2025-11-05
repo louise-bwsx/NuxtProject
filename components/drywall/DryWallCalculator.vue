@@ -45,16 +45,16 @@
 
         <div class="flex items-center">
           <div class="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">
-            板子寬度(台尺):
+            板子寬度(公分):
           </div>
-          <el-input type="number" v-model.number="boardWidthTaiwanFoot" class="w-full" />
+          <el-input type="number" v-model.number="boardWidthCM" class="w-full" />
         </div>
 
         <div class="flex items-center">
           <div class="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">
-            板子高度(台尺):
+            板子高度(公分):
           </div>
-          <el-input type="number" v-model.number="boardHeightTaiwanFoot" class="w-full" />
+          <el-input type="number" v-model.number="boardHeightCM" class="w-full" />
         </div>
 
         <div class="flex items-center">
@@ -221,8 +221,8 @@ const hasRockWool = ref(false);
 const isDoubleSided = ref(false);
 const boardMaterial = ref('矽酸鈣');
 const boardThickness = ref(9);
-const boardWidthTaiwanFoot = ref(4);
-const boardHeightTaiwanFoot = ref(6);
+const boardWidthCM = ref(122);
+const boardHeightCM = ref(183);
 
 const TAIWAN_FOOT_TO_CM = 30.303; // 台尺轉公分
 const ROCK_WOOL_SHEET_AREA = 122 * 40.5; // 4941 平方公分
@@ -249,8 +249,8 @@ const saveSize = () => {
     isDoubleSided: isDoubleSided.value,
     boardMaterial: boardMaterial.value,
     boardThickness: boardThickness.value,
-    boardWidthTaiwanFoot: boardWidthTaiwanFoot.value,
-    boardHeightTaiwanFoot: boardHeightTaiwanFoot.value,
+    boardWidthCM: boardWidthCM.value,
+    boardHeightCM: boardHeightCM.value,
   });
 
   width.value = 0;
@@ -337,18 +337,23 @@ const recalculateMaterials = () => {
     }
 
     // 計算板子
-    const boardArea = size.boardWidthTaiwanFoot * size.boardHeightTaiwanFoot * TAIWAN_FOOT_TO_CM * TAIWAN_FOOT_TO_CM;
+    const boardArea = size.boardWidthCM * size.boardHeightCM;
     const boardCount = Math.ceil(area / boardArea);
     const finalBoardCount = size.isDoubleSided ? boardCount * 2 : boardCount;
 
-    const boardKey = `${size.boardMaterial}_${size.boardThickness}_${size.boardWidthTaiwanFoot}_${size.boardHeightTaiwanFoot}`;
+    console.log(`TAIWAN_FOOT_TO_CM: ${TAIWAN_FOOT_TO_CM}`) // 30.303
+    console.log(`boardArea: ${boardArea}`) // 22038
+    console.log(`area: ${area}`)
+    console.log(`boardCount: ${boardCount}`) // 46
+
+    const boardKey = `${size.boardMaterial}_${size.boardThickness}_${size.boardWidthCM}_${size.boardHeightCM}`;
 
     if (!boardsByType[boardKey]) {
       boardsByType[boardKey] = {
         material: size.boardMaterial,
         thickness: size.boardThickness,
-        widthTF: size.boardWidthTaiwanFoot,
-        heightTF: size.boardHeightTaiwanFoot,
+        widthTF: size.boardWidthCM,
+        heightTF: size.boardHeightCM,
         quantity: 0,
       };
     }

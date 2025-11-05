@@ -14,16 +14,20 @@
       <h3 class="text-lg font-semibold text-gray-800 mb-3">常用參考</h3>
       <div class="space-y-2 text-sm text-gray-600">
         <div class="flex justify-between py-2 border-b border-gray-100">
-          <span>10 坪</span>
-          <span class="font-medium">≈ 33.06 m²</span>
+          <span>一片60cm * 60cm的天花板</span>
+          <span class="font-medium">3600 cm²</span>
         </div>
         <div class="flex justify-between py-2 border-b border-gray-100">
-          <span>20 坪</span>
-          <span class="font-medium">≈ 66.12 m²</span>
+          <span>一片91.5 * 183的板子</span>
+          <span class="font-medium">16744.5 cm²</span>
         </div>
         <div class="flex justify-between py-2 border-b border-gray-100">
-          <span>30 坪</span>
-          <span class="font-medium">≈ 99.17 m²</span>
+          <span>一片122 * 183的板子</span>
+          <span class="font-medium">22326 cm²</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-gray-100">
+          <span>一包岩綿8片</span>
+          <span class="font-medium">39528 cm²</span>
         </div>
         <div class="flex justify-between py-2">
           <span>1 台尺</span>
