@@ -7,7 +7,8 @@
       start-placeholder="起始日" end-placeholder="結束日" :shortcuts="shortcuts" size="large" format="YYYY/MM/DD"
       value-format="YYYY-MM-DD" />
 
-    <div class="flex gap-2 overflow-hidden">
+    <!-- 20251110 只有在筆記列表的搜尋才要顯示SortButton -->
+    <div v-if="route.path == '/notes'" class="flex gap-2 overflow-hidden">
       <SortButton title="新增日期" value="createDate" :sortType="sortType" :sortOption="sortOption"
         @onClick="onSort('createDate')" />
       <SortButton title="觀看次數" value="viewCount" :sortType="sortType" :sortOption="sortOption"
