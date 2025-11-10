@@ -1,11 +1,22 @@
 <template>
-  <div v-show="props.showSearchInput" class="flex flex-col  p-[8px] gap-[8px] w-screen">
+  <div v-show="props.showSearchInput" class="flex flex-col p-[8px] gap-[8px] w-full">
     <el-input ref="keywordInputRef" class="flex-1" type="text" v-model="keyword" placeholder="搜尋" clearable size="large"
       @keydown.enter="onSearch" @keydown.esc="onReset" />
 
     <el-date-picker class="flex-1 min-w-full" v-model="dateRange" type="daterange" unlink-panels range-separator="到"
       start-placeholder="起始日" end-placeholder="結束日" :shortcuts="shortcuts" size="large" format="YYYY/MM/DD"
       value-format="YYYY-MM-DD" />
+
+    <div class="flex gap-2 overflow-hidden">
+      <SortButton title="新增日期" value="createDate" :sortType="sortType" :sortOption="sortOption"
+        @onClick="onSort('createDate')" />
+      <SortButton title="觀看次數" value="viewCount" :sortType="sortType" :sortOption="sortOption"
+        @onClick="onSort('viewCount')" />
+      <SortButton title="讚數" value="likeCount" :sortType="sortType" :sortOption="sortOption"
+        @onClick="onSort('likeCount')" />
+      <SortButton title="倒讚數" value="likeCount" :sortType="sortType" :sortOption="sortOption"
+        @onClick="onSort('dislikeCount')" />
+    </div>
 
     <div class=" flex w-full gap-[8px]">
       <button @click="onReset" class="btn flex-1">重設</button>
@@ -16,6 +27,7 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
+import SortButton from '../common/SortButton.vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -27,6 +39,8 @@ const emit = defineEmits(['onReset', 'onSearch'])
 
 const keywordInputRef = ref(null)
 const keyword = ref("")
+const sortType = ref("")
+const sortOption = ref("")
 const dateRange = ref([])
 const shortcuts = [
   {
@@ -67,19 +81,33 @@ const onReset = async () => {
   emit('onReset')
 }
 
+const onSort = (type) => {
+  if (sortType.value == type && sortOption.value == '') {
+    sortOption.value = 'DESC'
+  } else if (sortType.value == type && sortOption.value == 'DESC') {
+    sortOption.value = 'ASC'
+  } else if (sortType.value == type && sortOption.value == 'ASC') {
+    sortOption.value = ''
+  } else {
+    sortType.value = type
+    sortOption.value = 'DESC'
+  }
+  onSearch()
+}
+
 const onSearch = async () => {
-  console.log(`keyword: ${keyword.value}`)
   // 使用 router.push 更新 query 參數
   // 或是改用router.replace 就不會留下紀錄 上一頁就不會顯示上一個搜尋條件
   await router.push({
     query: {
-      ...route.query, // 保留現有的 query 參數
-      keyword: keyword.value,
-      startDate: dateRange.value[0],
-      endDate: dateRange.value[1]
+      // 為了在ASC的狀態後清空排序 取消...route.query
+      ...(keyword.value && { keyword: keyword.value }), // 只有不是空字串的情況下在會增加
+      ...(dateRange.value[0] && { startDate: dateRange.value[0] }),
+      ...(dateRange.value[1] && { endDate: dateRange.value[1] }),
+      ...(sortType.value && sortOption.value && { sortType: sortType.value }),
+      ...(sortOption.value && { sortOption: sortOption.value })
     }
   })
-
   emit('onSearch')
 }
 

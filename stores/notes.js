@@ -6,6 +6,8 @@ export const useNotesStore = defineStore("notes", () => {
   const notes = ref([])
   const page = ref(1)
   const limit = ref(30)
+  const sortType = ref("")
+  const sortOption = ref("")
   const hasNoMoreData = ref(false)
 
   const searchNotes = async () => {
@@ -17,6 +19,8 @@ export const useNotesStore = defineStore("notes", () => {
       const keyword = route.query.keyword
       const startDate = route.query.startDate
       const endDate = route.query.endDate
+      sortType.value = route.query.sortType
+      sortOption.value = route.query.sortOption
 
       // 只添加有值的參數
       if (keyword) {
@@ -30,7 +34,11 @@ export const useNotesStore = defineStore("notes", () => {
       }
       params.append("page", page.value)
       params.append("limit", limit.value)
-      params.append("userId", useAuthStore().getUserInfo.id)
+
+      if (sortType.value && sortOption.value) {
+        params.append("sortType", sortType.value)
+        params.append("sortOption", sortOption.value)
+      }
 
       // 建構完整的 API URL
       const apiUrl = `/api/v1/notes${params.toString() ? "?" + params.toString() : ""}`
@@ -79,5 +87,5 @@ export const useNotesStore = defineStore("notes", () => {
     await searchNotes()
   }
 
-  return { notes, page, searchNotes, resetLoadingState, getNote }
+  return { notes, page, sortType, sortOption, searchNotes, resetLoadingState, getNote }
 })

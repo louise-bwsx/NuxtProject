@@ -1,12 +1,21 @@
+/* 在nuxt.config.ts 引入 */
 .el-input {
     /* input輸入框背景顏色 */
     --el-input-bg-color: #1D232A !important;
 }
 
 .el-input-tag {
-    /* input輸入框背景顏色 */
+    /* input-tag輸入框背景顏色 */
     /* --el-input-bg-color: #1D232A !important; */
     --el-fill-color-blank: #1D232A !important;
+}
+
+.el-input__wrapper {
+    --el-input-bg-color: #1D232A !important;
+}
+
+.el-date-editor .el-range-separator {
+    --el-text-color-primary: #A2A5AC !important;
 }
 
 .el-input__inner{
