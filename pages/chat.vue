@@ -65,9 +65,13 @@
               </div>
             </div>
 
-            <div class="flex flex-col justify-end h-full">
-              <img v-if="isLogin" :src="picture" class="w-8 h-8 bg-black rounded-full">
-              <img v-else src="@/assets/icons/account_40_40_white.svg" class="w-8 h-8 bg-black rounded-full">
+            <!-- 20251112 為了讓連續英文字不會擠壓到頭像 新增min-w min-h -->
+            <div class="flex flex-col justify-end h-full min-w-8 min-h-8">
+              <!-- 20251112 避免登入狀態時重新整理 出現HydrationMismatch -->
+              <ClientOnly>
+                <img v-if="getPicture" :src="getPicture" class="w-8 h-8 bg-black rounded-full">
+                <img v-else src="@/assets/icons/account_40_40_white.svg" class="w-8 h-8 bg-black rounded-full">
+              </ClientOnly>
             </div>
           </div>
         </div>
@@ -87,11 +91,11 @@
                 <div v-else>
                   <!-- 20251012 避免連續字無空格 超出chat-bubble 使用wrap-break-word -->
                   <!-- 20251013 避免AI生成的內容無法換行 使用whitespace-pre-line -->
-                  <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }} </div>
+                  <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }}</div>
                   <div class="absolute left-0 -bottom-6 flex  space-x-3 opacity-50 text-xs">
                     <div class="flex items-center whitespace-nowrap">{{ chatObj.createdAt }}</div>
 
-                    <button @click="copy" class="w-[14px] h-[14px]">
+                    <button @click="copy(chatObj.content.trim())" class="w-[14px] h-[14px]">
                       <img src="~/assets/icons/copy_24_24_white.svg" alt="copy">
                     </button>
 
@@ -143,8 +147,9 @@
 const aiChat = useAIChatStore()
 const authStore = useAuthStore()
 
-const isLogin = ref(false)
-const picture = ref("")
+const getPicture = computed(() => {
+  return authStore.isLogin ? authStore.getUserInfo.picture : ''
+})
 // const isMobile = ref("")
 
 // const onFocus = () => {
@@ -154,11 +159,6 @@ const picture = ref("")
 //   }
 //   isMobile.value = `isMobile`
 // }
-
-onMounted(() => {
-  isLogin.value = authStore.getUserInfo != undefined && !isEmptyObject(authStore.getUserInfo)
-  picture.value = isLogin.value ? authStore.getUserInfo.picture : ''
-})
 </script>
 
 <style scoped>
