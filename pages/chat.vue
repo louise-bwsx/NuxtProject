@@ -150,15 +150,6 @@ const authStore = useAuthStore()
 const getPicture = computed(() => {
   return authStore.isLogin ? authStore.getUserInfo.picture : ''
 })
-// const isMobile = ref("")
-
-// const onFocus = () => {
-//   if (!window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|Android)/i)) {
-//     isMobile.value = `isNotMobile`
-//     return
-//   }
-//   isMobile.value = `isMobile`
-// }
 </script>
 
 <style scoped>

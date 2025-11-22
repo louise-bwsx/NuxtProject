@@ -1,10 +1,22 @@
 <template>
-  <div style="width:100%; height:100vh;">
-    <iframe src="/unity/index.html" style="width:100%; height:100%; border:none;"></iframe>
+  <div class="flex justify-center items-center h-full">
+    <div v-if="isMobile" class="wrap-break-word whitespace-pre-line">
+      哭哭
+      無法用手機顯示Unity打包的Webgl
+      在電腦顯示正常
+    </div>
+    <iframe v-else src="/unity/index.html?v=3" style="width:100%; height:100%; border:none;"></iframe>
   </div>
 </template>
 
-<!-- 更新手機移動 -->
+<script setup>
+const isMobile = computed(() => {
+  if (!window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|Android)/i)) {
+    return false
+  }
+  return true
+})
+</script>
 
 <!-- <template>
   <canvas id="unity-canvas" style="width:100%; height:100vh;"></canvas>
