@@ -146,7 +146,7 @@
     <div>
       <div class="flex justify-between items-center py-2">
         <h2 class="text-lg font-semibold text-gray-800">紀錄的尺寸:</h2>
-        <button v-if="savedSizes.length != 0" class="btn" @click="exportToExcel">
+        <button v-if="drywallStore.savedSizes.length != 0" class="btn" @click="exportToExcel">
           匯出表格
         </button>
       </div>
@@ -261,6 +261,8 @@
 </template>
 
 <script setup>
+import { fa } from 'element-plus/es/locale/index.mjs';
+
 const drywallStore = useDrywallStore()
 
 const saveSize = () => {
