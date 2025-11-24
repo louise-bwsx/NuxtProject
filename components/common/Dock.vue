@@ -13,7 +13,7 @@
       </svg>
     </NuxtLink>
 
-    <NuxtLink to="/expenditureReport" class="flex flex-col justify-center items-center">
+    <NuxtLink v-if="authStore.isDeveloper" to="/expenditureReport" class="flex flex-col justify-center items-center">
       <!-- https://www.mingcute.com/ -->
       <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
         <g id="report_forms_line" fill='none' fill-rule='evenodd'>
@@ -67,7 +67,7 @@
       </svg>
     </NuxtLink>
 
-    <NuxtLink to="/game" class="flex flex-col justify-center items-center">
+    <NuxtLink v-if="authStore.isDeveloper" to="/game" class="flex flex-col justify-center items-center">
       <!-- https://tabler.io/icons -->
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -101,3 +101,8 @@
     </button>
   </div> -->
 </template>
+
+<script setup>
+const authStore = useAuthStore()
+
+</script>

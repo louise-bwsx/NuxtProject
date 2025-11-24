@@ -18,7 +18,11 @@
 
     <Weather />
 
-    <WorkTimeline />
+    <!-- {{ useAuthStore().getUserInfo.email }} -->
+    <!-- 未登入: {} -->
+    <!-- 登入: { "id": "109348961960736109184", "email": "louise87276@gmail.com", "isVerifiedEmail": 0, "name": "世傑", "givenName": "世傑", "picture": "https://lh3.googleusercontent.com/a/ACg8ocL2oU7jG4pTHIM7u0SBACMLcOXreUd4Nj0JBt_wgUug_adwzA=s96-c" } -->
+
+    <WorkTimeline v-if="authStore.isDeveloper" />
 
     <!-- <NuxtLink to="/chat" class="btn btn-primary">
       AIChat
@@ -37,6 +41,7 @@
 <script setup>
 import WorkTimeline from '~/components/common/WorkTimeline.vue';
 import Weather from '~/components/common/Weather.vue';
+const authStore = useAuthStore()
 
 </script>
 <!-- TODO: 網址需要可以大小寫不分 -->

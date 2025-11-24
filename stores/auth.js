@@ -58,6 +58,10 @@ export const useAuthStore = defineStore("auth", () => {
     return userInfo.value
   })
 
+  const isDeveloper = computed(() => {
+    return isLogin.value && getUserInfo.value.email === "louise87276@gmail.com"
+  })
+
   const setUserInfo = (newUserInfo) => {
     userInfo.value = newUserInfo
     localStorage.setItem("userInfo", JSON.stringify(newUserInfo))
@@ -82,6 +86,7 @@ export const useAuthStore = defineStore("auth", () => {
     getAccessToken,
     getUserInfo,
     isLogin,
+    isDeveloper,
 
     setAccessToken,
     setUserInfo,
