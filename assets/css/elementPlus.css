@@ -12,6 +12,8 @@
 
 .el-input__wrapper {
     --el-input-bg-color: #1D232A !important;
+    /* 本來1px 11px 為了讓裝潢小工具佈局更緊湊 */
+    padding: 1px 8px !important;
 }
 
 .el-date-editor .el-range-separator {

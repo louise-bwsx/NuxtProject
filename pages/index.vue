@@ -22,7 +22,10 @@
     <!-- 未登入: {} -->
     <!-- 登入: { "id": "109348961960736109184", "email": "louise87276@gmail.com", "isVerifiedEmail": 0, "name": "世傑", "givenName": "世傑", "picture": "https://lh3.googleusercontent.com/a/ACg8ocL2oU7jG4pTHIM7u0SBACMLcOXreUd4Nj0JBt_wgUug_adwzA=s96-c" } -->
 
-    <WorkTimeline v-if="authStore.isDeveloper" />
+    <!-- 20251124 避免因為v-if="authStore.isDeveloper" 出現Hydration 增加ClientOnly -->
+    <ClientOnly>
+      <WorkTimeline v-if="authStore.isDeveloper" />
+    </ClientOnly>
 
     <!-- <NuxtLink to="/chat" class="btn btn-primary">
       AIChat
