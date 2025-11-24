@@ -104,7 +104,14 @@
 
     <!-- 已儲存的尺寸 -->
     <div>
-      <h2 class="text-lg font-semibold text-gray-800">紀錄的尺寸:</h2>
+      <div class="flex justify-between items-center py-2">
+        <h2 class="text-lg font-semibold text-gray-800">紀錄的尺寸:</h2>
+        <!-- <button v-if="savedSizes.length != 0" class="btn" @click="exportToGoogleSheet"> -->
+        <button class="btn" @click="exportToGoogleSheet">
+          匯出表格
+        </button>
+      </div>
+
       <div class="h-[200px] text-[black] overflow-y-scroll border rounded-xl">
         <div v-if="savedSizes.length === 0" class="p-4 text-center text-gray-500">
           尚無記錄
@@ -271,6 +278,10 @@ const getReinforcementWidth = (frameWidth) => {
 // 計算上下槽寬度：直接使用骨架寬度
 const getTopBottomTrackWidth = (frameWidth) => {
   return frameWidth;
+};
+
+const exportToGoogleSheet = () => {
+  useDrywallStore().testExportToExcel()
 };
 
 const recalculateMaterials = () => {

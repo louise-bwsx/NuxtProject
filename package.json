@@ -31,7 +31,8 @@
     "vue": "latest",
     "vue-clipboard3": "^2.0.0",
     "vue-draggable-plus": "^0.6.0",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "xlsx": "^0.18.5"
   },
   "packageManager": "yarn@4.9.2",
   "devDependencies": {
