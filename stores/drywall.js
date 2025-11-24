@@ -4,8 +4,8 @@ import * as XLSX from "xlsx"
 export const useDrywallStore = defineStore("drywall", () => {
   const width = ref(0)
   const height = ref(0)
-  const hasDoor = ref(true)
-  const hasWindow = ref(true)
+  const hasDoor = ref(false)
+  const hasWindow = ref(false)
   const doorHeight = ref(90)
   const doorWidth = ref(210)
   const windowHeight = ref(210)
@@ -17,8 +17,8 @@ export const useDrywallStore = defineStore("drywall", () => {
   const maxFrameLengthTaiwanFoot = ref(12)
   const frameSpacing = ref(40.5)
   const frameWidth = ref(6.5)
-  const hasRockWool = ref(true)
-  const isDoubleSided = ref(true)
+  const hasRockWool = ref(false)
+  const isDoubleSided = ref(false)
   const boardMaterial = ref("矽酸鈣")
   const boardThickness = ref(9)
   const boardWidthCM = ref(122)
@@ -33,7 +33,7 @@ export const useDrywallStore = defineStore("drywall", () => {
   const REINFORCEMENT_LENGTH_TAIWAN_FOOT = 8 // 加強料固定長度 8 台尺
 
   const savedSizes = ref([])
-  const calculatedMaterials = ref([])
+  const calculatedMaterials = ref({})
 
   const exportToExcel = () => {
     console.log(`calculatedMaterials: ${JSON.stringify(calculatedMaterials.value)}`) // 這是總和
