@@ -4,7 +4,9 @@
       <h1 class="text-3xl font-bold">裝潢小工具</h1>
     </div>
 
-    <DryWallCalculator />
+    <DrywallCalculator />
+
+    <!-- <DropCeilingCalculator /> -->
 
     <TaiwanFootConverter />
 
@@ -41,5 +43,6 @@
 <script setup>
 import TaiwanFootConverter from '~/components/drywall/FootConverter.vue';
 import PingConverter from '~/components/drywall/PingConverter.vue';
-import DryWallCalculator from '~/components/drywall/DryWallCalculator.vue';
+import DrywallCalculator from '~/components/drywall/DrywallCalculator.vue';
+import DropCeilingCalculator from '~/components/drywall/DropCeilingCalculator.vue';
 </script>
