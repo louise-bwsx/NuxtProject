@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-no-repeat bg-[#E0E4E6] h-[180px] bg-right rounded-md mx-2 shadow-md" :style="{
+  <div class="bg-no-repeat bg-[#E0E4E6] h-[180px] bg-right rounded-md mx-2 mb-4 shadow-md" :style="{
     backgroundImage: `url(${bgImage})`,
     backgroundSize: 'auto 100%',
     backgroundPosition: 'right center'

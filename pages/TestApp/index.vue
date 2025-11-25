@@ -1,25 +1,11 @@
 <template>
-  <div class="w-full h-full overflow-y-scroll overflow-hidden">
+  <div class="w-screen h-full pb-40 overflow-y-scroll">
     <Carousel />
     <SearchBar />
     <Service />
     <LearnMore />
-    <!-- <div class="text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos fuga quam, unde
-      reiciendis minima,
-      doloremque odio error voluptatem quibusdam expedita neque veritatis? Incidunt consequatur iste voluptate sit
-      laboriosam culpa. Necessitatibus!</div>
-    <div class="text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos fuga quam, unde
-      reiciendis minima,
-      doloremque odio error voluptatem quibusdam expedita neque veritatis? Incidunt consequatur iste voluptate sit
-      laboriosam culpa. Necessitatibus!</div>
-    <div class="text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos fuga quam, unde
-      reiciendis minima,
-      doloremque odio error voluptatem quibusdam expedita neque veritatis? Incidunt consequatur iste voluptate sit
-      laboriosam culpa. Necessitatibus!</div>
-    <div class="text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos fuga quam, unde
-      reiciendis minima,
-      doloremque odio error voluptatem quibusdam expedita neque veritatis? Incidunt consequatur iste voluptate sit
-      laboriosam culpa. Necessitatibus!</div> -->
+    <BlogList />
+    <Assure />
   </div>
 </template>
 
@@ -28,6 +14,8 @@ import Carousel from '~/components/testApp/Carousel.vue';
 import SearchBar from '~/components/testApp/SearchBar.vue';
 import Service from '~/components/testApp/Service.vue';
 import LearnMore from '~/components/testApp/LearnMore.vue';
+import BlogList from '~/components/testApp/BlogList.vue';
+import Assure from '~/components/testApp/Assure.vue';
 
 // 指定這個頁面使用 BLayout
 definePageMeta({
