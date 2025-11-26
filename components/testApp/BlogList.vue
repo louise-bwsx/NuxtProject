@@ -13,16 +13,16 @@
     <!-- 文章列表 -->
     <div class="flex justify-start w-full overflow-y-hidden space-x-2">
       <div v-for="blog in blogList" :key="blog" class="ms-2">
-        <div class="w-[300px] h-[200px] rounded-xl bg-no-repeat bg-center" :style="{
+        <div class="w-[300px] h-[200px] rounded-xl bg-no-repeat bg-center pt-[10px]" :style="{
           backgroundImage: `url(${blog.image})`,
           backgroundSize: 'auto 100%'
         }">
           <div
-            class="text-[#181818] text-sm text-normal mt-[10px] bg-[#F8BF14] w-fit rounded-br-sm rounded-tr-sm px-2 py-[2px]">
-            好物分享
+            class="text-[#181818] text-sm font-normal mt-[10px] bg-[#F8BF14] w-fit rounded-br-sm rounded-tr-sm px-2 py-[2px]">
+            {{ blog.tag }}
           </div>
         </div>
-        <div class="text-[#181818] text-sm text-normal">{{ blog.title }}</div>
+        <div class="text-[#181818] text-sm font-normal">{{ blog.title }}</div>
       </div>
     </div>
   </div>

@@ -9,7 +9,7 @@
         <div class="text-[#252525] text-xl font-semibold">我們如何提供您</div>
         <div class="text-[#252525] text-xl font-semibold">可靠的服務？</div>
       </div>
-      <button class="btn bg-[#398AF9] w-fit shadow-none border-none font-normal ">了解更多</button>
+      <button class="btn bg-[#398AF9] w-fit shadow-none border-none text-white font-bold">了解更多</button>
     </div>
   </div>
 </template>
