@@ -43,7 +43,7 @@ const pointList = ref([
   {
     start: "2022/09/07",
     end: "2022/09/16",
-    point: "某個自走車",
+    point: "亮昇實業",
   },
   {
     start: "2022/09/17",
@@ -53,7 +53,7 @@ const pointList = ref([
   {
     start: "2023/11/08",
     end: "2023/12/27",
-    point: "閎裝潢",
+    point: "閎昱室內裝修",
   },
   {
     start: "2024/01/03",
