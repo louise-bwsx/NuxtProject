@@ -79,6 +79,12 @@ export const useAuthStore = defineStore("auth", () => {
 
     const timestampNow = Date.now() / 1000
     const decoded = jwtDecode(token)
+    // console.log("decoded:", JSON.stringify(decoded))
+    // {"user_id":"guest_735da63e-eaf9-4ff8-bf55-4f99f5d6dfc6","email":"","exp":1770652024,"nbf":1770565624,"iat":1770565624}
+    // exp Expiration time（過期時間）
+    // nbf Not Before（生效時間）token 在這個時間之前不可使用
+    // iat Issued At（發行時間）token 是在這個時間點產生的
+
     return timestampNow > decoded.exp
   }
 

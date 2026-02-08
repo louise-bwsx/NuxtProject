@@ -24,6 +24,12 @@ import { useRoute } from 'vue-router';
 import ResponseDataTable from "~/components/expenditure/ResponseDataTable.vue";
 import SearchInput from '~/components/expenditure/SearchInput.vue';
 
+usePageSeo({
+  title: '開銷紀錄',
+  description: '開銷紀錄',
+  url: 'https://www.louise.tw/expenditureReport'
+})
+
 const toastStore = useToastStore()
 const costStore = useCostStore()
 const authStore = useAuthStore()

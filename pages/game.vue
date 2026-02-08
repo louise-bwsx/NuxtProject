@@ -16,6 +16,13 @@ const isMobile = computed(() => {
   }
   return true
 })
+
+
+usePageSeo({
+  title: '小遊戲',
+  description: '我做的小遊戲',
+  url: 'https://www.louise.tw/game'
+})
 </script>
 
 <!-- <template>

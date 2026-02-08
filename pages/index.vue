@@ -47,6 +47,12 @@ import WorkTimeline from '~/components/common/WorkTimeline.vue';
 import Weather from '~/components/common/Weather.vue';
 const authStore = useAuthStore()
 
+usePageSeo({
+  title: '',
+  description: '',
+  url: 'https://www.louise.tw'
+})
+
 </script>
 <!-- TODO: 網址需要可以大小寫不分 -->
 

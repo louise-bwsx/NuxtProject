@@ -46,4 +46,11 @@ import TaiwanFootConverter from '~/components/drywall/FootConverter.vue';
 import PingConverter from '~/components/drywall/PingConverter.vue';
 import DrywallCalculator from '~/components/drywall/DrywallCalculator.vue';
 import DropCeilingCalculator from '~/components/drywall/DropCeilingCalculator.vue';
+
+
+usePageSeo({
+  title: '裝潢計算機',
+  description: '裝潢計算機',
+  url: 'https://www.louise.tw/drywall'
+})
 </script>

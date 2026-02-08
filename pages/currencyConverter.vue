@@ -52,6 +52,12 @@
 <script setup>
 import { useDraggable } from "vue-draggable-plus";
 
+usePageSeo({
+  title: '貨幣計算機',
+  description: '貨幣計算機',
+  url: 'https://www.louise.tw/currencyConverter'
+})
+
 const dateTimeStore = useDateTimeStore()
 
 const amount = ref(1)

@@ -26,6 +26,12 @@ import { useRoute } from 'vue-router'
 import SearchInput from '~/components/expenditure/SearchInput.vue'
 import Item from '~/components/notes/Item.vue'
 
+usePageSeo({
+  title: '筆記列表',
+  description: '筆記列表',
+  url: 'https://www.louise.tw/notes'
+})
+
 const notesStore = useNotesStore()
 const keybindStore = useKeybindStore()
 

@@ -75,6 +75,11 @@ import MarkdownIt from 'markdown-it'
 import { useRoute } from 'vue-router'
 import { deleteNote, createNote, saveNote, postView, postTag } from '~/api/notes'
 
+usePageSeo({
+  title: '筆記',
+  description: '筆記',
+})
+
 const notesStore = useNotesStore()
 const route = useRoute()
 const router = useRouter()

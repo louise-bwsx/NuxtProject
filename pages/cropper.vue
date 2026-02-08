@@ -58,6 +58,12 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 
+usePageSeo({
+  title: '圖片壓縮',
+  description: '圖片壓縮',
+  url: 'https://www.louise.tw/cropper'
+})
+
 // 狀態管理
 const canvasRef = ref(null);
 const selectionRef = ref(null);

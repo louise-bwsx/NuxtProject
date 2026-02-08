@@ -147,14 +147,13 @@
 const aiChat = useAIChatStore()
 const authStore = useAuthStore()
 
-// TODO: 這是SEO範本先註解掉供日後使用
 // description, ogDescription, twitterDescription需要根據網頁內容做修改 不能統一
 // 使用composables/useSeo.ts 大幅簡化原本的useSeoMeta
-// usePageSeo({
-//   title: 'AI 聊天機器人',
-//   description: '與 Louise AI 即時對話,獲得專業建議',
-//   url: 'https://www.louise.tw/chat'
-// })
+usePageSeo({
+  title: 'AI 聊天機器人',
+  description: '與 Louise AI 即時對話,獲得專業建議',
+  url: 'https://www.louise.tw/chat'
+})
 
 const getPicture = computed(() => {
   return authStore.isLogin ? authStore.getUserInfo.picture : ''

@@ -19,4 +19,10 @@ import MonthCostChart from '~/components/expenditure/charts/MonthCostChart.vue';
 import AllCostChart from '~/components/expenditure/charts/AllCostChart.vue';
 import AllCostSumChart from '~/components/expenditure/charts/AllCostSumChart.vue';
 import AllTypeChart from '~/components/expenditure/charts/AllTypeChart.vue';
+
+usePageSeo({
+  title: '開銷圖表',
+  description: '開銷圖表',
+  url: 'https://www.louise.tw/costCharts'
+})
 </script>

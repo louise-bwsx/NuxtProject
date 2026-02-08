@@ -15,6 +15,12 @@
 <script setup>
 import { createShortURL } from '~/api/short';
 
+usePageSeo({
+  title: '短網址',
+  description: '短網址',
+  url: 'https://www.louise.tw/short'
+})
+
 const longUrl = ref("")
 const shortUrl = ref("")
 
