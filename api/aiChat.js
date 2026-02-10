@@ -12,3 +12,7 @@ export const chat = async (content) => {
 
   return await useApiStore().post(`/api/v1/aiChat/chat`, body)
 }
+
+export const allGroup = async () => {
+  return await useApiStore().get(`/api/v1/aiChat/allGroup`)
+}

@@ -1,108 +1,165 @@
 <template>
-  <div class="relative flex flex-col justify-between bg-base-200 h-full">
-    <!-- Header -->
-    <div class="navbar bg-base-100 shadow-lg border-b border-base-300 h-[65px]">
-      <div class="flex-1">
-        <div class="flex items-center space-x-3  px-4">
-          <div class="flex justify-center items-center text-xl bg-primary text-primary-content rounded-full w-10 h-10">
-            AI
-          </div>
-
-          <div>
-            <h1 class="text-lg font-bold">AI Assistant</h1>
-            <p class="text-xs text-base-content/60">Online</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div class="flex-none">
-        <el-dropdown trigger="click">
-          <button class="btn btn-ghost btn-circle">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+  <div class="relative flex h-full bg-[#191E24]">
+    <!-- 側邊欄 -->
+    <div :class="[
+      'fixed inset-y-0 left-0 z-50 w-80 bg-[#1D232A] border-r border-[#6EED00]/80 transition-all duration-300 ease-out',
+      sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+    ]">
+      <!-- 側邊欄頭部 -->
+      <div class="p-4 border-b border-[#6EED00]/80">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold">對話歷史</h2>
+          <button @click="sidebarOpen = false" class="btn btn-ghost btn-sm btn-circle text-white hover:bg-white/10">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="aiChat.onDropdownOptionClick('清除對話')">清除對話</el-dropdown-item>
-              <el-dropdown-item @click="aiChat.onDropdownOptionClick('匯出對話')">匯出對話</el-dropdown-item>
-              <el-dropdown-item @click="aiChat.onDropdownOptionClick('設定')" divided>設定</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-</el-dropdown>
-</div> -->
-    </div>
-
-    <div class="overflow-y-auto flex-1 px-4 py-6 space-y-10 lg:px-8 h-full">
-      <div v-if="aiChat.history.length <= 0" class="flex justify-center h-full">
-        <div class="flex flex-col justify-center items-center">
-          <div
-            class="flex justify-center items-center text-3xl bg-primary text-primary-content rounded-full w-16 h-16 mb-4">
-            🤖
-          </div>
-
-          <h2 class="text-2xl font-bold mb-2">Hello! 我是 AI 助手</h2>
-          <p class="text-base-content/60">有什麼我可以幫助你的嗎？</p>
         </div>
+
+        <!-- 新對話按鈕 -->
+        <button @click="createNewChat" class="w-full btn border-none font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          新對話
+        </button>
       </div>
 
-      <div v-else v-for="(chatObj, index) in aiChat.history" :key="index">
-        <div v-if="index % 2 == 0" class="flex justify-end">
-          <div class="flex items-start space-x-3">
-            <div class="chat chat-end justify-between">
-              <div class="relative chat-bubble chat-bubble-primary w-full mb-3 ">
-                <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }}</div>
-                <div class="absolute right-0 -bottom-6 flex justify-end space-x-3 opacity-50 text-xs">
-                  <!-- 編輯按鈕 -->
-                  <!-- <button @click="edit" class="w-[14px] h-[14px]">
-                    <img src="~/assets/icons/edit_24_24_white.svg" alt="edit">
-                  </button> -->
-
-                  <div class="whitespace-nowrap">{{ chatObj.createdAt }}</div>
-                </div>
+      <!-- 對話歷史列表 -->
+      <div class="overflow-y-auto h-[calc(100vh-140px)] p-3">
+        <div class="space-y-2">
+          <div v-for="chat in aiChat.groupList" :key="chat.id" @click="selectChat(chat.id)" :class="[
+            'p-3 rounded-lg cursor-pointer transition-all duration-200',
+            currentChatId === chat.id
+              ? 'bg-[#FAD803]/20 border border-[#6EED00]/80'
+              : 'hover:bg-white/5 border border-transparent'
+          ]">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-medium truncate text-sm text-white mb-1">{{ chat.title }}</h3>
+                <!-- TODO: 時間 -->
+                <!-- <p class="text-xs text-[#FAD803] mt-1">{{ chat.time }}</p> -->
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <!-- 20251112 為了讓連續英文字不會擠壓到頭像 新增min-w min-h -->
-            <div class="flex flex-col justify-end h-full min-w-8 min-h-8">
-              <!-- 20251112 避免登入狀態時重新整理 出現HydrationMismatch -->
-              <ClientOnly>
-                <img v-if="getPicture" :src="getPicture" class="w-8 h-8 bg-black rounded-full">
-                <img v-else src="@/assets/icons/account_40_40_white.svg" class="w-8 h-8 bg-black rounded-full">
-              </ClientOnly>
+    <!-- 遮罩層 -->
+    <div @click="sidebarOpen = false" class="fixed inset-0 bg-black/60 z-40 transition-all duration-300 ease-out"
+      :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'" />
+
+    <!-- 主要內容區域 -->
+    <div class="flex flex-col flex-1 h-full">
+      <!-- Header -->
+      <div class="navbar bg-[#1D232A] shadow-lg z-30">
+        <div class="flex-1">
+          <div class="flex items-center space-x-3">
+            <!-- 漢堡選單按鈕 -->
+            <button @click="sidebarOpen = true" class="btn btn-ghost btn-sm btn-circle text-white hover:bg-white/10">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            <div>
+              <h1 class="text-lg font-bold text-white">AI Assistant</h1>
+              <p class="text-xs text-gray-400">Online</p>
             </div>
           </div>
         </div>
 
-        <div v-else class="flex justify-start">
-          <div class="flex items-start space-x-3">
-            <div class="flex flex-col justify-end h-full">
-              <div
-                class="flex justify-center items-center text-sm bg-primary text-primary-content rounded-full w-8 h-8">
-                AI
+        <!-- 隱身模式切換 -->
+        <div class="flex-none">
+          <button @click="toggleIncognito" :class="[
+            'btn btn-sm',
+            isIncognito
+              ? 'bg-[#FAD803] hover:bg-[#FAD803]/90 text-[#0d263f] border-none'
+              : 'btn-ghost text-gray-400 hover:bg-white/10'
+          ]" :title="isIncognito ? '隱身模式：開啟' : '隱身模式：關閉'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-spy">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M3 11h18" />
+              <path d="M5 11v-4a3 3 0 0 1 3 -3h8a3 3 0 0 1 3 3v4" />
+              <path d="M4 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+              <path d="M14 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+              <path d="M10 17h4" />
+            </svg>
+            <span class="hidden sm:inline ml-1">{{ isIncognito ? '隱身' : '正常' }}</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- 隱身模式提示條 (absolute 定位) -->
+      <!-- 不能使用v-if隱藏 會導致動畫無法播放 -->
+      <div
+        class="absolute top-[65px] left-0 right-0 bg-[#FAD803]/10 border-b border-[#FAD803]/30 px-4 py-2 flex items-center gap-2 z-20 transition-all duration-300 ease-out pointer-events-none"
+        :class="isIncognito ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-full opacity-0'">
+        <span class="text-sm text-[#FAD803]">隱身模式已啟用 - 此對話不會被儲存</span>
+      </div>
+
+      <!-- 訊息區域 -->
+      <div class="overflow-y-auto flex-1 px-4 py-6 space-y-10 lg:px-8 h-full">
+        <div v-if="aiChat.history.length <= 0" class="flex justify-center h-full">
+          <div class="flex flex-col justify-center items-center">
+
+            <h2 class="text-2xl font-bold mb-2 text-white">Hello! 我是 AI 助手</h2>
+            <p class="text-gray-400">有什麼我可以幫助你的嗎？</p>
+            <div class="text-xs text-gray-500 text-center mt-2 max-w-4xl mx-auto">
+              AI 可能會產生不準確的資訊
+            </div>
+          </div>
+        </div>
+
+        <div v-else v-for="(chatObj, index) in aiChat.history" :key="index">
+          <!-- 使用者訊息 -->
+          <div v-if="index % 2 == 0" class="flex justify-end">
+            <div class="flex items-start space-x-3">
+              <div class="chat chat-end justify-between">
+                <div class="relative chat-bubble w-full mb-3">
+                  <div class="wrap-break-word whitespace-pre-line font-medium">{{ chatObj.content.trim() }}</div>
+                  <div class="absolute right-0 -bottom-6 flex justify-end space-x-3 opacity-50 text-xs">
+                    <div class="whitespace-nowrap text-gray-400">{{ chatObj.createdAt }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col justify-end h-full min-w-8 min-h-8">
+                <ClientOnly>
+                  <img v-if="getPicture" :src="getPicture" class="w-8 h-8 rounded-full">
+                  <img v-else src="@/assets/icons/account_40_40_white.svg" class="w-8 h-8 bg-black rounded-full">
+                </ClientOnly>
               </div>
             </div>
+          </div>
 
-            <div class="chat chat-start w-full justify-between">
-              <div class="relative chat-bubble bg-base-100 text-base-content border border-base-300 w-full mb-3">
-                <span v-if="isEmptyObject(chatObj)" class="loading loading-dots loading-sm"></span>
-                <div v-else>
-                  <!-- 20251012 避免連續字無空格 超出chat-bubble 使用wrap-break-word -->
-                  <!-- 20251013 避免AI生成的內容無法換行 使用whitespace-pre-line -->
-                  <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }}</div>
-                  <div class="absolute left-0 -bottom-6 flex  space-x-3 opacity-50 text-xs">
-                    <div class="flex items-center whitespace-nowrap">{{ chatObj.createdAt }}</div>
+          <!-- AI 訊息 -->
+          <div v-else class="flex justify-start">
+            <div class="flex items-start space-x-3">
+              <div class="flex flex-col justify-end h-full">
+                <div
+                  class="flex justify-center items-center text-sm bg-[#1D232A] border border-[#6EED00]/80 rounded-full w-8 h-8 font-bold">
+                  AI
+                </div>
+              </div>
 
-                    <button @click="copy(chatObj.content.trim())" class="w-[14px] h-[14px]">
-                      <img src="~/assets/icons/copy_24_24_white.svg" alt="copy">
-                    </button>
+              <div class="chat chat-start w-full justify-between">
+                <div class="relative chat-bubble bg-[#1D232A] w-full mb-3">
+                  <span v-if="isEmptyObject(chatObj)" class="loading loading-dots loading-sm"></span>
+                  <div v-else>
+                    <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }}</div>
+                    <div class="absolute left-0 -bottom-6 flex space-x-3 opacity-50 text-xs">
+                      <div class="flex items-center whitespace-nowrap text-gray-400">{{ chatObj.createdAt }}</div>
 
-                    <!-- 收藏按鈕 -->
-                    <!-- <button class="w-[14px] h-[14px]">
-                      <img src="~/assets/icons/heart_24_24_white.svg" alt="heart">
-                    </button> -->
+                      <button @click="copy(chatObj.content.trim())"
+                        class="w-[14px] h-[14px] hover:opacity-100 transition-opacity">
+                        <img src="~/assets/icons/copy_24_24_white.svg" alt="copy">
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -110,34 +167,25 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="w-full bg-base-100 border-t border-base-300 p-4 min-h-[95px]">
-      <div class="flex items-end space-x-2 py-2 max-w-4xl mx-auto">
-        <!-- 檔案上傳按鈕 -->
-        <!-- <button @click="console.log(11)" class="btn btn-ghost btn-circle hidden sm:flex">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-          </svg>
-        </button> -->
+      <!-- 輸入區域 -->
+      <div class="w-full bg-base-100 border-t border-base-300 p-4">
+        <div class="flex items-center space-x-2 max-w-4xl mx-auto">
+          <div class="flex items-center min-h-[40px] flex-1">
+            <el-input type="textarea" v-model="aiChat.input" placeholder="輸入訊息... (Shift+Enter 換行)"
+              class="w-full gumroad-input" :autosize="{ minRows: 1, maxRows: 12 }"
+              @keydown.enter.exact="aiChat.sendMessage" />
+          </div>
 
-        <div class="flex items-center min-h-[40px] flex-1">
-          <el-input type="textarea" v-model="aiChat.input" placeholder="輸入訊息... (Shift+Enter 換行)" class="w-full"
-            :autosize="{ minRows: 2, maxRows: 12 }" @keydown.enter.exact="aiChat.sendMessage"
-            @compositionstart="aiChat.isComposing = true" @compositionend="aiChat.isComposing = false" />
+          <button @click="aiChat.sendMessage"
+            class="btn bg-[#1D232A] border border-[#6EED00]/80 hover:bg-[#FAD803]/90 text-white btn-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+          </button>
         </div>
-
-        <button @click="aiChat.sendMessage" class="btn btn-primary btn-circle">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="text-xs text-base-content/50 text-center mt-2 max-w-4xl mx-auto">
-        AI 可能會產生不準確的資訊
       </div>
     </div>
   </div>
@@ -147,19 +195,99 @@
 const aiChat = useAIChatStore()
 const authStore = useAuthStore()
 
-// description, ogDescription, twitterDescription需要根據網頁內容做修改 不能統一
-// 使用composables/useSeo.ts 大幅簡化原本的useSeoMeta
+// SEO
 usePageSeo({
   title: 'AI 聊天機器人',
   description: '與 Louise AI 即時對話,獲得專業建議',
   url: 'https://www.louise.tw/chat'
 })
 
+// 響應式資料
+const sidebarOpen = ref(false)
+const isIncognito = ref(false)
+const currentChatId = ref(1)
+
+// 對話歷史資料（範例）
+const chatHistory = ref([
+  {
+    id: 1,
+    title: '關於人工智慧的討論',
+    time: '2 分鐘前',
+  },
+  {
+    id: 2,
+    title: 'Web 開發技巧',
+    time: '1 小時前',
+  },
+  {
+    id: 3,
+    title: '私密對話',
+    time: '3 小時前',
+  },
+  {
+    id: 4,
+    title: 'Nuxt 3 最佳實踐',
+    time: '昨天',
+  },
+  {
+    id: 5,
+    title: '設計靈感收集',
+    time: '2 天前',
+  }
+])
+
 const getPicture = computed(() => {
   return authStore.isLogin ? authStore.getUserInfo.picture : ''
+})
+
+// 切換隱身模式
+const toggleIncognito = () => {
+  isIncognito.value = !isIncognito.value
+  // 這裡可以加入實際的隱身模式邏輯
+  console.log('隱身模式:', isIncognito.value)
+}
+
+// 建立新對話
+const createNewChat = () => {
+  // 這裡加入建立新對話的邏輯
+  aiChat.history = []
+  sidebarOpen.value = false
+  console.log('建立新對話')
+}
+
+// 選擇對話
+const selectChat = (chatId) => {
+  currentChatId.value = chatId
+  sidebarOpen.value = false
+  // 這裡加入載入對話歷史的邏輯
+  console.log('選擇對話:', chatId)
+}
+
+onMounted(async () => {
+  await aiChat.getAllGroup()
 })
 </script>
 
 <style scoped>
 @import url("~/assets/css/daisyUI.css");
+
+/* Gumroad 風格自訂樣式 */
+:deep(.gumroad-input .el-textarea__inner) {
+  background-color: #191E24;
+  border: 1px solid rgb(118, 255, 0, 0.8);
+  color: white;
+  border-radius: 0.35rem;
+  padding: 0.75rem;
+  transition: all 0.2s;
+  box-shadow: none;
+}
+
+:deep(.gumroad-input .el-textarea__inner:focus) {
+  border-color: #FAD803;
+  box-shadow: 0 0 0 3px rgba(250, 216, 3, 0.1);
+}
+
+:deep(.gumroad-input .el-textarea__inner::placeholder) {
+  color: rgba(255, 255, 255, 0.4);
+}
 </style>

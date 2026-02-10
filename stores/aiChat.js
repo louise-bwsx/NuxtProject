@@ -1,10 +1,10 @@
 import { defineStore } from "pinia"
-import { chat } from "~/api/aiChat"
+import { allGroup, chat } from "~/api/aiChat"
 
 export const useAIChatStore = defineStore(`aiChat`, () => {
   const history = ref([])
   const input = ref(``)
-  const isComposing = ref(false)
+  const groupList = ref([])
   const isLoading = ref(false)
 
   const sendMessage = async () => {
@@ -38,9 +38,18 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     isLoading.value = false
   }
 
+  const getAllGroup = async () => {
+    const response = await allGroup()
+    if (response.code != 0) {
+      useToastStore().showToast(response.message, `error`)
+    }
+
+    groupList.value = response.data.groupList
+  }
+
   const onDropdownOptionClick = (option) => {
     console.log(option)
   }
 
-  return { history, input, isComposing, sendMessage, onDropdownOptionClick }
+  return { history, input, groupList, sendMessage, getAllGroup, onDropdownOptionClick }
 })

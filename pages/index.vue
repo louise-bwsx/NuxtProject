@@ -48,8 +48,6 @@ import Weather from '~/components/common/Weather.vue';
 const authStore = useAuthStore()
 
 usePageSeo({
-  title: '',
-  description: '',
   url: 'https://www.louise.tw'
 })
 
