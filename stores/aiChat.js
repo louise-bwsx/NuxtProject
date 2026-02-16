@@ -49,6 +49,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     // console.log(`postChatStream.groupId.value: ${groupId.value}`)
     postChatStream(parentId.value, groupId.value, useAuthStore().getUserInfo.id, history.value, {
       onMessage: (content) => {
+        // 這邊確定會逐字顯示 但好像會有延遲 如果在開始前資料全部取得後 就會一瞬間出來
         // console.log(`content: ${content}`)
         // 逐字累加內容
         history.value[aiMessageIndex].content += content || ""

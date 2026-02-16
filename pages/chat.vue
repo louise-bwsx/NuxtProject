@@ -205,6 +205,7 @@ const toggleIncognito = () => {
 // 建立新對話
 const createNewChat = () => {
   // 這裡加入建立新對話的邏輯
+  aiChat.groupId = 0
   aiChat.history = []
   sidebarOpen.value = false
   console.log('建立新對話')
