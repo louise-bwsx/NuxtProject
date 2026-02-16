@@ -41,7 +41,64 @@ export const useApiStore = defineStore("api", () => {
     }
   }
 
+  // 專門給aiChat使用 因為stream改成true
+  const postStream = async (endpoint, body, { onMessage, onError, onDone }) => {
+    const url = import.meta.env.VITE_BASE_URL + endpoint
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useAuthStore().getAccessToken}`,
+        },
+        body: JSON.stringify(body),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) {
+          if (onDone) onDone()
+          break
+        }
+
+        const chunk = decoder.decode(value, { stream: true })
+        // 解析 SSE 格式 (假設後端傳送 data: {...}\n\n)
+        const lines = chunk.split("\n")
+        for (let line of lines) {
+          line = line.trim() // 移除前後空白與換行符
+          // console.log(`處理中的行: "${line}"`)
+
+          if (line.startsWith("data:")) {
+            try {
+              // 移除 "data:" 字串，不管後面有沒有空格
+              const jsonStr = line.replace(/^data:\s*/, "")
+              // console.log(`成功提取 JSON 字串: ${jsonStr}`)
+
+              if (jsonStr) {
+                const data = JSON.parse(jsonStr)
+                if (onMessage) onMessage(data)
+              }
+            } catch (e) {
+              console.warn("解析串流 JSON 失敗", e, "原始內容:", line)
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (onError) onError(error)
+    }
+  }
+
   return {
+    postStream,
     get: (endpoint, options) => apiFetch(endpoint, { method: "GET", ...options }),
     post: (endpoint, body, options) => apiFetch(endpoint, { method: "POST", body, ...options }),
     put: (endpoint, body, options) => apiFetch(endpoint, { method: "PUT", body, ...options }),

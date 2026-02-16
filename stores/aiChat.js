@@ -1,11 +1,13 @@
 import { defineStore } from "pinia"
-import { allGroup, chat } from "~/api/aiChat"
+import { allGroup, postChatStream, postGenerateTitle } from "~/api/aiChat"
 
 export const useAIChatStore = defineStore(`aiChat`, () => {
   const history = ref([])
   const input = ref(``)
   const groupList = ref([])
   const isLoading = ref(false)
+  const groupId = ref(0)
+  const title = ref(``)
 
   const sendMessage = async (event) => {
     // 如果是 Shift + Enter，不做任何處理，讓它自然換行
@@ -21,27 +23,52 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     if (!content) return
 
     isLoading.value = true
-
     input.value = ``
+
+    // 1. 推入使用者的訊息
     history.value.push({
       createdAt: useDateTimeStore().now(),
       content: content,
     })
 
-    history.value.push({})
+    // 2. 推入一個空的 AI 訊息佔位
+    const aiMessageIndex =
+      history.value.push({
+        createdAt: useDateTimeStore().now(),
+        content: "", // 初始內容為空
+        model: "",
+      }) - 1
 
-    const response = await chat(content)
+    if (groupId.value == 0) {
+      await generateTitle(content)
+      getAllGroup()
+    }
+
+    // console.log(`postChatStream.groupId.value: ${groupId.value}`)
+    await postChatStream(groupId.value, useAuthStore().getUserInfo.id, content, {
+      onMessage: (data) => {
+        // console.log(`data.content: ${data.content}`)
+        // 逐字累加內容
+        history.value[aiMessageIndex].content += data.content || ""
+      },
+      onError: (err) => {
+        useToastStore().showToast("串流發生錯誤: " + err.message, "error")
+        isLoading.value = false
+      },
+      onDone: () => {
+        isLoading.value = false
+      },
+    })
+  }
+
+  const generateTitle = async (content) => {
+    const response = await postGenerateTitle(useAuthStore().getUserInfo.id, content)
     if (response.code != 0) {
-      response.data.createdAt = useDateTimeStore().now()
-      response.data.message = response.message
       useToastStore().showToast(response.message, `error`)
     }
-
-    history.value[history.value.length - 1] = {
-      createdAt: response.data.createdAt,
-      content: response.data.message,
-    }
-    isLoading.value = false
+    groupId.value = response.data.groupId
+    title.value = response.data.title
+    // console.log(`generateTitle.groupId.value: ${groupId.value}`)
   }
 
   const getAllGroup = async () => {

@@ -123,16 +123,13 @@
                 <div class="relative chat-bubble w-full mb-3">
                   <div class="wrap-break-word whitespace-pre-line font-medium">{{ chatObj.content.trim() }}</div>
                   <div class="absolute right-0 -bottom-6 flex justify-end space-x-3 opacity-50 text-xs">
+                    <button @click="copy(chatObj.content.trim())"
+                      class="w-[14px] h-[14px] hover:opacity-100 transition-opacity">
+                      <img src="~/assets/icons/copy_24_24_white.svg" alt="copy">
+                    </button>
                     <div class="whitespace-nowrap text-gray-400">{{ chatObj.createdAt }}</div>
                   </div>
                 </div>
-              </div>
-
-              <div class="flex flex-col justify-end h-full min-w-8 min-h-8">
-                <ClientOnly>
-                  <img v-if="getPicture" :src="getPicture" class="w-8 h-8 rounded-full">
-                  <img v-else src="@/assets/icons/account_40_40_white.svg" class="w-8 h-8 bg-black rounded-full">
-                </ClientOnly>
               </div>
             </div>
           </div>
@@ -140,13 +137,6 @@
           <!-- AI 訊息 -->
           <div v-else class="flex justify-start">
             <div class="flex items-start space-x-3">
-              <div class="flex flex-col justify-end h-full">
-                <div
-                  class="flex justify-center items-center text-sm bg-[#1D232A] border border-[#6EED00]/80 rounded-full w-8 h-8 font-bold">
-                  AI
-                </div>
-              </div>
-
               <div class="chat chat-start w-full justify-between">
                 <div class="relative chat-bubble bg-[#1D232A] w-full mb-3">
                   <span v-if="isEmptyObject(chatObj)" class="loading loading-dots loading-sm"></span>
@@ -193,7 +183,6 @@
 
 <script setup>
 const aiChat = useAIChatStore()
-const authStore = useAuthStore()
 
 // SEO
 usePageSeo({
@@ -206,39 +195,6 @@ usePageSeo({
 const sidebarOpen = ref(false)
 const isIncognito = ref(false)
 const currentChatId = ref(1)
-
-// 對話歷史資料（範例）
-const chatHistory = ref([
-  {
-    id: 1,
-    title: '關於人工智慧的討論',
-    time: '2 分鐘前',
-  },
-  {
-    id: 2,
-    title: 'Web 開發技巧',
-    time: '1 小時前',
-  },
-  {
-    id: 3,
-    title: '私密對話',
-    time: '3 小時前',
-  },
-  {
-    id: 4,
-    title: 'Nuxt 3 最佳實踐',
-    time: '昨天',
-  },
-  {
-    id: 5,
-    title: '設計靈感收集',
-    time: '2 天前',
-  }
-])
-
-const getPicture = computed(() => {
-  return authStore.isLogin ? authStore.getUserInfo.picture : ''
-})
 
 // 切換隱身模式
 const toggleIncognito = () => {
