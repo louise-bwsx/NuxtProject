@@ -64,10 +64,9 @@ export const useApiStore = defineStore("api", () => {
 
       while (true) {
         const { done, value } = await reader.read()
-        if (done) {
-          if (onDone) onDone()
-          break
-        }
+
+        // 如果連線真的斷了且沒數據了，就退出
+        if (done && !value) break
 
         const chunk = decoder.decode(value, { stream: true })
         // 解析 SSE 格式 (假設後端傳送 data: {...}\n\n)
@@ -80,17 +79,29 @@ export const useApiStore = defineStore("api", () => {
             try {
               // 移除 "data:" 字串，不管後面有沒有空格
               const jsonStr = line.replace(/^data:\s*/, "")
+              if (!jsonStr) continue
               // console.log(`成功提取 JSON 字串: ${jsonStr}`)
 
-              if (jsonStr) {
-                const data = JSON.parse(jsonStr)
-                if (onMessage) onMessage(data)
+              const data = JSON.parse(jsonStr)
+
+              // 1. 處理內容更新
+              if (data.content && onMessage) {
+                onMessage(data.content)
+              }
+
+              // 2. 根據後端給的標記決定結束，而不是根據 reader.read()
+              if (data.done === true) {
+                if (onDone) onDone(data.lastInsertID)
+                return // 成功結束，直接跳出 function
               }
             } catch (e) {
               console.warn("解析串流 JSON 失敗", e, "原始內容:", line)
             }
           }
         }
+
+        // 安全閥：如果 reader 已經 done 卻沒進到 data.done，也要退出避免死迴圈
+        if (done) break
       }
     } catch (error) {
       if (onError) onError(error)

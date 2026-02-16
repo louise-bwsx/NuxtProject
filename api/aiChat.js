@@ -1,9 +1,10 @@
-export const postChatStream = async (groupId, userId, content, callbacks) => {
+export const postChatStream = async (parentId, groupId, userId, messages, callbacks) => {
   const body = {
     model: "gpt-oss:20b",
+    parentId: parentId,
     userId: userId,
     groupId: groupId,
-    messages: [{ role: "user", content: content }],
+    messages: messages,
     stream: true,
   }
 
@@ -24,4 +25,8 @@ export const postGenerateTitle = async (userId, content) => {
 
 export const allGroup = async () => {
   return await useApiStore().get(`/api/v1/aiChat/allGroup?userId=${useAuthStore().getUserInfo.id}`)
+}
+
+export const chatList = async (groupId) => {
+  return await useApiStore().get(`/api/v1/aiChat/chatList?uid=${groupId}`)
 }

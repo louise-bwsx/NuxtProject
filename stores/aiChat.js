@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { allGroup, postChatStream, postGenerateTitle } from "~/api/aiChat"
+import { allGroup, postChatStream, postGenerateTitle, chatList } from "~/api/aiChat"
 
 export const useAIChatStore = defineStore(`aiChat`, () => {
   const history = ref([])
@@ -8,6 +8,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   const isLoading = ref(false)
   const groupId = ref(0)
   const title = ref(``)
+  const parentId = ref(0)
 
   const sendMessage = async (event) => {
     // 如果是 Shift + Enter，不做任何處理，讓它自然換行
@@ -27,35 +28,38 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
 
     // 1. 推入使用者的訊息
     history.value.push({
+      role: "user",
       createdAt: useDateTimeStore().now(),
       content: content,
     })
-
-    // 2. 推入一個空的 AI 訊息佔位
-    const aiMessageIndex =
-      history.value.push({
-        createdAt: useDateTimeStore().now(),
-        content: "", // 初始內容為空
-        model: "",
-      }) - 1
 
     if (groupId.value == 0) {
       await generateTitle(content)
       getAllGroup()
     }
 
+    const aiMessageIndex =
+      history.value.push({
+        role: "assistant",
+        createdAt: useDateTimeStore().now(),
+        content: "", // 初始內容為空
+        model: "gpt-oss:20b",
+      }) - 1
+
     // console.log(`postChatStream.groupId.value: ${groupId.value}`)
-    await postChatStream(groupId.value, useAuthStore().getUserInfo.id, content, {
-      onMessage: (data) => {
-        // console.log(`data.content: ${data.content}`)
+    postChatStream(parentId.value, groupId.value, useAuthStore().getUserInfo.id, history.value, {
+      onMessage: (content) => {
+        // console.log(`content: ${content}`)
         // 逐字累加內容
-        history.value[aiMessageIndex].content += data.content || ""
+        history.value[aiMessageIndex].content += content || ""
       },
       onError: (err) => {
         useToastStore().showToast("串流發生錯誤: " + err.message, "error")
         isLoading.value = false
       },
-      onDone: () => {
+      onDone: (lastInsertID) => {
+        // console.log("🚀 ~ sendMessage ~ lastInsertID:", lastInsertID)
+        parentId.value = lastInsertID
         isLoading.value = false
       },
     })
@@ -80,9 +84,27 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     groupList.value = response.data.groupList
   }
 
+  const getChatList = async () => {
+    const response = await chatList(groupId.value)
+    if (response.code != 0) {
+      useToastStore().showToast(response.message, `error`)
+    }
+
+    history.value = response.data.history
+  }
+
   const onDropdownOptionClick = (option) => {
     console.log(option)
   }
 
-  return { history, input, groupList, sendMessage, getAllGroup, onDropdownOptionClick }
+  return {
+    history,
+    input,
+    groupList,
+    groupId,
+    sendMessage,
+    getAllGroup,
+    getChatList,
+    onDropdownOptionClick,
+  }
 })

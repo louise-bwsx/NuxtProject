@@ -28,17 +28,17 @@
       <!-- 對話歷史列表 -->
       <div class="overflow-y-auto h-[calc(100vh-140px)] p-3">
         <div class="space-y-2">
-          <div v-for="chat in aiChat.groupList" :key="chat.id" @click="selectChat(chat.id)" :class="[
+          <div v-for="group in aiChat.groupList" :key="group.id" @click="selectChat(group.id)" :class="[
             'p-3 rounded-lg cursor-pointer transition-all duration-200',
-            currentChatId === chat.id
+            aiChat.groupId === group.id
               ? 'bg-[#FAD803]/20 border border-[#6EED00]/80'
               : 'hover:bg-white/5 border border-transparent'
           ]">
             <div class="flex items-start justify-between gap-2">
               <div class="flex-1 min-w-0">
-                <h3 class="font-medium truncate text-sm text-white mb-1">{{ chat.title }}</h3>
+                <h3 class="font-medium truncate text-sm text-white mb-1">{{ group.title }}</h3>
                 <!-- TODO: 時間 -->
-                <!-- <p class="text-xs text-[#FAD803] mt-1">{{ chat.time }}</p> -->
+                <!-- <p class="text-xs text-[#FAD803] mt-1">{{ group.time }}</p> -->
               </div>
             </div>
           </div>
@@ -194,7 +194,6 @@ usePageSeo({
 // 響應式資料
 const sidebarOpen = ref(false)
 const isIncognito = ref(false)
-const currentChatId = ref(1)
 
 // 切換隱身模式
 const toggleIncognito = () => {
@@ -212,11 +211,10 @@ const createNewChat = () => {
 }
 
 // 選擇對話
-const selectChat = (chatId) => {
-  currentChatId.value = chatId
+const selectChat = (groupId) => {
+  aiChat.groupId = groupId
   sidebarOpen.value = false
-  // 這裡加入載入對話歷史的邏輯
-  console.log('選擇對話:', chatId)
+  aiChat.getChatList()
 }
 
 onMounted(async () => {
