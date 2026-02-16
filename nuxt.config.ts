@@ -2,6 +2,15 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app:{
+    head:{
+      htmlAttrs:{
+        "data-theme": "dark", // 強制 DaisyUI 使用 dark 主題
+        class: "dark"// 強制 Tailwind 的 dark: 修飾符生效
+      }
+      // 可以透過chrome > 右上角更多 > 設定 > 外觀 > 模式 > 淺色來確認
+    }
+  },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css", "~/assets/css/elementPlus.css"],
