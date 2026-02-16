@@ -7,8 +7,14 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   const groupList = ref([])
   const isLoading = ref(false)
 
-  const sendMessage = async () => {
-    if (isLoading.value) return
+  const sendMessage = async (event) => {
+    // 如果是 Shift + Enter，不做任何處理，讓它自然換行
+    if (event.shiftKey) return
+
+    // 攔截 Enter 的預設換行行為（避免送出後輸入框殘留換行）
+    event.preventDefault()
+
+    if (event.isComposing || isLoading.value) return
 
     const content = input.value.trim()
 

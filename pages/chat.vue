@@ -174,7 +174,7 @@
           <div class="flex items-center min-h-[40px] flex-1">
             <el-input type="textarea" v-model="aiChat.input" placeholder="輸入訊息... (Shift+Enter 換行)"
               class="w-full gumroad-input" :autosize="{ minRows: 1, maxRows: 12 }"
-              @keydown.enter.exact="aiChat.sendMessage" />
+              @keydown.enter="aiChat.sendMessage" />
           </div>
 
           <button @click="aiChat.sendMessage"
