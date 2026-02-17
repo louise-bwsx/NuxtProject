@@ -8,6 +8,8 @@
     /* input-tag輸入框背景顏色 */
     /* --el-input-bg-color: #1D232A !important; */
     --el-fill-color-blank: #1D232A !important;
+    /* tag在輸入時且還沒按Enter以前的顏色 */
+    --el-input-tag-text-color: white !important;
 }
 
 .el-input-tag__inner.is-left-space {
