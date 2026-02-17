@@ -122,7 +122,8 @@
             <div class="flex items-start space-x-3">
               <div class="chat chat-end justify-between">
                 <div class="relative chat-bubble w-full mb-3">
-                  <div class="wrap-break-word whitespace-pre-line font-medium">{{ chatObj.content.trim() }}</div>
+                  <div class="wrap-break-word whitespace-pre-line font-medium markdown-content"
+                    v-html="renderedContent(chatObj.content.trim())" />
                   <div class="absolute right-0 -bottom-6 flex justify-end space-x-3 opacity-50 text-xs">
                     <button @click="copy(chatObj.content.trim())"
                       class="w-[14px] h-[14px] hover:opacity-100 transition-opacity">
@@ -140,9 +141,11 @@
             <div class="flex items-start space-x-3">
               <div class="chat chat-start w-full justify-between">
                 <div class="relative chat-bubble bg-[#1D232A] w-full mb-3">
-                  <span v-if="isEmptyObject(chatObj)" class="loading loading-dots loading-sm"></span>
+                  <span v-if="isEmptyObject(chatObj) || chatObj.content == ``"
+                    class="loading loading-dots loading-sm" />
                   <div v-else>
-                    <div class="wrap-break-word whitespace-pre-line">{{ chatObj.content.trim() }}</div>
+                    <div class="wrap-break-word whitespace-pre-line markdown-content"
+                      v-html="renderedContent(chatObj.content.trim())" />
                     <div class="absolute left-0 -bottom-6 flex space-x-3 opacity-50 text-xs">
                       <div class="flex items-center whitespace-nowrap text-gray-400">{{ chatObj.createdAt }}</div>
 
@@ -183,6 +186,8 @@
 </template>
 
 <script setup>
+import MarkdownIt from 'markdown-it'
+
 const aiChat = useAIChatStore()
 
 // SEO
@@ -219,6 +224,18 @@ const selectChat = (groupId) => {
   aiChat.getChatList()
 }
 
+// 配置 markdown-it
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true
+})
+
+// 計算渲染後的 HTML
+const renderedContent = (content) => {
+  return content ? md.render(content) : ''
+}
+
 onMounted(async () => {
   await aiChat.getAllGroup()
   await aiChat.getStatus()
@@ -227,6 +244,7 @@ onMounted(async () => {
 
 <style scoped>
 @import url("~/assets/css/daisyUI.css");
+@import url("~/assets/css/markdown.css");
 
 /* Gumroad 風格自訂樣式 */
 :deep(.gumroad-input .el-textarea__inner) {

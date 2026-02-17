@@ -46,10 +46,11 @@
     <div v-else-if="currentMode == 'split'" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
       <textarea ref="textareaRef" class="outline-none resize-none w-full lg:w-1/2 h-[50dvh] lg:h-full aaa"
         v-model="content" @paste="handlePaste" @dragover.prevent @drop="handleDrop" />
-      <div class="markdown-content overflow-y-auto w-full lg:w-1/2 h-[50dvh] lg:h-full aaa" v-html="renderedContent" />
+      <div class="markdown-content p-[20px] overflow-y-auto w-full lg:w-1/2 h-[50dvh] lg:h-full aaa"
+        v-html="renderedContent" />
     </div>
 
-    <div v-else class="markdown-content overflow-y-auto" v-html="renderedContent" />
+    <div v-else class="markdown-content p-[20px] overflow-y-auto" v-html="renderedContent" />
 
     <button @click="onDeleteClick"
       class="fixed bottom-20 left-5 bg-[rgba(0,0,0,0.75)] w-[40px] h-[40px] flex justify-center items-center rounded-full">

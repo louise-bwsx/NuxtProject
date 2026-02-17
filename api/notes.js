@@ -26,7 +26,8 @@ export const createNote = async (title, content) => {
 
 export const postView = async (noteId, userId) => {
   const body = {
-    noteId: noteId,
+    // 改用int64 原本會是string導致400
+    noteId: +noteId,
     userId: userId,
   }
 
@@ -38,7 +39,8 @@ export const postView = async (noteId, userId) => {
 
 export const postTag = async (noteId, tag, action) => {
   const body = {
-    noteId: noteId,
+    // 改用int64 原本會是string導致400
+    noteId: +noteId,
     tag: tag,
     action: action,
   }

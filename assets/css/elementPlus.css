@@ -10,6 +10,11 @@
     --el-fill-color-blank: #1D232A !important;
 }
 
+.el-input-tag__inner.is-left-space {
+    /* 20260218 讓筆記列表的tag的placeholder 樣式統一 */
+    margin-left: 0px!important;
+}
+
 .el-input__wrapper {
     --el-input-bg-color: #1D232A !important;
     /* 本來1px 11px 為了讓裝潢小工具佈局更緊湊 */

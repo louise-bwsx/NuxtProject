@@ -1,5 +1,5 @@
 .markdown-content {
-  padding: 20px;
+  /* 為了不影響chat.vue 把原本的p-[20px] 移到read.vue */
   line-height: 1.6;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -128,7 +128,8 @@
 }
 
 /* 圖片 */
-:deep(img) {
+/* 20260218 補上缺少的.markdown-content 避免chat.vue的複製按鈕被影響到 */
+.markdown-content :deep(img) {
   max-width: 50%;
 }
 
