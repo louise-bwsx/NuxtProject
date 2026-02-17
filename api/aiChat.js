@@ -30,3 +30,7 @@ export const allGroup = async () => {
 export const chatList = async (groupId) => {
   return await useApiStore().get(`/api/v1/aiChat/chatList?uid=${groupId}`)
 }
+
+export const status = async () => {
+  return await useApiStore().get(`/api/v1/aiChat/status`)
+}

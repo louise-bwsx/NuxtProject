@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { allGroup, postChatStream, postGenerateTitle, chatList } from "~/api/aiChat"
+import { allGroup, postChatStream, postGenerateTitle, chatList, status } from "~/api/aiChat"
 
 export const useAIChatStore = defineStore(`aiChat`, () => {
   const history = ref([])
@@ -9,6 +9,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   const groupId = ref(0)
   const title = ref(``)
   const parentId = ref(0)
+  const isOnline = ref(false)
 
   const sendMessage = async (event) => {
     // 如果是 Shift + Enter，不做任何處理，讓它自然換行
@@ -94,6 +95,12 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     history.value = response.data.history
   }
 
+  const getStatus = async () => {
+    const response = await status(groupId.value)
+
+    isOnline.value = response.code == 0
+  }
+
   const onDropdownOptionClick = (option) => {
     console.log(option)
   }
@@ -103,6 +110,8 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     input,
     groupList,
     groupId,
+    isOnline,
+    getStatus,
     sendMessage,
     getAllGroup,
     getChatList,

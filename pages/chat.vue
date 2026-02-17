@@ -65,13 +65,13 @@
 
             <div>
               <h1 class="text-lg font-bold text-white">AI Assistant</h1>
-              <p class="text-xs text-gray-400">Online</p>
+              <p class="text-xs text-gray-400">{{ aiChat.isOnline ? 'Online' : 'Offline' }}</p>
             </div>
           </div>
         </div>
 
         <!-- 隱身模式切換 -->
-        <div class="flex-none">
+        <!-- <div class="flex-none">
           <button @click="toggleIncognito" :class="[
             'btn btn-sm',
             isIncognito
@@ -90,7 +90,7 @@
             </svg>
             <span class="hidden sm:inline ml-1">{{ isIncognito ? '隱身' : '正常' }}</span>
           </button>
-        </div>
+        </div> -->
 
       </div>
 
@@ -107,9 +107,10 @@
         <div v-if="aiChat.history.length <= 0" class="flex justify-center h-full">
           <div class="flex flex-col justify-center items-center">
 
-            <h2 class="text-2xl font-bold mb-2 text-white">Hello! 我是 AI 助手</h2>
-            <p class="text-gray-400">有什麼我可以幫助你的嗎？</p>
-            <div class="text-xs text-gray-500 text-center mt-2 max-w-4xl mx-auto">
+            <h2 v-if="aiChat.isOnline" class="text-2xl font-bold mb-2 text-white">Hello! 我是 AI 助手</h2>
+            <h2 v-else class="text-2xl font-bold mb-2 text-white">AI 助手 休眠中</h2>
+            <p v-if="aiChat.isOnline" class="text-gray-400">有什麼我可以幫助你的嗎？</p>
+            <div v-if="aiChat.isOnline" class="text-xs text-gray-500 text-center mt-2 max-w-4xl mx-auto">
               AI 可能會產生不準確的資訊
             </div>
           </div>
@@ -220,6 +221,7 @@ const selectChat = (groupId) => {
 
 onMounted(async () => {
   await aiChat.getAllGroup()
+  await aiChat.getStatus()
 })
 </script>
 
