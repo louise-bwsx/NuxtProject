@@ -25,7 +25,6 @@
 
 /* 段落和文字 */
 .markdown-content :deep(p) {
-  /* margin-bottom: 1rem; */
   /* 20251001 為了讓viewonly可以換行 取消註解 */
   white-space: pre-line;
 }

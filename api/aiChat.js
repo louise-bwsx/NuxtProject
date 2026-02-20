@@ -34,3 +34,15 @@ export const chatList = async (groupId) => {
 export const status = async () => {
   return await useApiStore().get(`/api/v1/aiChat/status`)
 }
+
+export const renameGroupTitle = async (groupId, title) => {
+  const body = {
+    groupId: groupId,
+    title: title,
+  }
+  return await useApiStore().put(`/api/v1/aiChat/title`, body)
+}
+
+export const deleteGroupById = async (groupId) => {
+  return await useApiStore().delete(`/api/v1/aiChat/group/${groupId}`)
+}

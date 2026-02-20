@@ -28,19 +28,56 @@
       <!-- 對話歷史列表 -->
       <div class="overflow-y-auto h-[calc(100vh-140px)] p-3">
         <div class="space-y-2">
-          <div v-for="group in aiChat.groupList" :key="group.id" @click="selectChat(group.id)" :class="[
-            'p-3 rounded-lg cursor-pointer transition-all duration-200',
+          <div v-for="group in aiChat.groupList" :key="group.id" @click="!editingId && selectChat(group.id)" :class="[
+            'group p-3 rounded-lg cursor-pointer transition-all duration-200',
             aiChat.groupId === group.id
               ? 'bg-[#FAD803]/20 border border-[#6EED00]/80'
               : 'hover:bg-white/5 border border-transparent'
           ]">
-            <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center justify-between gap-2">
               <div class="flex-1 min-w-0">
-                <h3 class="font-medium truncate text-sm text-white mb-1">{{ group.title }}</h3>
-                <!-- TODO: 時間 -->
-                <!-- <p class="text-xs text-[#FAD803] mt-1">{{ group.time }}</p> -->
+                <!-- 編輯模式：顯示 Element Plus Input -->
+                <el-input v-if="editingId === group.id" v-model="editingTitle" size="small" ref="editInputRef"
+                  class="edit-input" @keyup.enter="confirmEdit(group)" @keyup.esc="cancelEdit" @blur="cancelEdit"
+                  @click.stop />
+                <!-- 一般模式：顯示標題 -->
+                <h3 v-else class="font-medium truncate text-sm text-white h-[26.5px] flex items-center">{{ group.title
+                }}
+                </h3>
+              </div>
+
+              <!-- 操作按鈕 -->
+              <div v-if="editingId !== group.id"
+                class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shrink-0"
+                @click.stop>
+                <!-- 編輯按鈕 -->
+                <button @click="startEdit(group)"
+                  class="p-1 rounded text-white hover:text-[#FAD803] hover:bg-white/10 transition-colors duration-150"
+                  title="編輯">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </button>
+
+                <!-- 刪除按鈕 -->
+                <button @click="openDeleteDialog(group)"
+                  class="p-1 rounded text-white hover:text-red-400 hover:bg-white/10 transition-colors duration-150"
+                  title="刪除">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                  </svg>
+                </button>
               </div>
             </div>
+            <!-- TODO: 時間 -->
+            <!-- <p class="text-xs text-[#FAD803]">{{ group.time }} 2025/2</p> -->
           </div>
         </div>
       </div>
@@ -121,8 +158,9 @@
           <div v-if="index % 2 == 0" class="flex justify-end">
             <div class="flex items-start space-x-3">
               <div class="chat chat-end justify-between">
-                <div class="relative chat-bubble w-full mb-3">
-                  <div class="wrap-break-word whitespace-pre-line font-medium markdown-content"
+                <div class="relative chat-bubble w-full">
+                  <!-- 20260220 在只有一行文字的情況下 會導致底下留很多空格 所以刪掉whitespace-pre-line -->
+                  <div class="wrap-break-word font-medium markdown-content"
                     v-html="renderedContent(chatObj.content.trim())" />
                   <div class="absolute right-0 -bottom-6 flex justify-end space-x-3 opacity-50 text-xs">
                     <button @click="copy(chatObj.content.trim())"
@@ -140,12 +178,12 @@
           <div v-else class="flex justify-start">
             <div class="flex items-start space-x-3">
               <div class="chat chat-start w-full justify-between">
-                <div class="relative chat-bubble bg-[#1D232A] w-full mb-3">
+                <div class="relative chat-bubble bg-[#1D232A] w-full">
                   <span v-if="isEmptyObject(chatObj) || chatObj.content == ``"
                     class="loading loading-dots loading-sm" />
                   <div v-else>
-                    <div class="wrap-break-word whitespace-pre-line markdown-content"
-                      v-html="renderedContent(chatObj.content.trim())" />
+                    <!-- 20260220 在只有一行文字的情況下 會導致底下留很多空格 所以刪掉whitespace-pre-line -->
+                    <div class="wrap-break-word markdown-content" v-html="renderedContent(chatObj.content.trim())" />
                     <div class="absolute left-0 -bottom-6 flex space-x-3 opacity-50 text-xs">
                       <div class="flex items-center whitespace-nowrap text-gray-400">{{ chatObj.createdAt }}</div>
 
@@ -198,8 +236,12 @@ usePageSeo({
 })
 
 // 響應式資料
-const sidebarOpen = ref(false)
+const sidebarOpen = ref(true)
 const isIncognito = ref(false)
+// 編輯狀態
+const editingId = ref(null)
+const editingTitle = ref(``)
+const editInputRef = ref(null)
 
 // 切換隱身模式
 const toggleIncognito = () => {
@@ -236,6 +278,55 @@ const renderedContent = (content) => {
   return content ? md.render(content) : ''
 }
 
+// 開始編輯：記錄目前 id 與標題，並在下一個 tick 後 focus input
+const startEdit = async (group) => {
+  editingId.value = group.id
+  editingTitle.value = group.title
+  await nextTick()
+  // el-input 的 ref 在 v-for 內是陣列，需取第一個
+  const inputEl = Array.isArray(editInputRef.value)
+    ? editInputRef.value[0]
+    : editInputRef.value
+  inputEl?.focus()
+}
+
+// 取消編輯
+const cancelEdit = () => {
+  editingId.value = null
+  editingTitle.value = ``
+}
+
+// 確認編輯：Enter 後呼叫 store 更新
+const confirmEdit = async (group) => {
+  const newTitle = editingTitle.value.trim()
+  if (!newTitle || newTitle === group.title) {
+    cancelEdit()
+    return
+  }
+  await aiChat.updateGroupTitle(group.id, newTitle)
+  cancelEdit()
+}
+
+// 開啟刪除確認彈窗
+const openDeleteDialog = (group) => {
+  ElMessageBox.confirm(
+    `確定要刪除「${group.title}」嗎？此操作無法復原。`,
+    `刪除確認`,
+    {
+      confirmButtonText: `刪除`,
+      cancelButtonText: `取消`,
+      type: `warning`,
+      confirmButtonClass: `el-button--danger`,
+    }
+  )
+    .then(async () => {
+      await aiChat.deleteGroup(group.id)
+    })
+    .catch(() => {
+      // 使用者取消，不做任何事
+    })
+}
+
 onMounted(async () => {
   await aiChat.getAllGroup()
   await aiChat.getStatus()
@@ -264,5 +355,16 @@ onMounted(async () => {
 
 :deep(.gumroad-input .el-textarea__inner::placeholder) {
   color: rgba(255, 255, 255, 0.4);
+}
+
+/* 側邊欄修改title的input */
+:deep(.edit-input .el-input__wrapper) {
+  box-shadow: 0 0 0 1px #6EED00 inset;
+}
+
+:deep(.edit-input .el-input__inner) {
+  color: #ffffff;
+  font-size: 0.875rem;
+  height: 24px;
 }
 </style>

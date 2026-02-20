@@ -1,5 +1,13 @@
 import { defineStore } from "pinia"
-import { allGroup, postChatStream, postGenerateTitle, chatList, status } from "~/api/aiChat"
+import {
+  allGroup,
+  postChatStream,
+  postGenerateTitle,
+  chatList,
+  status,
+  renameGroupTitle,
+  deleteGroupById,
+} from "~/api/aiChat"
 
 export const useAIChatStore = defineStore(`aiChat`, () => {
   const history = ref([])
@@ -105,6 +113,35 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     console.log(option)
   }
 
+  const updateGroupTitle = async (id, newTitle) => {
+    const response = await renameGroupTitle(id, newTitle)
+    if (response.code != 0) {
+      useToastStore().showToast(response.message, `error`)
+      return
+    }
+    useToastStore().showToast(response.message, `success`)
+    // 直接更新本地資料，不需重新打 getAllGroup
+    const target = groupList.value.find((g) => g.id === id)
+    if (target) target.title = newTitle
+  }
+
+  const deleteGroup = async (id) => {
+    const response = await deleteGroupById(id)
+    if (response.code != 0) {
+      useToastStore().showToast(response.message, `error`)
+      return
+    }
+    groupList.value = groupList.value.filter((g) => g.id !== id)
+    // 若刪除的是目前選中的對話，重置狀態
+    if (groupId.value === id) {
+      groupId.value = 0
+      history.value = []
+      parentId.value = 0
+      title.value = ``
+    }
+    useToastStore().showToast(`已刪除對話`, `success`)
+  }
+
   return {
     history,
     input,
@@ -116,5 +153,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     getAllGroup,
     getChatList,
     onDropdownOptionClick,
+    updateGroupTitle,
+    deleteGroup,
   }
 })
