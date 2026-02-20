@@ -1,5 +1,8 @@
 .chat-bubble{
     max-width: 100% !important;
+    /* 20260220 為了在chat有更緊湊的佈局 */
+    padding-inline: calc(0.25rem * 3) !important;
+    padding-block: calc(0.25rem * 2) !important;
 }
 
 button{
