@@ -29,7 +29,7 @@
       <div class="overflow-y-auto h-[calc(100vh-140px)] p-3">
         <div class="space-y-2">
           <div v-for="group in aiChat.groupList" :key="group.id" @click="!editingId && selectChat(group.id)" :class="[
-            'group p-3 rounded-lg cursor-pointer transition-all duration-200',
+            'group p-3 rounded-lg cursor-pointer transition-all duration-200 relative',
             aiChat.groupId === group.id
               ? 'bg-[#FAD803]/20 border border-[#6EED00]/80'
               : 'hover:bg-white/5 border border-transparent'
@@ -46,9 +46,53 @@
                 </h3>
               </div>
 
-              <!-- 操作按鈕 -->
+              <!-- ── 手機版（≤ sm）：三點更多按鈕 + Dropdown ── -->
+              <div v-if="editingId !== group.id" class="relative sm:hidden shrink-0" @click.stop>
+                <button @click="toggleMenu(group.id)"
+                  class="p-1 rounded text-white hover:bg-white/10 transition-colors duration-150" title="更多">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 640 640">
+                    <path fill="rgb(255,255,255)"
+                      d="M320 208C289.1 208 264 182.9 264 152C264 121.1 289.1 96 320 96C350.9 96 376 121.1 376 152C376 182.9 350.9 208 320 208zM320 432C350.9 432 376 457.1 376 488C376 518.9 350.9 544 320 544C289.1 544 264 518.9 264 488C264 457.1 289.1 432 320 432zM376 320C376 350.9 350.9 376 320 376C289.1 376 264 350.9 264 320C264 289.1 289.1 264 320 264C350.9 264 376 289.1 376 320z" />
+                  </svg>
+                </button>
+
+                <!-- Dropdown 選單 -->
+                <transition enter-active-class="transition ease-out duration-150" enter-from-class="opacity-0 scale-95"
+                  enter-to-class="opacity-100 scale-100" leave-active-class="transition ease-in duration-100"
+                  leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+                  <div v-if="activeMenuId === group.id"
+                    class="absolute right-0 top-7 z-50 w-32 bg-[#252D36] border border-[#6EED00]/50 rounded-lg shadow-xl overflow-hidden">
+                    <!-- 編輯 -->
+                    <button @click="startEdit(group); activeMenuId = null"
+                      class="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors duration-150">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#FAD803]" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                      編輯
+                    </button>
+                    <!-- 刪除 -->
+                    <button @click="openDeleteDialog(group); activeMenuId = null"
+                      class="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors duration-150">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                      </svg>
+                      刪除
+                    </button>
+                  </div>
+                </transition>
+              </div>
+
+              <!-- ── 桌面版（> sm）：hover 顯示編輯 / 刪除按鈕 ── -->
               <div v-if="editingId !== group.id"
-                class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shrink-0"
+                class="hidden sm:flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shrink-0"
                 @click.stop>
                 <!-- 編輯按鈕 -->
                 <button @click="startEdit(group)"
@@ -83,8 +127,9 @@
       </div>
     </div>
 
-    <!-- 遮罩層 -->
-    <div @click="sidebarOpen = false" class="fixed inset-0 bg-black/60 z-40 transition-all duration-300 ease-out"
+    <!-- 遮罩層（同時關閉 dropdown） -->
+    <div @click="sidebarOpen = false; activeMenuId = null"
+      class="fixed inset-0 bg-black/60 z-40 transition-all duration-300 ease-out"
       :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'" />
 
     <!-- 主要內容區域 -->
@@ -108,13 +153,13 @@
         </div>
 
         <!-- 隱身模式切換 -->
-        <!-- <div class="flex-none">
-          <button @click="toggleIncognito" :class="[
+        <div v-if="aiChat.history.length <= 0" class="flex-none">
+          <button @click="aiChat.toggleIncognito()" :class="[
             'btn btn-sm',
-            isIncognito
+            aiChat.isIncognito
               ? 'bg-[#FAD803] hover:bg-[#FAD803]/90 text-[#0d263f] border-none'
               : 'btn-ghost text-gray-400 hover:bg-white/10'
-          ]" :title="isIncognito ? '隱身模式：開啟' : '隱身模式：關閉'">
+          ]" :title="aiChat.isIncognito ? '隱身模式：開啟' : '隱身模式：關閉'">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               class="icon icon-tabler icons-tabler-outline icon-tabler-spy">
@@ -125,17 +170,17 @@
               <path d="M14 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
               <path d="M10 17h4" />
             </svg>
-            <span class="hidden sm:inline ml-1">{{ isIncognito ? '隱身' : '正常' }}</span>
+            <span class="hidden sm:inline ml-1">{{ aiChat.isIncognito ? '隱身' : '正常' }}</span>
           </button>
-        </div> -->
+        </div>
 
       </div>
 
-      <!-- 隱身模式提示條 (absolute 定位) -->
+      <!-- 隱身模式提示條 -->
       <!-- 不能使用v-if隱藏 會導致動畫無法播放 -->
-      <div
+      <div v-if="aiChat.isIncognito"
         class="absolute top-[65px] left-0 right-0 bg-[#FAD803]/10 border-b border-[#FAD803]/30 px-4 py-2 flex items-center gap-2 z-20 transition-all duration-300 ease-out pointer-events-none"
-        :class="isIncognito ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-full opacity-0'">
+        :class="aiChat.isIncognito ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-full opacity-0'">
         <span class="text-sm text-[#FAD803]">隱身模式已啟用 - 此對話不會被儲存</span>
       </div>
 
@@ -236,23 +281,26 @@ usePageSeo({
 })
 
 // 響應式資料
-const sidebarOpen = ref(false)
-const isIncognito = ref(false)
+const sidebarOpen = ref(true)
 // 編輯狀態
 const editingId = ref(null)
 const editingTitle = ref(``)
 const editInputRef = ref(null)
+// 手機版更多選單
+const activeMenuId = ref(null)
 
-// 切換隱身模式
-const toggleIncognito = () => {
-  isIncognito.value = !isIncognito.value
-  // 這裡可以加入實際的隱身模式邏輯
-  console.log('隱身模式:', isIncognito.value)
+// 切換更多選單（點同一個就關閉）
+const toggleMenu = (id) => {
+  activeMenuId.value = activeMenuId.value === id ? null : id
+}
+
+// 點擊頁面其他地方關閉選單
+const handleClickOutside = () => {
+  activeMenuId.value = null
 }
 
 // 建立新對話
 const createNewChat = () => {
-  // 這裡加入建立新對話的邏輯
   aiChat.groupId = 0
   aiChat.history = []
   sidebarOpen.value = false
@@ -263,6 +311,7 @@ const createNewChat = () => {
 const selectChat = (groupId) => {
   aiChat.groupId = groupId
   sidebarOpen.value = false
+  aiChat.toggleIncognito()
   aiChat.getChatList()
 }
 
@@ -278,12 +327,11 @@ const renderedContent = (content) => {
   return content ? md.render(content) : ''
 }
 
-// 開始編輯：記錄目前 id 與標題，並在下一個 tick 後 focus input
+// 開始編輯
 const startEdit = async (group) => {
   editingId.value = group.id
   editingTitle.value = group.title
   await nextTick()
-  // el-input 的 ref 在 v-for 內是陣列，需取第一個
   const inputEl = Array.isArray(editInputRef.value)
     ? editInputRef.value[0]
     : editInputRef.value
@@ -330,6 +378,12 @@ const openDeleteDialog = (group) => {
 onMounted(async () => {
   await aiChat.getAllGroup()
   await aiChat.getStatus()
+  // 點擊空白處關閉 dropdown
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 

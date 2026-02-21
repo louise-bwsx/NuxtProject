@@ -18,6 +18,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   const title = ref(``)
   const parentId = ref(0)
   const isOnline = ref(false)
+  const isIncognito = ref(false)
 
   const sendMessage = async (event) => {
     // 如果是 Shift + Enter，不做任何處理，讓它自然換行
@@ -42,7 +43,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
       content: content,
     })
 
-    if (groupId.value == 0) {
+    if (groupId.value == 0 && !isIncognito.value) {
       await generateTitle(content)
       getAllGroup()
     }
@@ -56,23 +57,30 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
       }) - 1
 
     // console.log(`postChatStream.groupId.value: ${groupId.value}`)
-    postChatStream(parentId.value, groupId.value, useAuthStore().getUserInfo.id, history.value, {
-      onMessage: (content) => {
-        // 這邊確定會逐字顯示 但好像會有延遲 如果在開始前資料全部取得後 就會一瞬間出來
-        // console.log(`content: ${content}`)
-        // 逐字累加內容
-        history.value[aiMessageIndex].content += content || ""
+    postChatStream(
+      isIncognito.value,
+      parentId.value,
+      groupId.value,
+      useAuthStore().getUserInfo.id,
+      history.value,
+      {
+        onMessage: (content) => {
+          // 這邊確定會逐字顯示 但好像會有延遲 如果在開始前資料全部取得後 就會一瞬間出來
+          // console.log(`content: ${content}`)
+          // 逐字累加內容
+          history.value[aiMessageIndex].content += content || ""
+        },
+        onError: (err) => {
+          useToastStore().showToast("串流發生錯誤: " + err.message, "error")
+          isLoading.value = false
+        },
+        onDone: (lastInsertID) => {
+          // console.log("🚀 ~ sendMessage ~ lastInsertID:", lastInsertID)
+          parentId.value = lastInsertID
+          isLoading.value = false
+        },
       },
-      onError: (err) => {
-        useToastStore().showToast("串流發生錯誤: " + err.message, "error")
-        isLoading.value = false
-      },
-      onDone: (lastInsertID) => {
-        // console.log("🚀 ~ sendMessage ~ lastInsertID:", lastInsertID)
-        parentId.value = lastInsertID
-        isLoading.value = false
-      },
-    })
+    )
   }
 
   const generateTitle = async (content) => {
@@ -109,10 +117,6 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     isOnline.value = response.code == 0
   }
 
-  const onDropdownOptionClick = (option) => {
-    console.log(option)
-  }
-
   const updateGroupTitle = async (id, newTitle) => {
     const response = await renameGroupTitle(id, newTitle)
     if (response.code != 0) {
@@ -142,18 +146,24 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     useToastStore().showToast(`已刪除對話`, `success`)
   }
 
+  // 切換隱身模式
+  const toggleIncognito = () => {
+    isIncognito.value = !isIncognito.value
+  }
+
   return {
     history,
     input,
     groupList,
     groupId,
     isOnline,
+    isIncognito,
     getStatus,
     sendMessage,
     getAllGroup,
     getChatList,
-    onDropdownOptionClick,
     updateGroupTitle,
     deleteGroup,
+    toggleIncognito,
   }
 })

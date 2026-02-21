@@ -1,7 +1,7 @@
 <template>
   <!-- 手機sm ~ 320px -->
   <!-- Sony手機411 832 -->
-  <div class="fixed flex space-x-4 aaa">
+  <div class="fixed flex space-x-4 aaa z-50">
     <div class="hidden 2xl:flex">2xl</div>
     <div class="hidden xl:flex">xl</div>
     <div class="hidden lg:flex">lg</div>

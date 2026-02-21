@@ -17,7 +17,6 @@ const isMobile = computed(() => {
   return true
 })
 
-
 usePageSeo({
   title: '小遊戲',
   description: '我做的小遊戲',

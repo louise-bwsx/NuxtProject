@@ -1,5 +1,13 @@
-export const postChatStream = async (parentId, groupId, userId, messages, callbacks) => {
+export const postChatStream = async (
+  isIncognito,
+  parentId,
+  groupId,
+  userId,
+  messages,
+  callbacks,
+) => {
   const body = {
+    isIncognito: isIncognito,
     model: "gpt-oss:20b",
     parentId: parentId,
     userId: userId,
