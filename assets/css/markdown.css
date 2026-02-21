@@ -39,46 +39,22 @@
 
 /* 列表 */
 .markdown-content :deep(ul) {
-  margin-bottom: 1rem;
-  overflow-x: auto;
-  /* 移除預設的列表樣式 */
-  list-style: none;
-}
-
-/* 只針對 ul 底下的 li 設定樣式 */
-.markdown-content :deep(ul li) {
-  /* margin-bottom: 0.5rem; */
-  position: relative;
+  list-style: disc;
   /* 為原點留出空間 */
   padding-left: 1.5rem;
-  /* color: #374151; */
-}
-
-.markdown-content :deep(ul li::before) {
-  /* 原點符號 */
-  content: '•';
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-weight: bold;
-  /* 稍微放大原點 */
-  font-size: 1.2em;
-  /* 調整行高讓原點對齊 */
-  line-height: 1.2;
-  padding-left: 0.5rem;
-}
-
-.markdown-content :deep(li) {
-  /* 20251001 為了讓viewonly可以換行 取消註解 */
-  white-space: pre-line;
 }
 
 .markdown-content :deep(ol) {
-  overflow-x: auto;
+  /* 20260221 這邊不要使用overflow-x: auto; 會導致出現橫向捲軸 當初排查時一直覺得是下底線排查很久 */
   /* 強制顯示數字 */
   list-style-type: decimal;
   /* 確保有足夠空間顯示數字 */
   padding-left: 2rem;
+}
+
+.markdown-content :deep(hr) {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /* 程式碼 inline code */
@@ -136,13 +112,12 @@
 
 /* 表格樣式 */
 .markdown-content :deep(table) {
-  width: 100%;
+  display: block;
+  max-width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5rem;
-  margin-top: 1rem;
-  overflow: hidden;
-  /* 隱藏溢出以顯示圓角 */
-  /* 使用 box-shadow 代替 border */
+  margin: 1rem 0;
+  /* 20260221 避免內容過長使.markdown-content出現橫向捲軸 */
+  overflow-x: auto;
   box-shadow: 0 0 0 1px #e5e7eb;
   border-radius: 0.5rem;
 }
@@ -153,6 +128,7 @@
   font-weight: 600;
   border-bottom: 2px solid #e5e7eb;
   border-right: 1px solid #e5e7eb;
+  white-space: nowrap;
 }
 
 .markdown-content :deep(th:last-child) {
@@ -163,6 +139,7 @@
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e5e7eb;
   border-right: 1px solid #e5e7eb;
+  white-space: nowrap;
 }
 
 .markdown-content :deep(td:last-child) {
