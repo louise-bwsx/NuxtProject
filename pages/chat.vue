@@ -41,8 +41,8 @@
                   class="edit-input" @keyup.enter="confirmEdit(group)" @keyup.esc="cancelEdit" @blur="cancelEdit"
                   @click.stop />
                 <!-- 一般模式：顯示標題 -->
-                <h3 v-else class="font-medium truncate text-sm text-white h-[26.5px] flex items-center">{{ group.title
-                }}
+                <h3 v-else class="font-medium truncate text-sm text-white h-[26.5px] flex items-center">
+                  {{ group.title }}
                 </h3>
               </div>
 
@@ -236,7 +236,7 @@ usePageSeo({
 })
 
 // 響應式資料
-const sidebarOpen = ref(true)
+const sidebarOpen = ref(false)
 const isIncognito = ref(false)
 // 編輯狀態
 const editingId = ref(null)
