@@ -311,7 +311,7 @@ const createNewChat = () => {
 const selectChat = (groupId) => {
   aiChat.groupId = groupId
   sidebarOpen.value = false
-  aiChat.toggleIncognito()
+  aiChat.isIncognito = false
   aiChat.getChatList()
 }
 
