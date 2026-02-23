@@ -281,7 +281,7 @@ usePageSeo({
 })
 
 // 響應式資料
-const sidebarOpen = ref(true)
+const sidebarOpen = ref(false)
 // 編輯狀態
 const editingId = ref(null)
 const editingTitle = ref(``)
