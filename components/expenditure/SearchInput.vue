@@ -96,7 +96,19 @@ const onSort = (type) => {
   onSearch()
 }
 
-const onSearch = async () => {
+const onSearch = async (event) => {
+  // 如果是 Shift + Enter，不做任何處理，讓它自然換行
+  if (event.shiftKey) return
+
+  // 攔截 Enter 的預設換行行為（避免送出後輸入框殘留換行）
+  event.preventDefault()
+
+  if (event.isComposing) return
+
+  const content = keyword.value.trim()
+
+  if (!content) return
+
   // 使用 router.push 更新 query 參數
   // 或是改用router.replace 就不會留下紀錄 上一頁就不會顯示上一個搜尋條件
   await router.push({
