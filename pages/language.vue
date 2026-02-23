@@ -1,106 +1,3 @@
-<script setup>
-import { ref, computed } from "vue"
-import { useApiStore } from "~/stores/api"
-import { useToastStore } from "~/stores/toast"
-
-const apiStore = useApiStore()
-
-const selectedLanguage = ref("en")
-const sentences = ref([])
-const userInputs = ref({})
-const isGenerating = ref(false)
-const isChecking = ref(false)
-const explanation = ref("")
-const isExplaining = ref(false)
-
-const languageOptions = [
-  { label: "中文", value: "zh" },
-  { label: "英文", value: "en" },
-  { label: "日文", value: "ja" },
-]
-
-const fieldMap = {
-  zh: "chinese",
-  en: "english",
-  ja: "japanese",
-}
-
-// 提示語言：選中文時顯示英文，其他顯示中文
-const hintField = computed(() =>
-  selectedLanguage.value === "zh" ? "english" : "chinese"
-)
-
-const hintLabel = computed(() =>
-  selectedLanguage.value === "zh" ? "英文" : "中文"
-)
-
-const normalize = (str) =>
-  str
-    .toLowerCase()
-    .replace(/[\s\p{P}\p{S}]/gu, "")
-
-const handleGenerate = async () => {
-  isGenerating.value = true
-  explanation.value = ""
-  userInputs.value = {}
-
-  const response = await apiStore.post(`/api/v1/language/generate`)
-  isGenerating.value = false
-
-  if (response?.status || response?.code !== 0) {
-    useToastStore().showToast(response?.message || "生成失敗", "error")
-    return
-  }
-
-  sentences.value = response.data
-  sentences.value.forEach((s) => {
-    userInputs.value[s.uid] = ""
-  })
-}
-
-const handleConfirm = async () => {
-  if (!sentences.value.length) {
-    useToastStore().showToast("請先生成資料", "error")
-    return
-  }
-
-  const targetField = fieldMap[selectedLanguage.value]
-
-  const wrongAnswers = sentences.value
-    .filter(
-      (s) =>
-        normalize(userInputs.value[s.uid] ?? "") !==
-        normalize(s[targetField] ?? "")
-    )
-    .map((s) => ({
-      uid: s.uid,
-      answer: userInputs.value[s.uid] ?? "",
-    }))
-
-  if (!wrongAnswers.length) return
-
-  isExplaining.value = true
-  explanation.value = ""
-
-  await apiStore.postStream(
-    `/api/v1/language/explain`,
-    { answers: wrongAnswers },
-    {
-      onMessage: (content) => {
-        explanation.value += content
-      },
-      onError: (err) => {
-        useToastStore().showToast(err?.message || "解釋失敗", "error")
-        isExplaining.value = false
-      },
-      onDone: () => {
-        isExplaining.value = false
-      },
-    }
-  )
-}
-</script>
-
 <template>
   <div class="min-h-screen bg-base-200 flex flex-col">
     <div class="navbar bg-base-100 shadow-sm px-4">
@@ -118,6 +15,14 @@ const handleConfirm = async () => {
             {{ option.label }}
           </option>
         </select>
+      </div>
+
+      <div class="dropdown dropdown-top dropdown-center">
+        <div tabindex="0" role="button" class="btn m-1">{{ aiChat.model }}</div>
+        <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-150 w-52 p-2 shadow-sm">
+          <li><a @click="aiChat.model = `gemma3:4b`">gemma3:4b</a></li>
+          <li><a @click="aiChat.model = `gpt-oss:20b`">gpt-oss:20b</a></li>
+        </ul>
       </div>
 
       <!-- 生成按鈕 -->
@@ -159,3 +64,112 @@ const handleConfirm = async () => {
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, computed } from "vue"
+import { useApiStore } from "~/stores/api"
+import { useToastStore } from "~/stores/toast"
+
+const apiStore = useApiStore()
+const aiChat = useAIChatStore()
+
+const selectedLanguage = ref("en")
+const sentences = ref([])
+const userInputs = ref({})
+const isGenerating = ref(false)
+const isChecking = ref(false)
+const explanation = ref("")
+const isExplaining = ref(false)
+
+const languageOptions = [
+  { label: "中文", value: "zh" },
+  { label: "英文", value: "en" },
+  { label: "日文", value: "ja" },
+]
+
+const fieldMap = {
+  zh: "chinese",
+  en: "english",
+  ja: "japanese",
+}
+
+// 提示語言：選中文時顯示英文，其他顯示中文
+const hintField = computed(() =>
+  selectedLanguage.value === "zh" ? "english" : "chinese"
+)
+
+const hintLabel = computed(() =>
+  selectedLanguage.value === "zh" ? "英文" : "中文"
+)
+
+const normalize = (str) =>
+  str
+    .toLowerCase()
+    .replace(/[\s\p{P}\p{S}]/gu, "")
+
+const handleGenerate = async () => {
+  isGenerating.value = true
+  explanation.value = ""
+  userInputs.value = {}
+
+  const response = await apiStore.post(`/api/v1/language/generate`, {
+    model: aiChat.model
+  })
+  isGenerating.value = false
+
+  if (response?.status || response?.code !== 0) {
+    useToastStore().showToast(response?.message || "生成失敗", "error")
+    return
+  }
+
+  sentences.value = response.data
+  sentences.value.forEach((s) => {
+    userInputs.value[s.uid] = ""
+  })
+}
+
+const handleConfirm = async () => {
+  if (!sentences.value.length) {
+    useToastStore().showToast("請先生成資料", "error")
+    return
+  }
+
+  const targetField = fieldMap[selectedLanguage.value]
+
+  const wrongAnswers = sentences.value
+    .filter(
+      (s) =>
+        normalize(userInputs.value[s.uid] ?? "") !==
+        normalize(s[targetField] ?? "")
+    )
+    .map((s) => ({
+      uid: s.uid,
+      answer: userInputs.value[s.uid] ?? "",
+    }))
+
+  if (!wrongAnswers.length) return
+
+  isExplaining.value = true
+  explanation.value = ""
+
+  await apiStore.postStream(
+    `/api/v1/language/explain`,
+    {
+      answers: wrongAnswers,
+      model: aiChat.model
+    },
+    {
+      onMessage: (content) => {
+        explanation.value += content
+      },
+      onError: (err) => {
+        useToastStore().showToast(err?.message || "解釋失敗", "error")
+        isExplaining.value = false
+      },
+      onDone: () => {
+        isExplaining.value = false
+      },
+    }
+  )
+}
+</script>

@@ -1,5 +1,6 @@
 export const postChatStream = async (
   isIncognito,
+  model,
   parentId,
   groupId,
   userId,
@@ -8,7 +9,7 @@ export const postChatStream = async (
 ) => {
   const body = {
     isIncognito: isIncognito,
-    model: "gpt-oss:20b",
+    model: model,
     parentId: parentId,
     userId: userId,
     groupId: groupId,
@@ -20,10 +21,10 @@ export const postChatStream = async (
   await useApiStore().postStream(`/api/v1/aiChat/chat`, body, callbacks)
 }
 
-export const postGenerateTitle = async (userId, content) => {
+export const postGenerateTitle = async (userId, model, content) => {
   const body = {
     userId: userId,
-    model: "gpt-oss:20b",
+    model: model,
     content: content,
     stream: false, // false代表一次性回應所有內容 而不是一個片段一個片段回傳
   }

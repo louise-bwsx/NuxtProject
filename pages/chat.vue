@@ -248,6 +248,13 @@
       <!-- 輸入區域 -->
       <div class="w-full bg-base-100 border-t border-base-300 p-4">
         <div class="flex items-center space-x-2 max-w-4xl mx-auto">
+          <div class="dropdown dropdown-hover dropdown-top">
+            <div tabindex="0" role="button" class="btn m-1">{{ aiChat.model }}</div>
+            <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-150 w-52 p-2 shadow-sm">
+              <li><a @click="aiChat.model = `gemma3:4b`">gemma3:4b</a></li>
+              <li><a @click="aiChat.model = `gpt-oss:20b`">gpt-oss:20b</a></li>
+            </ul>
+          </div>
           <div class="flex items-center min-h-[40px] flex-1">
             <el-input type="textarea" v-model="aiChat.input" placeholder="輸入訊息... (Shift+Enter 換行)"
               class="w-full gumroad-input" :autosize="{ minRows: 1, maxRows: 12 }"

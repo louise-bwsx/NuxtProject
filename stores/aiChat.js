@@ -16,6 +16,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   const isLoading = ref(false)
   const groupId = ref(0)
   const title = ref(``)
+  const model = ref(`gemma3:4b`)
   const parentId = ref(0)
   const isOnline = ref(false)
   const isIncognito = ref(false)
@@ -53,12 +54,13 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
         role: "assistant",
         createdAt: useDateTimeStore().now(),
         content: "", // 初始內容為空
-        model: "gpt-oss:20b",
+        model: model.value,
       }) - 1
 
     // console.log(`postChatStream.groupId.value: ${groupId.value}`)
     postChatStream(
       isIncognito.value,
+      model.value,
       parentId.value,
       groupId.value,
       useAuthStore().getUserInfo.id,
@@ -84,7 +86,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   }
 
   const generateTitle = async (content) => {
-    const response = await postGenerateTitle(useAuthStore().getUserInfo.id, content)
+    const response = await postGenerateTitle(useAuthStore().getUserInfo.id, model.value, content)
     if (response.code != 0) {
       useToastStore().showToast(response.message, `error`)
     }
@@ -158,6 +160,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
     groupId,
     isOnline,
     isIncognito,
+    model,
     getStatus,
     sendMessage,
     getAllGroup,
