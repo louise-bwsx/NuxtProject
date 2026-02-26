@@ -55,10 +55,8 @@
       <div v-if="explanation || isExplaining" class="card bg-base-100 shadow">
         <div class="card-body p-4 gap-2">
           <h3 class="font-medium text-sm">錯誤解析</h3>
-          <p class="text-sm whitespace-pre-wrap text-base-content/80">
-            {{ explanation }}
-            <span v-if="isExplaining" class="inline-block w-2 h-4 bg-base-content/50 animate-pulse ml-0.5" />
-          </p>
+          <div class="text-sm markdown-content text-base-content/80" v-html="renderedContent" />
+          <span v-if="isExplaining" class="inline-block w-2 h-4 bg-base-content/50 animate-pulse ml-0.5" />
         </div>
       </div>
     </div>
@@ -66,9 +64,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
 import { useApiStore } from "~/stores/api"
 import { useToastStore } from "~/stores/toast"
+import MarkdownIt from 'markdown-it'
 
 const apiStore = useApiStore()
 const aiChat = useAIChatStore()
@@ -80,6 +78,18 @@ const isGenerating = ref(false)
 const isChecking = ref(false)
 const explanation = ref("")
 const isExplaining = ref(false)
+
+// 配置 markdown-it
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true
+})
+
+// 計算渲染後的 HTML
+const renderedContent = computed(() => {
+  return explanation.value ? md.render(explanation.value) : ''
+})
 
 const languageOptions = [
   { label: "中文", value: "zh" },
@@ -173,3 +183,7 @@ const handleConfirm = async () => {
   )
 }
 </script>
+
+<style scoped>
+@import url("~/assets/css/markdown.css");
+</style>
