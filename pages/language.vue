@@ -1,11 +1,8 @@
 <template>
-  <div class="min-h-screen bg-base-200 flex flex-col">
-    <div class="navbar bg-base-100 shadow-sm px-4">
-      <span class="text-lg font-semibold">語言練習</span>
-    </div>
-
-    <div class="flex-1 p-4 flex flex-col gap-4">
-      <!-- 語言選擇 -->
+  <div class="flex flex-col flex-1 p-4 gap-4">
+    <!-- 語言選擇 -->
+    <div class="flex items-end space-x-2">
+      <!-- 左邊 -->
       <div class="form-control w-full">
         <label class="label">
           <span class="label-text text-sm font-medium">練習語言</span>
@@ -17,47 +14,52 @@
         </select>
       </div>
 
-      <div class="dropdown dropdown-top dropdown-center">
-        <div tabindex="0" role="button" class="btn m-1">{{ aiChat.model }}</div>
-        <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-150 w-52 p-2 shadow-sm">
-          <li><a @click="aiChat.model = `gemma3:4b`">gemma3:4b</a></li>
-          <li><a @click="aiChat.model = `gpt-oss:20b`">gpt-oss:20b</a></li>
-        </ul>
+      <!-- 右邊 -->
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text text-sm font-medium">模型</span>
+        </label>
+
+        <!-- 用select 取代 daisy dropdown因為選項會超出螢幕 出現橫向捲軸 -->
+        <select v-model="aiChat.model" class="select select-bordered w-full">
+          <option>gemma3:4b</option>
+          <option>gpt-oss:20b</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 生成按鈕 -->
+    <button class="btn btn-primary w-full" :disabled="isGenerating" @click="handleGenerate">
+      <span v-if="isGenerating" class="loading loading-spinner loading-sm" />
+      {{ isGenerating ? "生成中..." : "生成" }}
+    </button>
+
+    <!-- 句子列表 -->
+    <template v-if="sentences.length">
+      <div v-for="sentence in sentences" :key="sentence.uid" class="card bg-base-100 shadow">
+        <div class="card-body p-4 gap-2">
+          <div class="flex gap-1 items-center">
+            <span class="badge badge-ghost badge-sm text-nowrap">{{ hintLabel }}</span>
+            <p class="text-sm">{{ sentence[hintField] }}</p>
+          </div>
+          <textarea v-model="userInputs[sentence.uid]" class="textarea textarea-bordered w-full resize-none text-sm"
+            rows="2" :placeholder="`輸入${languageOptions.find((o) => o.value === selectedLanguage)?.label}...`" />
+        </div>
       </div>
 
-      <!-- 生成按鈕 -->
-      <button class="btn btn-primary w-full" :disabled="isGenerating" @click="handleGenerate">
-        <span v-if="isGenerating" class="loading loading-spinner loading-sm" />
-        {{ isGenerating ? "生成中..." : "生成" }}
+      <!-- 確認按鈕 -->
+      <button class="btn btn-success w-full" :disabled="isExplaining || isChecking" @click="handleConfirm">
+        <span v-if="isExplaining" class="loading loading-spinner loading-sm" />
+        {{ isExplaining ? "分析中..." : "確認" }}
       </button>
+    </template>
 
-      <!-- 句子列表 -->
-      <template v-if="sentences.length">
-        <div v-for="sentence in sentences" :key="sentence.uid" class="card bg-base-100 shadow">
-          <div class="card-body p-4 gap-2">
-            <div class="flex gap-1 items-center">
-              <span class="badge badge-ghost badge-sm">{{ hintLabel }}</span>
-              <p class="text-sm">{{ sentence[hintField] }}</p>
-            </div>
-            <textarea v-model="userInputs[sentence.uid]" class="textarea textarea-bordered w-full resize-none text-sm"
-              rows="2" :placeholder="`輸入${languageOptions.find((o) => o.value === selectedLanguage)?.label}...`" />
-          </div>
-        </div>
-
-        <!-- 確認按鈕 -->
-        <button class="btn btn-success w-full" :disabled="isExplaining || isChecking" @click="handleConfirm">
-          <span v-if="isExplaining" class="loading loading-spinner loading-sm" />
-          {{ isExplaining ? "分析中..." : "確認" }}
-        </button>
-      </template>
-
-      <!-- 解釋區塊 -->
-      <div v-if="explanation || isExplaining" class="card bg-base-100 shadow">
-        <div class="card-body p-4 gap-2">
-          <h3 class="font-medium text-sm">錯誤解析</h3>
-          <div class="text-sm markdown-content text-base-content/80" v-html="renderedContent" />
-          <span v-if="isExplaining" class="inline-block w-2 h-4 bg-base-content/50 animate-pulse ml-0.5" />
-        </div>
+    <!-- 解釋區塊 -->
+    <div v-if="explanation || isExplaining" class="card bg-base-100 shadow">
+      <div class="card-body p-4 gap-2">
+        <h3 class="font-medium text-sm">錯誤解析</h3>
+        <div class="text-sm markdown-content text-base-content/80" v-html="renderedContent" />
+        <span v-if="isExplaining" class="inline-block w-2 h-4 bg-base-content/50 animate-pulse ml-0.5" />
       </div>
     </div>
   </div>
@@ -122,7 +124,7 @@ const handleGenerate = async () => {
   explanation.value = ""
   userInputs.value = {}
 
-  const response = await apiStore.post(`/api/v1/language/generate`, {
+  const response = await apiStore.post(`/api/v1/language/question`, {
     model: aiChat.model
   })
   isGenerating.value = false
