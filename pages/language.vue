@@ -1,5 +1,19 @@
 <template>
   <div class="flex flex-col flex-1 p-4 gap-4">
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text text-sm font-medium">儲存單字</span>
+      </label>
+      <div class="flex gap-2">
+        <input v-model="newWord" type="text" class="input input-bordered w-full" placeholder="輸入單字" />
+        <button class="btn btn-primary" :disabled="isSavingWord" @click="saveWord">
+          <span v-if="isSavingWord" class="loading loading-spinner loading-sm" />
+          儲存
+        </button>
+      </div>
+    </div>
+
     <!-- 語言選擇 -->
     <div class="flex items-end space-x-2">
       <!-- 左邊 -->
@@ -75,6 +89,39 @@ const aiChat = useAIChatStore()
 
 const selectedLanguage = ref("en")
 const sentences = ref([])
+// 測試用資料
+// const sentences = ref([
+//   {
+//     "uid": 46,
+//     "chinese": "老兄，沒問題，記得申報你帶的膠條，保證海關檢查順利。",
+//     "english": "Mate, no worries, just declare your gum for a smooth check.",
+//     "japanese": "メイト、心配ないよ。ガムを申告すれば、スムーズにチェックが通るよ。"
+//   },
+//   {
+//     "uid": 5,
+//     "chinese": "我覺得這個泳池的設施一流，夥伴。",
+//     "english": "I reckon the pool's facilities are top-notch, mate.",
+//     "japanese": "このプールの施設は最高だと思うよ、相棒。"
+//   },
+//   {
+//     "uid": 7,
+//     "chinese": "夥伴，我覺得搭配咖啡的酪梨吐司是早餐超棒的選擇。",
+//     "english": "Mate, the avo toast with espresso is bonza for breakfast.",
+//     "japanese": "メイト、エスプレッソと一緒のアボカドトーストは朝食に最高だよ。"
+//   },
+//   {
+//     "uid": 8,
+//     "chinese": "我能買包薯片和一些水果嗎，兄弟？沒問題。",
+//     "english": "Can I grab a pack of chips and some fruit, mate? No worries.",
+//     "japanese": "チップスと果物を買ってもいいですか、メイト？大丈夫です。"
+//   },
+//   {
+//     "uid": 14,
+//     "chinese": "嗨！我想要兩晚的雙人房，請問可以嗎？",
+//     "english": "G'day! Could I get a double room for two nights, please?",
+//     "japanese": "こんにちは！2泊のダブルルームをお願いできますか？"
+//   }
+// ])
 const userInputs = ref({})
 const isGenerating = ref(false)
 const isChecking = ref(false)
@@ -183,6 +230,39 @@ const handleConfirm = async () => {
       },
     }
   )
+}
+
+const newWord = ref("")
+const isSavingWord = ref(false)
+const generatedSentence = ref("")
+
+const saveWord = async () => {
+  if (!newWord.value.trim()) {
+    useToastStore().showToast("請輸入單字", "error")
+    return
+  }
+
+  try {
+    isSavingWord.value = true
+
+    const response = await apiStore.post("/api/v1/language/word", {
+      term: newWord.value
+    })
+
+    if (response?.status || response?.code !== 0) {
+      useToastStore().showToast(response?.message || "儲存失敗", "error")
+      return
+    }
+
+    generatedSentence.value = response.data?.generatedSentence || ""
+
+    useToastStore().showToast("儲存成功", "success")
+    newWord.value = ""
+  } catch (err) {
+    useToastStore().showToast(err?.message || "儲存失敗", "error")
+  } finally {
+    isSavingWord.value = false
+  }
 }
 </script>
 
