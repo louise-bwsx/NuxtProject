@@ -134,15 +134,14 @@ const speak = async () => {
 const fetchHistory = async () => {
   if (!userId.value) return
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/api/v1/tts/history/${userId.value}`
-    )
-    if (!res.ok) {
+
+    const response = await useApiStore().get(`/api/v1/tts/history/${userId.value}`)
+    if (response.code != 0) {
       useToastStore().showToast(`取得所有音檔失敗`, "error")
       return
     }
 
-    history.value = await res.json()
+    history.value = response.data
   } catch (err) {
     return
   }
@@ -150,7 +149,6 @@ const fetchHistory = async () => {
 
 onMounted(() => {
   userId.value = useAuthStore().getUserInfo.id
-  console.log(userId.value)
   fetchHistory()
 })
 </script>
