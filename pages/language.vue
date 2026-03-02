@@ -50,11 +50,17 @@
 
     <!-- 句子列表 -->
     <template v-if="sentences.length">
-      <div v-for="sentence in sentences" :key="sentence.uid" class="card bg-base-100 shadow">
+      <div v-for="sentence in sentences" :key="sentence.uid" class="card bg-[#191E24] shadow">
         <div class="card-body p-4 gap-2">
           <div class="flex gap-1 items-center">
-            <span class="badge badge-ghost badge-sm text-nowrap">{{ hintLabel }}</span>
             <p class="text-sm">{{ sentence[hintField] }}</p>
+            <button @click="blockSentence(sentence.uid)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 640 640"
+                class="fill-current text-white">
+                <path fill="rgb(255, 255, 255)"
+                  d="M431.2 476.5L163.5 208.8C141.1 240.2 128 278.6 128 320C128 426 214 512 320 512C361.5 512 399.9 498.9 431.2 476.5zM476.5 431.2C498.9 399.8 512 361.4 512 320C512 214 426 128 320 128C278.5 128 240.1 141.1 208.8 163.5L476.5 431.2zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z" />
+              </svg>
+            </button>
           </div>
           <textarea v-model="userInputs[sentence.uid]" class="textarea textarea-bordered w-full resize-none text-sm"
             rows="2" :placeholder="`輸入${languageOptions.find((o) => o.value === selectedLanguage)?.label}...`" />
@@ -262,6 +268,30 @@ const saveWord = async () => {
     useToastStore().showToast(err?.message || "儲存失敗", "error")
   } finally {
     isSavingWord.value = false
+  }
+}
+
+const blockSentence = async (uid) => {
+  try {
+    const response = await apiStore.post("/api/v1/language/sentence", {
+      uid: uid
+    })
+
+    if (response?.status || response?.code !== 0) {
+      useToastStore().showToast(response?.message || "儲存失敗", "error")
+      return
+    }
+
+    switch (response.data.status) {
+      case `isBlock`:
+        useToastStore().showToast("儲存成功 這個句子不會再出現", "success")
+        break;
+      case `isAllow`:
+        useToastStore().showToast("儲存成功 這個句子將會隨機出現", "success")
+        break;
+    }
+  } catch (err) {
+    useToastStore().showToast(err?.message || "儲存失敗", "error")
   }
 }
 </script>
