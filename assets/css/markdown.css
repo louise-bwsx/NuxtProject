@@ -112,7 +112,7 @@
 
 /* 表格樣式 */
 .markdown-content :deep(table) {
-  display: block;
+  /* 20260303 為了讓table的border閉合移除display: block; */
   max-width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
@@ -131,15 +131,16 @@
   white-space: nowrap;
 }
 
-.markdown-content :deep(th:last-child) {
-  border-right: none;
-}
 
 .markdown-content :deep(td) {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e5e7eb;
   border-right: 1px solid #e5e7eb;
   white-space: nowrap;
+}
+
+.markdown-content :deep(th:last-child) {
+  border-right: none;
 }
 
 .markdown-content :deep(td:last-child) {
