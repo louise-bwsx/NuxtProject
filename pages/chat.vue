@@ -248,17 +248,22 @@
       <!-- 輸入區域 -->
       <div class="w-full bg-base-100 border-t border-base-300 p-4">
         <div class="flex items-center space-x-2 max-w-4xl mx-auto">
-          <div class="dropdown dropdown-hover dropdown-top">
-            <div tabindex="0" role="button" class="btn m-1">{{ aiChat.model }}</div>
-            <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-150 w-52 p-2 shadow-sm">
-              <li><a @click="aiChat.model = `gemma3:4b`">gemma3:4b</a></li>
-              <li><a @click="aiChat.model = `gpt-oss:20b`">gpt-oss:20b</a></li>
-            </ul>
-          </div>
-          <div class="flex items-center min-h-[40px] flex-1">
+          <div class="flex items-center min-h-[40px] flex-1 relative">
             <el-input type="textarea" v-model="aiChat.input" placeholder="輸入訊息... (Shift+Enter 換行)"
               class="w-full gumroad-input" :autosize="{ minRows: 1, maxRows: 12 }"
               @keydown.enter="aiChat.sendMessage" />
+
+            <div class="absolute right-2 dropdown dropdown-hover dropdown-top">
+              <!-- 20260303 限制最大寬度 因為input p-r-[100px] 靠左對齊 如果超出範圍出現捲軸 -->
+              <div tabindex="0" role="button"
+                class="btn p-[2px] w-[90px] flex justify-start overflow-x-auto truncate text-left">
+                {{ aiChat.model }}
+              </div>
+              <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-150 flex-1 shadow-sm">
+                <li><a class="text-nowrap" @click="aiChat.model = `gemma3:4b`">gemma3:4b</a></li>
+                <li><a class="text-nowrap" @click="aiChat.model = `gpt-oss:20b`">gpt-oss:20b</a></li>
+              </ul>
+            </div>
           </div>
 
           <button @click="aiChat.sendMessage"
@@ -407,6 +412,7 @@ onUnmounted(() => {
   padding: 0.75rem;
   transition: all 0.2s;
   box-shadow: none;
+  padding-right: 100px !important;
 }
 
 :deep(.gumroad-input .el-textarea__inner:focus) {
