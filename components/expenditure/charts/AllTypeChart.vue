@@ -29,7 +29,6 @@
         <!-- 統計資訊 -->
         <div class="flex justify-between text-xs">
           <span>顯示項目: {{ filteredData.length }}</span>
-          <span>總項目: {{ totalItems }}</span>
           <span v-if="loading" class="text-blue-400">載入中...</span>
         </div>
       </div>
@@ -89,11 +88,6 @@ let chartInstance = null
 const filteredData = computed(() => {
   if (!costDetails.value.data?.types) return []
   return costDetails.value.data.types
-})
-
-// 總項目數
-const totalItems = computed(() => {
-  return costDetails.value.data?.types?.length || 0
 })
 
 // 計算總數
