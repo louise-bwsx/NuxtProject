@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col flex-1 p-4 gap-4">
-
     <div class="form-control">
       <label class="label">
         <span class="label-text text-sm font-medium">儲存單字</span>
@@ -12,6 +11,21 @@
           儲存
         </button>
       </div>
+    </div>
+
+    <!-- 單字列表 -->
+    <div v-if="vocabularyList.length" class="flex flex-wrap gap-2">
+      <button v-for="item in vocabularyList" :key="item.uid"
+        class="badge badge-outline gap-1 cursor-pointer transition-colors hover:bg-red-500/20 hover:border-red-400 hover:text-red-400"
+        :disabled="deletingUids.has(item.uid)" @click="deleteWord(item.uid)">
+        <span v-if="deletingUids.has(item.uid)" class="loading loading-spinner loading-xs" />
+        {{ item.term }}
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
     </div>
 
     <!-- 語言選擇 -->
@@ -33,7 +47,6 @@
         <label class="label">
           <span class="label-text text-sm font-medium">模型</span>
         </label>
-
         <!-- 用select 取代 daisy dropdown因為選項會超出螢幕 出現橫向捲軸 -->
         <select v-model="aiChat.model" class="select select-bordered w-full">
           <option>gemma3:4b</option>
@@ -95,51 +108,18 @@ const aiChat = useAIChatStore()
 
 const selectedLanguage = ref("en")
 const sentences = ref([])
-// 測試用資料
-// const sentences = ref([
-//   {
-//     "uid": 46,
-//     "chinese": "老兄，沒問題，記得申報你帶的膠條，保證海關檢查順利。",
-//     "english": "Mate, no worries, just declare your gum for a smooth check.",
-//     "japanese": "メイト、心配ないよ。ガムを申告すれば、スムーズにチェックが通るよ。"
-//   },
-//   {
-//     "uid": 5,
-//     "chinese": "我覺得這個泳池的設施一流，夥伴。",
-//     "english": "I reckon the pool's facilities are top-notch, mate.",
-//     "japanese": "このプールの施設は最高だと思うよ、相棒。"
-//   },
-//   {
-//     "uid": 7,
-//     "chinese": "夥伴，我覺得搭配咖啡的酪梨吐司是早餐超棒的選擇。",
-//     "english": "Mate, the avo toast with espresso is bonza for breakfast.",
-//     "japanese": "メイト、エスプレッソと一緒のアボカドトーストは朝食に最高だよ。"
-//   },
-//   {
-//     "uid": 8,
-//     "chinese": "我能買包薯片和一些水果嗎，兄弟？沒問題。",
-//     "english": "Can I grab a pack of chips and some fruit, mate? No worries.",
-//     "japanese": "チップスと果物を買ってもいいですか、メイト？大丈夫です。"
-//   },
-//   {
-//     "uid": 14,
-//     "chinese": "嗨！我想要兩晚的雙人房，請問可以嗎？",
-//     "english": "G'day! Could I get a double room for two nights, please?",
-//     "japanese": "こんにちは！2泊のダブルルームをお願いできますか？"
-//   }
-// ])
 const userInputs = ref({})
 const isGenerating = ref(false)
 const isChecking = ref(false)
 const explanation = ref("")
 const isExplaining = ref(false)
 
+// 單字列表
+const vocabularyList = ref([])
+const deletingUids = ref(new Set())
+
 // 配置 markdown-it
-const md = new MarkdownIt({
-  html: true,
-  linkify: true,
-  typographer: true
-})
+const md = new MarkdownIt({ html: true, linkify: true, typographer: true })
 
 // 計算渲染後的 HTML
 const renderedContent = computed(() => {
@@ -168,10 +148,36 @@ const hintLabel = computed(() =>
 )
 
 const normalize = (str) =>
-  str
-    .toLowerCase()
-    .replace(/[\s\p{P}\p{S}]/gu, "")
+  str.toLowerCase().replace(/[\s\p{P}\p{S}]/gu, "")
 
+// ===== 單字列表 =====
+const fetchVocabulary = async () => {
+  const response = await apiStore.get("/api/v1/language/word")
+  if (response?.code !== 0) return
+  vocabularyList.value = response.data ?? []
+}
+
+const deleteWord = async (uid) => {
+  if (deletingUids.value.has(uid)) return
+  deletingUids.value = new Set([...deletingUids.value, uid])
+
+  try {
+    const response = await apiStore.delete(`/api/v1/language/word/${uid}`)
+    if (response?.code !== 0) {
+      useToastStore().showToast(response?.message || "刪除失敗", "error")
+      return
+    }
+    vocabularyList.value = vocabularyList.value.filter((item) => item.uid !== uid)
+  } catch (err) {
+    useToastStore().showToast(err?.message || "刪除失敗", "error")
+  } finally {
+    const next = new Set(deletingUids.value)
+    next.delete(uid)
+    deletingUids.value = next
+  }
+}
+
+// ===== 生成 =====
 const handleGenerate = async () => {
   isGenerating.value = true
   explanation.value = ""
@@ -193,6 +199,7 @@ const handleGenerate = async () => {
   })
 }
 
+// ===== 確認 =====
 const handleConfirm = async () => {
   if (!sentences.value.length) {
     useToastStore().showToast("請先生成資料", "error")
@@ -219,25 +226,19 @@ const handleConfirm = async () => {
 
   await apiStore.postStream(
     `/api/v1/language/explain`,
+    { answers: wrongAnswers, model: aiChat.model },
     {
-      answers: wrongAnswers,
-      model: aiChat.model
-    },
-    {
-      onMessage: (content) => {
-        explanation.value += content
-      },
+      onMessage: (content) => { explanation.value += content },
       onError: (err) => {
         useToastStore().showToast(err?.message || "解釋失敗", "error")
         isExplaining.value = false
       },
-      onDone: () => {
-        isExplaining.value = false
-      },
+      onDone: () => { isExplaining.value = false },
     }
   )
 }
 
+// ===== 儲存單字 =====
 const newWord = ref("")
 const isSavingWord = ref(false)
 const generatedSentence = ref("")
@@ -261,7 +262,8 @@ const saveWord = async () => {
     }
 
     generatedSentence.value = response.data?.generatedSentence || ""
-
+    // 儲存成功後直接插入列表最前面，不需重新 fetch
+    vocabularyList.value.unshift(response.data)
     useToastStore().showToast("儲存成功", "success")
     newWord.value = ""
   } catch (err) {
@@ -271,11 +273,10 @@ const saveWord = async () => {
   }
 }
 
+// ===== 封鎖句子 =====
 const blockSentence = async (uid) => {
   try {
-    const response = await apiStore.post("/api/v1/language/sentence", {
-      uid: uid
-    })
+    const response = await apiStore.post("/api/v1/language/sentence", { uid })
 
     if (response?.status || response?.code !== 0) {
       useToastStore().showToast(response?.message || "儲存失敗", "error")
@@ -285,15 +286,20 @@ const blockSentence = async (uid) => {
     switch (response.data.status) {
       case `isBlock`:
         useToastStore().showToast("儲存成功 這個句子不會再出現", "success")
-        break;
+        break
       case `isAllow`:
         useToastStore().showToast("儲存成功 這個句子將會隨機出現", "success")
-        break;
+        break
     }
   } catch (err) {
     useToastStore().showToast(err?.message || "儲存失敗", "error")
   }
 }
+
+// 頁面掛載時載入單字列表
+onMounted(() => {
+  fetchVocabulary()
+})
 </script>
 
 <style scoped>
