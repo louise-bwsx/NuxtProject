@@ -87,6 +87,8 @@ export const useApiStore = defineStore("api", () => {
               // 1. 處理內容更新
               if (data.content && onMessage) {
                 onMessage(data.content)
+                // 20260329 為了讓language解釋時 能夠一個字一個字出來
+                await new Promise((resolve) => setTimeout(resolve, 0)) // 讓 Vue 有機會更新 DOM
               }
 
               // 2. 根據後端給的標記決定結束，而不是根據 reader.read()
