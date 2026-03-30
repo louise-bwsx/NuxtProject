@@ -63,20 +63,36 @@
 
     <!-- 句子列表 -->
     <template v-if="sentences.length">
-      <div v-for="sentence in sentences" :key="sentence.uid" class="card bg-[#191E24] shadow">
-        <div class="card-body p-4 gap-2">
-          <div class="flex gap-1 items-center">
+      <div v-for="sentence in sentences" :key="sentence.uid" class="flex flex-col gap-2">
+        <!-- 句子卡片 -->
+        <div class="card bg-[#191E24] shadow">
+          <div class="card-body p-4 gap-2">
+            <!-- uid + block 按鈕 -->
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-base-content/40 font-mono">#{{ sentence.uid }}</span>
+              <button @click="blockSentence(sentence.uid)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 640 640"
+                  class="fill-current text-white">
+                  <path fill="rgb(255, 255, 255)"
+                    d="M431.2 476.5L163.5 208.8C141.1 240.2 128 278.6 128 320C128 426 214 512 320 512C361.5 512 399.9 498.9 431.2 476.5zM476.5 431.2C498.9 399.8 512 361.4 512 320C512 214 426 128 320 128C278.5 128 240.1 141.1 208.8 163.5L476.5 431.2zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z" />
+                </svg>
+              </button>
+            </div>
             <p class="text-sm">{{ sentence[hintField] }}</p>
-            <button @click="blockSentence(sentence.uid)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 640 640"
-                class="fill-current text-white">
-                <path fill="rgb(255, 255, 255)"
-                  d="M431.2 476.5L163.5 208.8C141.1 240.2 128 278.6 128 320C128 426 214 512 320 512C361.5 512 399.9 498.9 431.2 476.5zM476.5 431.2C498.9 399.8 512 361.4 512 320C512 214 426 128 320 128C278.5 128 240.1 141.1 208.8 163.5L476.5 431.2zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z" />
-              </svg>
-            </button>
+            <textarea v-model="userInputs[sentence.uid]" class="textarea textarea-bordered w-full resize-none text-sm"
+              rows="2" :placeholder="`輸入${languageOptions.find((o) => o.value === selectedLanguage)?.label}...`" />
           </div>
-          <textarea v-model="userInputs[sentence.uid]" class="textarea textarea-bordered w-full resize-none text-sm"
-            rows="2" :placeholder="`輸入${languageOptions.find((o) => o.value === selectedLanguage)?.label}...`" />
+        </div>
+
+        <!-- 該題的解釋區塊 -->
+        <div v-if="explanations[sentence.uid] || explaningUids.has(sentence.uid)" class="card bg-base-100 shadow">
+          <div class="card-body p-4 gap-2">
+            <h3 class="font-medium text-sm">錯誤解析</h3>
+            <div class="text-sm markdown-content text-base-content/80"
+              v-html="renderMarkdown(explanations[sentence.uid] ?? '')" />
+            <span v-if="explaningUids.has(sentence.uid)"
+              class="inline-block w-2 h-4 bg-base-content/50 animate-pulse ml-0.5" />
+          </div>
         </div>
       </div>
 
@@ -86,15 +102,6 @@
         {{ isExplaining ? "分析中..." : "確認" }}
       </button>
     </template>
-
-    <!-- 解釋區塊 -->
-    <div v-if="explanation || isExplaining" class="card bg-base-100 shadow">
-      <div class="card-body p-4 gap-2">
-        <h3 class="font-medium text-sm">錯誤解析</h3>
-        <div class="text-sm markdown-content text-base-content/80" v-html="renderedContent" />
-        <span v-if="isExplaining" class="inline-block w-2 h-4 bg-base-content/50 animate-pulse ml-0.5" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -111,8 +118,11 @@ const sentences = ref([])
 const userInputs = ref({})
 const isGenerating = ref(false)
 const isChecking = ref(false)
-const explanation = ref("")
 const isExplaining = ref(false)
+
+// 每題獨立的解釋內容與載入狀態
+const explanations = ref({})    // { [uid]: string }
+const explaningUids = ref(new Set()) // 正在串流中的 uid
 
 // 單字列表
 const vocabularyList = ref([])
@@ -122,14 +132,11 @@ const deletingUids = ref(new Set())
 const md = new MarkdownIt({ html: true, linkify: true, typographer: true })
 
 // 計算渲染後的 HTML
-const renderedContent = computed(() => {
-  return explanation.value ? md.render(explanation.value) : ''
-})
+const renderMarkdown = (content) => content ? md.render(content) : ''
 
 const languageOptions = [
   { label: "中文", value: "zh" },
   { label: "英文", value: "en" },
-  { label: "日文", value: "ja" },
 ]
 
 const fieldMap = {
@@ -141,10 +148,6 @@ const fieldMap = {
 // 提示語言：選中文時顯示英文，其他顯示中文
 const hintField = computed(() =>
   selectedLanguage.value === "zh" ? "english" : "chinese"
-)
-
-const hintLabel = computed(() =>
-  selectedLanguage.value === "zh" ? "英文" : "中文"
 )
 
 const normalize = (str) =>
@@ -180,7 +183,8 @@ const deleteWord = async (uid) => {
 // ===== 生成 =====
 const handleGenerate = async () => {
   isGenerating.value = true
-  explanation.value = ""
+  explanations.value = {}
+  explaningUids.value = new Set()
   userInputs.value = {}
 
   const response = await apiStore.post(`/api/v1/language/question`, {
@@ -199,7 +203,7 @@ const handleGenerate = async () => {
   })
 }
 
-// ===== 確認 =====
+// ===== 確認：對每一題錯誤各自發一次串流請求 =====
 const handleConfirm = async () => {
   if (!sentences.value.length) {
     useToastStore().showToast("請先生成資料", "error")
@@ -208,32 +212,46 @@ const handleConfirm = async () => {
 
   const targetField = fieldMap[selectedLanguage.value]
 
-  const wrongAnswers = sentences.value
-    .filter(
-      (s) =>
-        normalize(userInputs.value[s.uid] ?? "") !==
-        normalize(s[targetField] ?? "")
-    )
-    .map((s) => ({
-      uid: s.uid,
-      answer: userInputs.value[s.uid] ?? "",
-    }))
+  const wrongAnswers = sentences.value.filter(
+    (s) =>
+      normalize(userInputs.value[s.uid] ?? "") !==
+      normalize(s[targetField] ?? "")
+  )
 
   if (!wrongAnswers.length) return
 
   isExplaining.value = true
-  explanation.value = ""
+
+  // 每題平行發送，各自寫入自己的 explanations[uid]
+  await Promise.all(
+    wrongAnswers.map((s) => explainSingle(s.uid, userInputs.value[s.uid] ?? ""))
+  )
+
+  isExplaining.value = false
+}
+
+const explainSingle = async (uid, answer) => {
+  explanations.value[uid] = ""
+  explaningUids.value = new Set([...explaningUids.value, uid])
 
   await apiStore.postStream(
     `/api/v1/language/explain`,
-    { answers: wrongAnswers, model: aiChat.model },
+    { answers: [{ uid, answer }], model: aiChat.model },
     {
-      onMessage: (content) => { explanation.value += content },
+      onMessage: (content) => {
+        explanations.value[uid] = (explanations.value[uid] ?? "") + content
+      },
       onError: (err) => {
         useToastStore().showToast(err?.message || "解釋失敗", "error")
-        isExplaining.value = false
+        const next = new Set(explaningUids.value)
+        next.delete(uid)
+        explaningUids.value = next
       },
-      onDone: () => { isExplaining.value = false },
+      onDone: () => {
+        const next = new Set(explaningUids.value)
+        next.delete(uid)
+        explaningUids.value = next
+      },
     }
   )
 }
@@ -251,10 +269,7 @@ const saveWord = async () => {
 
   try {
     isSavingWord.value = true
-
-    const response = await apiStore.post("/api/v1/language/word", {
-      term: newWord.value
-    })
+    const response = await apiStore.post("/api/v1/language/word", { term: newWord.value })
 
     if (response?.status || response?.code !== 0) {
       useToastStore().showToast(response?.message || "儲存失敗", "error")
