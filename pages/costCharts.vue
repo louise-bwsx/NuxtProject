@@ -13,12 +13,15 @@
 </template>
 
 <script setup>
-import CostDistribution from '~/components/expenditure/charts/CostDistribution.vue';
-import YearCostChart from '~/components/expenditure/charts/YearCostChart.vue';
-import MonthCostChart from '~/components/expenditure/charts/MonthCostChart.vue';
-import AllCostChart from '~/components/expenditure/charts/AllCostChart.vue';
-import AllCostSumChart from '~/components/expenditure/charts/AllCostSumChart.vue';
-import AllTypeChart from '~/components/expenditure/charts/AllTypeChart.vue';
+// 20260331 為了優化打包大小 全部改成動態import 讓每個元件獨立chunk 不再塞進同一包
+// 全部改成動態 import，讓每個元件獨立 chunk，不再塞進同一包
+const CostDistribution = defineAsyncComponent(() => import('~/components/expenditure/charts/CostDistribution.vue'))
+const YearCostChart = defineAsyncComponent(() => import('~/components/expenditure/charts/YearCostChart.vue'))
+const MonthCostChart = defineAsyncComponent(() => import('~/components/expenditure/charts/MonthCostChart.vue'))
+const AllCostChart = defineAsyncComponent(() => import('~/components/expenditure/charts/AllCostChart.vue'))
+const AllCostSumChart = defineAsyncComponent(() => import('~/components/expenditure/charts/AllCostSumChart.vue'))
+const AllTypeChart = defineAsyncComponent(() => import('~/components/expenditure/charts/AllTypeChart.vue'))
+
 
 usePageSeo({
   title: '開銷圖表',

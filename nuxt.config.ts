@@ -15,6 +15,20 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css", "~/assets/css/elementPlus.css"],
   vite: {
+    build: {
+      // 20260331 告訴bundler 把echarts相關城市集中輸出成同一個.js 避免重複打包
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'echarts': ['echarts'],
+          }
+        }
+      },
+      // 20260331 關閉deploy時的sourcemap警告 sourcemap只是
+      // 是一個記錄「打包後的程式碼」對應到「原始程式碼」哪一行的對照表，副檔名通常是 .map。
+      // production 因為壓縮及安全的原因不應該開啟
+      sourcemap: false
+    },
     plugins: [tailwindcss()],
   },
   modules: [
