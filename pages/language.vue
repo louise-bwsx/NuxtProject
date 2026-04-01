@@ -15,7 +15,7 @@
 
     <!-- 單字列表 -->
     <div v-if="vocabularyList.length" class="flex flex-wrap gap-2">
-      <button v-for="item in vocabularyList" :key="item.uid"
+      <button v-for="item in vocabularyList" :key="item"
         class="badge badge-outline gap-1 cursor-pointer transition-colors hover:bg-red-500/20 hover:border-red-400 hover:text-red-400"
         :disabled="deletingUids.has(item.uid)" @click="deleteWord(item.uid)">
         <span v-if="deletingUids.has(item.uid)" class="loading loading-spinner loading-xs" />
@@ -270,15 +270,18 @@ const saveWord = async () => {
   try {
     isSavingWord.value = true
     const response = await apiStore.post("/api/v1/language/word", { term: newWord.value })
+    console.log("response:", JSON.stringify(response)) // 加這行
 
-    if (response?.status || response?.code !== 0) {
+    // 修正：code !== 0 才是失敗
+    if (response?.code !== 0) {
       useToastStore().showToast(response?.message || "儲存失敗", "error")
       return
     }
 
-    generatedSentence.value = response.data?.generatedSentence || ""
-    // 儲存成功後直接插入列表最前面，不需重新 fetch
-    vocabularyList.value.unshift(response.data)
+    // 修正：確認 data 存在才 unshift
+    if (response.data) {
+      vocabularyList.value.unshift(response.data)
+    }
     useToastStore().showToast("儲存成功", "success")
     newWord.value = ""
   } catch (err) {
