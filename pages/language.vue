@@ -31,7 +31,7 @@
     <!-- 語言選擇 -->
     <div class="flex items-end space-x-2">
       <!-- 左邊 -->
-      <div class="form-control w-full">
+      <!-- <div class="form-control w-full">
         <label class="label">
           <span class="label-text text-sm font-medium">練習語言</span>
         </label>
@@ -40,7 +40,7 @@
             {{ option.label }}
           </option>
         </select>
-      </div>
+      </div> -->
 
       <!-- 右邊 -->
       <div class="form-control w-full">
@@ -99,7 +99,7 @@
       <!-- 確認按鈕 -->
       <button class="btn btn-success w-full" :disabled="isExplaining || isChecking" @click="handleConfirm">
         <span v-if="isExplaining" class="loading loading-spinner loading-sm" />
-        {{ isExplaining ? "分析中..." : "確認" }}
+        {{ isExplaining ? "分析中..." : "開始分析" }}
       </button>
     </template>
   </div>
