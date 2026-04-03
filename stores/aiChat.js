@@ -16,7 +16,7 @@ export const useAIChatStore = defineStore(`aiChat`, () => {
   const isLoading = ref(false)
   const groupId = ref(0)
   const title = ref(``)
-  const model = ref(`qwen2.5:72b`)
+  const model = ref(`qwen2.5:32b`)
   const parentId = ref(0)
   const isOnline = ref(false)
   const isIncognito = ref(false)
