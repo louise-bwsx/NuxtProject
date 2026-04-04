@@ -6,10 +6,19 @@
       </label>
       <div class="flex gap-2">
         <input v-model="newWord" type="text" class="input input-bordered w-full" placeholder="輸入單字" />
-        <button class="btn btn-primary" :disabled="isSavingWord" @click="saveWord">
+        <button class="btn btn-primary" :disabled="isSavingWord || !newWord.trim()" @click="saveWord">
           <span v-if="isSavingWord" class="loading loading-spinner loading-sm" />
           儲存
         </button>
+      </div>
+
+      <div v-if="isTranslating || translatedText" class="mt-2 text-sm pl-1">
+        <span v-if="isTranslating" class="text-base-content/60 flex items-center gap-2">
+          <span class="loading loading-dots loading-xs"></span> 翻譯中...
+        </span>
+        <span v-else class="text-success font-medium">
+          翻譯結果：{{ translatedText }}
+        </span>
       </div>
     </div>
 
@@ -30,18 +39,72 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useApiStore } from "~/stores/api"
 import { useToastStore } from "~/stores/toast"
 
 const apiStore = useApiStore()
 const toastStore = useToastStore()
 
+// 狀態變數
 const newWord = ref("")
 const isSavingWord = ref(false)
 const vocabularyList = ref([])
 const deletingUids = ref(new Set())
 
+// 翻譯相關變數
+let debounceTimer = null
+const lastCheckedWord = ref("") // 紀錄上一次檢查的單字
+const translatedText = ref("")  // 儲存翻譯結果
+const isTranslating = ref(false)
+
+// 監聽輸入，實作 Debounce (防抖) 邏輯
+watch(newWord, (newValue) => {
+  // 清除上一次的計時器
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
+  }
+
+  // 如果輸入框被清空，重置狀態並提早離開
+  const trimmedValue = newValue.trim()
+  if (!trimmedValue) {
+    translatedText.value = ""
+    lastCheckedWord.value = ""
+    return
+  }
+
+  // 設定一秒 (1000ms) 後執行檢查
+  debounceTimer = setTimeout(async () => {
+    // 檢查和上一次翻譯的字是否不同
+    if (trimmedValue !== lastCheckedWord.value) {
+      lastCheckedWord.value = trimmedValue
+      await translateWord(trimmedValue)
+    }
+  }, 1000)
+})
+
+// 呼叫翻譯 API
+const translateWord = async (text) => {
+  isTranslating.value = true
+  translatedText.value = ""
+
+  try {
+    const response = await apiStore.post("/api/v1/language/translate", { term: text })
+
+    if (response?.code === 0 && response?.data) {
+      translatedText.value = response.data.translation
+    } else {
+      translatedText.value = "翻譯失敗"
+    }
+  } catch (err) {
+    console.error("Translate error:", err)
+    translatedText.value = "翻譯失敗"
+  } finally {
+    isTranslating.value = false
+  }
+}
+
+// ===== 以下為原本的 CRUD 邏輯 =====
 const fetchVocabulary = async () => {
   const response = await apiStore.get("/api/v1/language/word")
   if (response?.code !== 0) return
@@ -49,14 +112,14 @@ const fetchVocabulary = async () => {
 }
 
 const saveWord = async () => {
-  if (!newWord.value.trim()) {
-    toastStore.showToast("請輸入單字", "error")
-    return
-  }
+  if (!newWord.value.trim()) return
 
   try {
     isSavingWord.value = true
-    const response = await apiStore.post("/api/v1/language/word", { term: newWord.value })
+    const payload = {
+      term: newWord.value,
+    }
+    const response = await apiStore.post("/api/v1/language/word", payload)
 
     if (response?.code !== 0) {
       toastStore.showToast(response?.message || "儲存失敗", "error")
@@ -67,7 +130,11 @@ const saveWord = async () => {
       vocabularyList.value.unshift(response.data)
     }
     toastStore.showToast("儲存成功", "success")
+
+    // 儲存成功後清空狀態
     newWord.value = ""
+    translatedText.value = ""
+    lastCheckedWord.value = ""
   } catch (err) {
     toastStore.showToast(err?.message || "儲存失敗", "error")
   } finally {
