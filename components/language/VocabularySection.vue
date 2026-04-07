@@ -137,7 +137,7 @@ const apiStore = useApiStore()
 const toastStore = useToastStore()
 
 // 清單 UI 狀態
-const isListOpen = ref(true)
+const isListOpen = ref(false)
 const searchWord = ref('')
 const listMaxHeight = 320
 
