@@ -38,7 +38,7 @@
       <SentenceCard v-for="sentence in sentences" :key="sentence.uid" :sentence="sentence"
         v-model="userInputs[sentence.uid]" :explanation="explanations[sentence.uid]"
         :is-explaining="explaningUids.has(sentence.uid)" :hint-field="hintField" :language-label="languageLabel"
-        @block="blockSentence" />
+        @block="blockSentence" @check="handleCheck" />
 
       <!-- 確認按鈕 -->
       <button class="btn btn-success w-full" :disabled="isExplaining || isChecking" @click="handleConfirm">
@@ -143,6 +143,35 @@ const explainSingle = async (uid, answer) => {
       },
       onError: (err) => {
         toastStore.showToast(err?.message || "解釋失敗", "error")
+        const next = new Set(explaningUids.value)
+        next.delete(uid)
+        explaningUids.value = next
+      },
+      onDone: () => {
+        const next = new Set(explaningUids.value)
+        next.delete(uid)
+        explaningUids.value = next
+      },
+    }
+  )
+}
+
+// ===== 單題 AI 提示（不公布答案）=====
+const handleCheck = async ({ uid, original, userInput, languageLabel }) => {
+  if (explaningUids.value.has(uid)) return
+
+  explanations.value[uid] = ""
+  explaningUids.value = new Set([...explaningUids.value, uid])
+
+  await apiStore.postStream(
+    `/api/v1/language/hint`,
+    { uid, original, userInput, languageLabel, model: aiChat.model },
+    {
+      onMessage: (content) => {
+        explanations.value[uid] = (explanations.value[uid] ?? "") + content
+      },
+      onError: (err) => {
+        toastStore.showToast(err?.message || "提示失敗", "error")
         const next = new Set(explaningUids.value)
         next.delete(uid)
         explaningUids.value = next

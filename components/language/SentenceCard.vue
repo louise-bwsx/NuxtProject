@@ -13,10 +13,31 @@
             </svg>
           </button>
         </div>
+
         <p class="text-sm">{{ sentence[hintField] }}</p>
+
         <textarea :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"
           class="textarea textarea-bordered w-full resize-none text-sm" rows="2"
           :placeholder="`輸入${languageLabel}...`" />
+
+        <!-- AI 提示按鈕 -->
+        <div class="flex justify-end mt-1">
+          <button class="btn btn-xs btn-outline gap-1" :class="isExplaining ? 'btn-disabled' : 'btn-info'"
+            :disabled="isExplaining || !modelValue.trim()" @click="handleCheck" title="讓 AI 提示哪裡錯了（不公布答案）">
+            <svg v-if="isExplaining" class="animate-spin w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ isExplaining ? '分析中...' : 'AI 提示' }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -44,13 +65,22 @@ const props = defineProps({
   languageLabel: { type: String, default: "" }
 })
 
-defineEmits(['update:modelValue', 'block'])
+const emit = defineEmits(['update:modelValue', 'block', 'check'])
 
-// 配置 markdown-it
 const md = new MarkdownIt({ html: true, linkify: true, typographer: true })
 
-// 計算渲染後的 HTML
 const renderedExplanation = computed(() => props.explanation ? md.render(props.explanation) : '')
+
+function handleCheck() {
+  if (!props.modelValue.trim() || props.isExplaining) return
+  // 把原題內容、使用者的作答、語言標籤一起傳給父層
+  emit('check', {
+    uid: props.sentence.uid,
+    original: props.sentence[props.hintField],
+    userInput: props.modelValue,
+    languageLabel: props.languageLabel,
+  })
+}
 </script>
 
 <style scoped>
