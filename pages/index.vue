@@ -39,6 +39,11 @@
     <NuxtLink to="/cropper" class="btn btn-primary">
       cropper圖片修改工具
     </NuxtLink>
+
+
+    <NuxtLink to="/ttsDemo" class="btn btn-primary">
+      TTSDemo
+    </NuxtLink>
   </div>
 </template>
 

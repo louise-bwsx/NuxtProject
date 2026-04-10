@@ -108,15 +108,15 @@
       </svg>
     </NuxtLink>
 
-    <NuxtLink to="/ttsDemo" class="flex flex-col justify-center items-center">
-      <!-- ai生成的 -->
+    <!-- ai生成的 -->
+    <!-- <NuxtLink to="/ttsDemo" class="flex flex-col justify-center items-center">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round"
           d="M11.25 5.25L6 9H3.75A.75.75 0 003 9.75v4.5c0 .414.336.75.75.75H6l5.25 3.75V5.25z" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9.75a3 3 0 010 4.5m2.25-6.75a6 6 0 010 9" />
       </svg>
-    </NuxtLink>
+    </NuxtLink> -->
   </div>
 
   <!-- 直接使用dock會導致內容裁切 -->
