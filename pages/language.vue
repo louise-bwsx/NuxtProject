@@ -60,6 +60,13 @@ const apiStore = useApiStore()
 const toastStore = useToastStore()
 const aiChat = useAIChatStore()
 
+usePageSeo({
+  title: '英語練習',
+  description: '透過 Louise 練習英語閱讀、聽力與詞彙，提升你的語文能力',
+  url: 'https://www.louise.tw/language'
+})
+
+
 const selectedLanguage = ref("en")
 const sentences = ref([])
 const userInputs = ref({})
