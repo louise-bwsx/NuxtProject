@@ -1,4 +1,4 @@
-// composables/useSeo.ts
+// composables/useSeo.js
 export const usePageSeo = ({ title, description, image, url } = {}) => {
   const config = useRuntimeConfig()
   const baseUrl = config.public.baseUrl || "https://www.louise.tw"
