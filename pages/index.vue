@@ -28,6 +28,10 @@
       AIChat
     </NuxtLink> -->
 
+    <NuxtLink to="/game" class="btn btn-primary">
+      小遊戲作品集
+    </NuxtLink>
+
     <NuxtLink to="/TestApp" class="btn btn-primary">
       做到一半放棄的App
     </NuxtLink>

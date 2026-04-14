@@ -59,7 +59,8 @@
         </div>
 
         <!-- 介紹文 -->
-        <div class="text-white text-xl mt-3 space-y-1">
+        <!-- 20260414 取消mt-3 在1080下會導致導覽列被裁切 -->
+        <div class="text-white text-xl space-y-1">
           <p>世間萬物，皆為神靈</p>
           <p class="ml-10">日本神道，八百萬神</p>
           <p>以日本八百萬神為故事原型的ＡＲＰＧ。</p>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-start items-center h-full">
-    <LittleFox class="bbb w-full" />
+    <LittleFox class="w-full" />
 
     <!-- <div v-if="isMobile" class="wrap-break-word whitespace-pre-line">
       哭哭
