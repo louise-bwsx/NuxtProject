@@ -5,8 +5,8 @@
     <button @click="resetSort" class="btn px-4 py-2">清除存檔排序</button>
 
     <div ref="currencyListRef" class="flex-1 overflow-auto">
-      <div v-for="rate in convertedRates" :key="rate.key"
-        class="flex w-full justify-between items-center border-b py-3 relative">
+      <div v-for="rate in convertedRates" :key="rate.key" class="flex w-full justify-between items-center border-b py-3 relative
+         hover:bg-base-300 transition-colors duration-200 cursor-pointer">
         <div class="flex space-x-4 ps-3">
           <!-- 20251101 修正手機無法上下捲動 加上drag-handle -->
           <div class="drag-handle cursor-move flex items-center">
@@ -36,13 +36,9 @@
     </div>
 
     <div class="flex space-x-2">
-      <div class="w-[150px]">
-        <select v-model="selectedCurrency" class="w-full h-full px-1">
-          <option v-for="([code, name]) in Object.entries(currencyCNMap)" :key="code" :value="name">
-            {{ name }}
-          </option>
-        </select>
-      </div>
+      <el-select v-model="selectedCurrency" size="large" style="width: 150px">
+        <el-option v-for="([code, name]) in Object.entries(currencyCNMap)" :key="code" :label="name" :value="name" />
+      </el-select>
 
       <el-input type="number" v-model="amount" placeholder="請輸入金額" clearable size="large" />
     </div>
@@ -209,3 +205,38 @@ onMounted(async () => {
   rates.value = JSON.parse(localStorage.getItem("rates"))
 })
 </script>
+
+<!-- 20260417 .el-select__popper 是掛在 body 底下的 所以不能用 scoped 加上scoped反而會失效 -->
+<style scoped>
+/* 下拉選單本體 */
+.el-select__popper.el-popper {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+}
+
+/* option字體顏色 */
+.el-select__popper .el-select-dropdown__item {
+  color: #f9fafb !important;
+}
+
+/* 下拉箭頭 */
+.el-select__popper .el-popper__arrow::before {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+}
+
+/* 下拉選單 */
+.el-select__wrapper {
+  background-color: #1d232b !important;
+}
+
+/* label的字體顏色 */
+.el-select__placeholder {
+  color: #f9fafb !important;
+}
+
+/* 選擇後的option */
+.el-select-dropdown__item.is-hovering {
+  background-color: #9093996a;
+}
+</style>
