@@ -207,7 +207,7 @@ onMounted(async () => {
 </script>
 
 <!-- 20260417 .el-select__popper 是掛在 body 底下的 所以不能用 scoped 加上scoped反而會失效 -->
-<style scoped>
+<style>
 /* 下拉選單本體 */
 .el-select__popper.el-popper {
   background-color: #1f2937 !important;
