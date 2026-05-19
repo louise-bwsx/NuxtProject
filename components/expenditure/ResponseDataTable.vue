@@ -22,13 +22,21 @@
           <td class="!py-[0px]"><input class="w-[90px] h-[30px]" type="date" v-model="data.costDate.split('T')[0]" />
           </td>
           <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.breakfastCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.breakfastType" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" @mousedown="startPress"
+              @mouseup="cancelPress" @mouseleave="cancelPress" @touchstart="startPress" @touchend="cancelPress"
+              @touchmove="cancelPress" v-model="data.breakfastType" /></td>
           <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.lunchCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.lunchType" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" @mousedown="startPress"
+              @mouseup="cancelPress" @mouseleave="cancelPress" @touchstart="startPress" @touchend="cancelPress"
+              @touchmove="cancelPress" v-model="data.lunchType" /></td>
           <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.dinnerCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.dinnerType" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" @mousedown="startPress"
+              @mouseup="cancelPress" @mouseleave="cancelPress" @touchstart="startPress" @touchend="cancelPress"
+              @touchmove="cancelPress" v-model="data.dinnerType" /></td>
           <td class="!py-[0px]"><input class="w-[50px] h-[30px]" type="number" v-model="data.extraCost" /></td>
-          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" v-model="data.extraType" /></td>
+          <td class="!py-[0px]"><input class="flex-1 h-[30px]" type="text" @mousedown="startPress"
+              @mouseup="cancelPress" @mouseleave="cancelPress" @touchstart="startPress" @touchend="cancelPress"
+              @touchmove="cancelPress" v-model="data.extraType" /></td>
           <td class="!py-[0px] text-nowrap flex justify-center"><button @click="onSaveDay(index)"
               class="btn">儲存</button></td>
         </tr>
@@ -113,4 +121,19 @@ const onSaveDay = async (index) => {
     extraType: costStore.expenditureList[index].extraType,
   })
 };
+
+let pressTimer = null
+
+const startPress = (event) => {
+  pressTimer = setTimeout(async () => {
+    const value = event.target.value
+    if (!value) return
+    await navigator.clipboard.writeText(value)
+    useToastStore().showToast("已複製", "success")
+  }, 500)
+}
+
+const cancelPress = () => {
+  clearTimeout(pressTimer)
+}
 </script>

@@ -1,18 +1,20 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-export const useToastStore = defineStore('toast', () => {
-  const timer = ref(2500);
-  const message = ref(``);
-  const toastType = ref(``);
+export const useToastStore = defineStore("toast", () => {
+  const timer = ref(2500)
+  const toasts = ref([])
 
   // 需要再Template 加上 <Toast/>
-  const showToast = (newMessage, type) => {
-    message.value = newMessage
-    toastType.value = type
-    setTimeout(() => {
-      toastType.value = ''
-    }, timer.value)
+  const showToast = (message, type, duration) => {
+    const id = Date.now()
+    toasts.value.push({ id, message, toastType: type })
+    setTimeout(() => removeToast(id), duration ?? timer.value)
   }
 
-  return { timer, message, toastType, showToast }
+  const removeToast = (id) => {
+    const index = toasts.value.findIndex((t) => t.id === id)
+    if (index !== -1) toasts.value.splice(index, 1)
+  }
+
+  return { timer, toasts, showToast, removeToast }
 })
