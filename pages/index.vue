@@ -32,6 +32,11 @@
       小遊戲作品集
     </NuxtLink>
 
+
+    <NuxtLink to="/dryWall" class="btn btn-primary">
+      裝潢小工具
+    </NuxtLink>
+
     <NuxtLink to="/TestApp" class="btn btn-primary">
       做到一半放棄的App
     </NuxtLink>
@@ -43,7 +48,6 @@
     <NuxtLink to="/cropper" class="btn btn-primary">
       cropper圖片修改工具
     </NuxtLink>
-
 
     <NuxtLink to="/ttsDemo" class="btn btn-primary">
       TTSDemo
