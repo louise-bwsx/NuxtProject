@@ -80,3 +80,5 @@ export const interaction = async (noteId, userId, action) => {
   }
   return response
 }
+
+export const getAllTags = () => useApiStore().get("/api/v1/notes/tag")
