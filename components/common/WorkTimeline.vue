@@ -70,6 +70,11 @@ const pointList = ref([
     end: "2025/09/30",
     point: "夢市集軟體技術",
   },
+  {
+    start: "2025/11/01",
+    end: "2025/05/31",
+    point: "閎昱室內裝修",
+  },
 ])
 
 const timelineRef = ref(null)
