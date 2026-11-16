@@ -47,8 +47,8 @@
         <tbody>
           <tr v-for="r in rows" :key="r.label" :class="r.strong ? 'font-extrabold text-[#C8F24D]' : ''">
             <td class="py-1">{{ r.label }}</td>
-            <td class="py-1 text-right">{{ r.aud < 0 ? "−" : "" }}A${{ fmt(Math.abs(r.aud)) }}</td>
-            <td class="py-1 text-right">{{ r.twd != null ? `${r.twd < 0 ? "−" : ""}NT$${fmt(Math.abs(r.twd))}` : "—"
+            <td class="py-1 text-right">{{ r.aud < 0 ? "−" : "" }}{{ fmt(Math.abs(r.aud)) }}</td>
+            <td class="py-1 text-right">{{ r.twd != null ? `${r.twd < 0 ? "−" : ""}${fmt(Math.abs(r.twd))}` : "—"
             }}</td>
           </tr>
         </tbody>

@@ -1,13 +1,16 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-2 p-3">
     <el-input type="text" v-model="title" placeholder="請輸入標題" clearable size="large" />
     <el-input-tag v-model="tags" placeholder="請輸入標籤" size="large" @add-tag="emit('addTag', $event)"
       @remove-tag="emit('removeTag', $event)" />
 
-    <div v-if="availableTags.length" class="flex w-full gap-[4px] flex-wrap px-4 py-1">
-      <button v-for="tag in availableTags" :key="tag" type="button" @click="emit('pickTag', tag)">
-        <TagChip>{{ tag }}</TagChip>
-      </button>
+    <div v-if="availableTags.length" class="flex flex-col gap-1.5">
+      <div class="flex flex-wrap gap-2 max-h-[96px] overflow-y-auto">
+        <button v-for="tag in availableTags" :key="tag" type="button" @click="emit('pickTag', tag)"
+          class="rounded-full cursor-pointer transition active:scale-95 hover:opacity-80">
+          <TagChip>{{ tag }}</TagChip>
+        </button>
+      </div>
     </div>
   </div>
 </template>
